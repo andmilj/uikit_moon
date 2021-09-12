@@ -254,16 +254,19 @@ const BetaTag = styled(Tag)`
   margin-bottom: -17px;
   color: black;
 `
-
+const ConnectButton = styled(Button)`
+  border-radius: 20px;
+  height: 37px;
+`
 const Portfolio: React.FC = () => {
   const chefs = useChefs()
   // console.log("kudex", chefs.find(c => c.name === "kudex"))
-  const { account } = useWallet()
+  const { account, connect } = useWallet()
   const pools = usePools(account)
   // console.log(pools[16].userData)
   // const farms = useFarms(account)
   // const tikuPool = useGuestFromProject('Tiku')
-
+  
   // const chefIds = chefs.map((c) => c.chefId)
 
   const quotePrice = useQuotePrice()
@@ -1014,9 +1017,11 @@ const Portfolio: React.FC = () => {
               </EyeWrapper>
               {!account && (
                 <NoAccount>
-                  <NoAccountTag variant="failure" outline>
-                    <Text color="contrast">Please connect your wallet</Text>
-                  </NoAccountTag>
+                  {/* <NoAccountTag variant="failure" outline> */}
+                    <ConnectButton color="failure" onClick={() => {
+                      connect()
+                    }}>Please connect your wallet</ConnectButton>
+                  {/* </NoAccountTag> */}
                 </NoAccount>
               )}
             </Header>
@@ -1051,9 +1056,9 @@ const Portfolio: React.FC = () => {
 
               {!account && (
                 <NoAccount>
-                  <NoAccountTag variant="failure" outline>
-                    <Text color="contrast">Please connect your wallet</Text>
-                  </NoAccountTag>
+                    <ConnectButton color="failure" onClick={() => {
+                      connect()
+                    }}>Please connect your wallet</ConnectButton>
                 </NoAccount>
               )}
             </HeaderCol>
