@@ -58,10 +58,16 @@ const DetailsSection: React.FC<ExpandableSectionProps> = ({
   // console.log(lpLabel)
 
   const getLiqSite = () => {
-    if (lpLabel.includes('KUSWAPLP')) {
-      return 'kuswap.finance'
+    if (lpLabel.includes('SOLARLP')) {
+      return 'solarbeam.io/exchange'
     }
-    return 'swap.kudex.finance'
+    if (lpLabel.includes('MOONLP')) {
+      return 'swap.moonfarm.in/#'
+    }
+    if (lpLabel.includes('FREELP')) {
+      return 'freeriver.exchange/#'
+    }
+    return ''
   }
 
   return (
@@ -71,8 +77,8 @@ const DetailsSection: React.FC<ExpandableSectionProps> = ({
         <StyledLinkExternal
           href={
             isTokenOnly
-              ? `https://${getLiqSite()}/#/swap/${tokenAddresses[process.env.REACT_APP_CHAIN_ID]}`
-              : `https://${getLiqSite()}/#/add/${liquidityUrlPathParts}`
+              ? `https://${getLiqSite()}/swap/${tokenAddresses[process.env.REACT_APP_CHAIN_ID]}`
+              : `https://${getLiqSite()}/add/${liquidityUrlPathParts}`
           }
         >
           {lpLabel}

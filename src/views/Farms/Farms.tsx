@@ -62,22 +62,25 @@ const Farms: React.FC<FarmsProps> = (farmsProps) => {
           .times(farm.rewardsMultiplier || 1)
           .div(new BigNumber(10).pow(18))
         const cakeRewardPerYear = cakeRewardPerBlock.times(BLOCKS_PER_YEAR)
-        // console.log("poolweight",farm.poolWeight)
-        // console.log("rewardsMultiplier",farm.rewardsMultiplier)
-        // console.log("cakeRewardPerBlock",cakeRewardPerBlock.toString())
-        // console.log("rewardPrices",rewardPrices)
-        // console.log("cakeRewardPerYear",cakeRewardPerYear.toString())
+        console.log("poolweight",farm.poolWeight)
+        console.log("rewardsMultiplier",farm.rewardsMultiplier)
+        console.log("cakeRewardPerBlock",cakeRewardPerBlock.toString())
+        console.log("rewardPrices",rewardPrices)
+        console.log("cakeRewardPerYear",cakeRewardPerYear.toString())
+        console.log("quotePrice", quotePrice)
         const rPrice =
           farm.farmType === 'native'
             ? quotePrice.kafe
             : rewardPrices[farm.customRewardToken.toLowerCase()] || new BigNumber(1)
-        let apy = rPrice.times(cakeRewardPerYear)
-        // console.log("apy$", apy.toString())
 
+        let apy = rPrice.times(cakeRewardPerYear)
+        console.log("apy", apy.toString())
+
+        // 9808313364
         let totalValue = new BigNumber(farm.lpTotalInQuoteToken || 0)
 
         totalValue = toDollarQuote(totalValue, farm.quoteTokenSymbol, quotePrice)
-
+        console.log("totalValue",totalValue.toString())
         if (totalValue.comparedTo(0) > 0) {
           apy = apy.div(totalValue)
         } else {

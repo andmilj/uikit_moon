@@ -17,23 +17,29 @@ const CakePriceContextProvider = ({ children }) => {
 
   useEffect(() => {
     const getPrice = async () => {
-      if (router && kcsPrice && contracts.cake[process.env.REACT_APP_CHAIN_ID]) {
-        const amts = await router.methods
-          .getAmountsOut('1000000000000', [
-            contracts.cake[process.env.REACT_APP_CHAIN_ID],
-            contracts.wbnb[process.env.REACT_APP_CHAIN_ID],
-          ])
-          .call()
 
-        const tokenPrice = kcsPrice.multipliedBy(new BigNumber(amts[1])).dividedBy(1e12)
-        const val = tokenPrice.toFixed(3)
-        if (val !== previousPrice.current) {
-          previousPrice.current = val
-          console.log('cake', val)
-          setPrice(new BigNumber(val))
+      try{
+        if (router && kcsPrice && contracts.cake[process.env.REACT_APP_CHAIN_ID]) {
+          const amts = await router.methods
+            .getAmountsOut('1000000000000', [
+              contracts.cake[process.env.REACT_APP_CHAIN_ID],
+              contracts.wbnb[process.env.REACT_APP_CHAIN_ID],
+            ])
+            .call()
+  
+          const tokenPrice = kcsPrice.multipliedBy(new BigNumber(amts[1])).dividedBy(1e12)
+          const val = tokenPrice.toFixed(3)
+          if (val !== previousPrice.current) {
+            previousPrice.current = val
+            console.log('cake', val)
+            setPrice(new BigNumber(val))
+          }
+  
+          // console.log("cakeprice",tokenPrice, tokenPrice.toNumber())
         }
 
-        // console.log("cakeprice",tokenPrice, tokenPrice.toNumber())
+      }catch(e){
+        console.error(e)
       }
       // const resp = await fetch(url)
       // const j = await resp.json();

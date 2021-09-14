@@ -132,14 +132,14 @@ const ApyCalculatorModal: React.FC<ApyCalculatorModalProps> = ({
       <Flex justifyContent="center">
         {isToken ? (
           <LinkExternal
-            href={`https://swap.kudex.finance/#/swap?inputCurrency=KCS&outputCurrency=${
+            href={`https:///solarbeam.io/exchange/swap?inputCurrency=ETH&outputCurrency=${
               tokenAddresses[process.env.REACT_APP_CHAIN_ID]
             }`}
           >
             {TranslateString(999, 'Get')} {lpLabel}
           </LinkExternal>
         ) : (
-          <LinkExternal href={`https://swap.kudex.finance/#/add/${liquidityUrlPathParts}`}>
+          <LinkExternal href={`https:///solarbeam.io/exchange/add/${liquidityUrlPathParts}`}>
             {TranslateString(999, 'Get')} {lpLabel}
           </LinkExternal>
         )}

@@ -60,7 +60,11 @@ export const useTeamBalance = (tokenAddress: string) => {
   useEffect(() => {
     const fetchBalance = async () => {
       // if (espressoPool) {
-        const multi = new web3.eth.Contract(MultiCallAbi as unknown as AbiItem, getMulticallAddress())
+      if (contracts.teamWallets.length === 0){
+        setBalance(new BigNumber(0))
+        return
+      }  
+      const multi = new web3.eth.Contract(MultiCallAbi as unknown as AbiItem, getMulticallAddress())
 
         // numbeer kafe
         const calls = contracts.teamWallets.map((w) => [tokenAddress, getFuncData('balanceOf(address)', [w])])

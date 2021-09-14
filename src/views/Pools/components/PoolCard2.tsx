@@ -1,12 +1,12 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import contracts from 'config/constants/contracts'
 import { Sparklines, SparklinesLine } from 'react-sparklines'
-import useMediaQuery from '@material-ui/core/useMediaQuery'
 import { AbiItem } from 'web3-utils'
+import useMediaQuery from '@material-ui/core/useMediaQuery'
 import { FarmWithStakedValue } from 'views/Farms/components/FarmCard/FarmCard'
 import BigNumber from 'bignumber.js'
 import { findCumulativeSum } from 'utils/callHelpers'
-import { findLastIndex } from 'lodash'
+import { findLastIndex, sortBy } from 'lodash'
 import getLiquidityUrlPathParts from 'utils/getLiquidityUrlPathParts'
 import { useCustomHarvest, useHarvest } from 'hooks/useHarvest'
 import { calculateAPY } from 'utils/compoundApyHelpers'
@@ -33,7 +33,7 @@ import UnlockButton from 'components/UnlockButton'
 import lpAbi from 'config/abi/uni_v2_lp.json'
 import { provider } from 'web3-core'
 import useQuotePrice from 'hooks/useQuotePrice'
-import { useERC20 } from 'hooks/useContract'
+import { useERC20, useVaultContract } from 'hooks/useContract'
 import { useApprove, useCustomApprove, useSousApprove } from 'hooks/useApprove'
 import useI18n from 'hooks/useI18n'
 import useStake, { useCustomStake, useSousStake } from 'hooks/useStake'
@@ -44,6 +44,7 @@ import {
   getBalanceNumberPrecision,
   getBalanceNumberPrecisionFloat,
   getBalanceNumberPrecisionFloatFixed,
+  getDecimals,
   getLiquidLink,
   removeTrailingZero,
   toDollar,
@@ -121,13 +122,14 @@ const PoolCard2: React.FC<PoolCardProps> = ({ pool }) => {
 
     // stakingLimit,
   } = pool
+  // console.log("stakeBalanceDollar",stakeBalanceDollar.toString())
   // console.log("vaultShareFarm",vaultShareFarm)
   // Pools using native BNB behave differently than pools using a token
   // const isBnbPool = poolCategory === PoolCategory.BINANCE
   const hasMinWidth = !useMediaQuery('(max-width:700px)')
   const TranslateString = useI18n()
   const stakingTokenContract = useERC20(stakingTokenAddress)
-  const vsTokenContract = useERC20(contractAddress[process.env.REACT_APP_CHAIN_ID])
+  const vsTokenContract = useVaultContract(contractAddress[process.env.REACT_APP_CHAIN_ID])
   const { account, ethereum }: { account: string; ethereum: provider } = useWallet()
   // const block = useBlock()
   const { onApprove } = useSousApprove(stakingTokenContract, sousId)
@@ -144,7 +146,7 @@ const PoolCard2: React.FC<PoolCardProps> = ({ pool }) => {
 
   useEffect(() => {
     const get = async () => {
-      console.log('get token pair')
+      // console.log('get token pair')
       let tok0
       let tok1
 
@@ -213,64 +215,131 @@ const PoolCard2: React.FC<PoolCardProps> = ({ pool }) => {
 
   const hideBalances = useHideBalances()
 
-  // useEffect(() => {
-  //   if (!accountHasStakedBalance && !accountHasVsStakedBalance) {
-  //     return
-  //   }
-  //   if (!expanded) {
-  //     return
-  //   }
+  useEffect(() => {
+    if (!accountHasStakedBalance && !accountHasVsStakedBalance) {
+      return
+    }
+    if (!expanded) {
+      return
+    }
 
-  //   const fetchEvents = async (myAccount) => {
-  //     // console.log("fetch past events")
-  //     if (!myAccount) {
-  //       return
-  //     }
-  //     console.log('Getting past events for', tokenName)
-  //     const e = await stakingTokenContract
-  //       .getPastEvents('Transfer', {
-  //         filter: { from: [myAccount, contractAddress[CHAIN_ID]], to: [myAccount, contractAddress[CHAIN_ID]] }, // Using an array means OR: e.g. 20 or 23
-  //         fromBlock: 0,
-  //         toBlock: 'latest',
-  //       })
-  //       .then(function (events) {
-  //         return events.map((l) => ({ from: l.returnValues.from, to: l.returnValues.to, value: l.returnValues.value }))
-  //       })
+    const fetchEvents = async (myAccount) => {
+      // console.log("fetch past events")
+      if (!myAccount) {
+        return
+      }
+      const w = getWeb3();
+      const blockNumber = await w.eth.getBlockNumber()
+      console.log("blockNumber", blockNumber)
+      console.log('Getting past events for', tokenName)
+      let zeroEventBlock = new BigNumber(await vsTokenContract.methods.blockAtZeroCapital(myAccount).call()).toNumber();
+      console.log("zeroEventBlock",zeroEventBlock)
+      if (zeroEventBlock === 0){
+        zeroEventBlock = contracts.globalStartBlock;
+      }
+      let allEvents = [];
+      const fromBlock = zeroEventBlock + 1;
+      const toBlock = "latest"
+      const vaultAddress = contractAddress[process.env.REACT_APP_CHAIN_ID].toLowerCase();
+      let topic0 = contracts.topics.vaultDeposit.toLowerCase();
+      const topic1 = `0000000000000000000000000000000000000000000000000000000000000000${myAccount.toLowerCase().slice(2)}`.slice(-64);
 
-  //     const arr = []
+      const url =  `https://blockscout.moonriver.moonbeam.network/api?module=logs&action=getLogs&fromBlock=${fromBlock}&toBlock=${toBlock}&address=${vaultAddress}&topic0=0x${topic0}&topic1=0x${topic1}&topic0_1_opr=and`
+      const resp = await fetch(url)
+      const j = await resp.json()
+      if (j && j.message === 'OK') {
+        allEvents = [...allEvents, ...j.result.map(o => ({...o, type: "deposit"}))]
+      }
+      topic0 = contracts.topics.vaultWithdraw.toLowerCase();
+      const url2 =  `https://blockscout.moonriver.moonbeam.network/api?module=logs&action=getLogs&fromBlock=${fromBlock}&toBlock=${toBlock}&address=${vaultAddress}&topic0=0x${topic0}&topic1=0x${topic1}&topic0_1_opr=and`
+      const resp2 = await fetch(url2)
+      const j2 = await resp2.json()
+      if (j2 && j2.message === 'OK') {
+        allEvents = [...allEvents, ...j2.result.map(o => ({...o, type: "withdraw"}))]
+      }
 
-  //     ;(e as any[]).forEach((log) => {
-  //       if (
-  //         log.from.toLowerCase() === myAccount.toLowerCase() &&
-  //         log.to.toLowerCase() === contractAddress[CHAIN_ID].toLowerCase()
-  //       ) {
-  //         arr.push(new BigNumber(log.value))
-  //       }
-  //       if (
-  //         log.from.toLowerCase() === contractAddress[CHAIN_ID].toLowerCase() &&
-  //         log.to.toLowerCase() === myAccount.toLowerCase()
-  //       ) {
-  //         arr.push(new BigNumber(log.value).multipliedBy(-1))
-  //       }
-  //     })
-  //     const { sum: total, res: cumSums } = findCumulativeSum(arr)
-  //     console.log(total, cumSums)
+      const logAbi = [{
+          type: 'address',
+          name: 'user',
+          indexed: true
+      },{
+          type: 'uint256',
+          name: 'amtShares'
+      },{
+          type: 'uint256',
+          name: 'amtTok'
+      }]
 
-  //     setCapital(total)
-  //     setCapitalCum(cumSums)
-  //   }
+      allEvents = allEvents.map((l) => {
+        const temp = web3.eth.abi.decodeLog(logAbi, l.data, l.topics.slice(1))
+        return {
+          block: new BigNumber(l.blockNumber).toNumber(),
+          type: l.type,
+          value: temp.amtTok
+        }
+      })
+      allEvents = sortBy(allEvents, e => e.block);
+      console.log("allEvents", allEvents)
+      // allEvents = allEvents.map((l) => ({ from: l.returnValues.from, to: l.returnValues.to, value: l.returnValues.value }))
+      const arr = []
 
-  //   fetchEvents(account)
-  // }, [
-  //   account,
-  //   expanded,
-  //   accountHasVsStakedBalance,
-  //   accountHasStakedBalance,
-  //   userData?.stakedBalance,
-  //   contractAddress,
-  //   stakingTokenContract,
-  //   tokenName,
-  // ])
+      allEvents.forEach((event) => {
+        if (event.type === "withdraw"){
+          arr.push(new BigNumber(event.value).multipliedBy(-1))
+        }
+        else if (event.type === "deposit"){
+          arr.push(new BigNumber(event.value))
+        }
+      })
+      const { sum: total, res: cumSums } = findCumulativeSum(arr)
+      console.log(total.toString(), cumSums.map(c => c.toString()))
+
+      setCapital(total)
+      setCapitalCum(cumSums)
+
+
+      // let zeroEventBlock
+      // .getPastEvents('CapitalZeroed', {
+      //   filter: {user: myAccount},
+      //   fromBlock: blockNumber- (4*3600/12),
+      //   toBlock: 'latest',
+      // })
+      // .then(function (events) {
+      //   return events.map((l) => ({ block: l.blockNumber }))
+      // })
+      // console.log("zeroEvents",zeroEvents)
+      // const zeroSorted = sortBy(zeroEvents, e => e.block);
+      // let searchStart = 0;
+      // if (zeroSorted.length > 0 ){
+      //   searchStart = zeroSorted[zeroSorted.length - 1].block + 1;
+      // }
+      // console.log("searchStart",searchStart)
+
+      // const e = await stakingTokenContract
+      //   .getPastEvents('Transfer', {
+      //     filter: { from: [myAccount, contractAddress[CHAIN_ID]], to: [myAccount, contractAddress[CHAIN_ID]] }, // Using an array means OR: e.g. 20 or 23
+      //     fromBlock: searchStart,
+      //     toBlock: 'latest',
+      //   })
+      //   .then(function (events) {
+      //     return events.map((l) => ({ from: l.returnValues.from, to: l.returnValues.to, value: l.returnValues.value }))
+      //   })
+
+    
+    }
+
+    fetchEvents(account)
+  }, [
+    account,
+    expanded,
+    accountHasVsStakedBalance,
+    accountHasStakedBalance,
+    userData?.stakedBalance,
+    contractAddress,
+    stakingTokenContract,
+    tokenName,
+    vsTokenContract
+  ])
 
   // console.log(tokenName, "capital", capital.toString())
   const [onPresentDeposit] = useModal(
@@ -278,6 +347,7 @@ const PoolCard2: React.FC<PoolCardProps> = ({ pool }) => {
       max={stakingTokenBalance}
       onConfirm={onStake}
       tokenName={stakingTokenName}
+      decimals={getDecimals(stakingTokenAddress)}
       pricePerShare={new BigNumber(pricePerShare)}
       startAtMax
     />,
@@ -287,6 +357,7 @@ const PoolCard2: React.FC<PoolCardProps> = ({ pool }) => {
     <RedeemModalSlider
       pricePerShare={new BigNumber(pricePerShare)}
       max={stakedBalance}
+      decimals={getDecimals(stakingTokenAddress)}
       onConfirm={onUnstake}
       redeemName={`Espresso ${stakingTokenName}`}
       tokenName={stakingTokenName}
@@ -369,6 +440,9 @@ const PoolCard2: React.FC<PoolCardProps> = ({ pool }) => {
   const capitalDollar = getDollarValue(capital)
   const overAllVStakedDollar = getDollarValue(vStakedBalance.multipliedBy(pricePerShare))
 
+  // console.log("stakingTokenBalance",stakingTokenBalance.toString(),
+  // getDollarValue(stakingTokenBalance).toString(), stakePriceAsQuoteToken)
+
   const getChange = (a, b) => {
     // console.log(tokenName, a.toString(),b.toString())
     if (a.isLessThan(0)) {
@@ -406,6 +480,8 @@ const PoolCard2: React.FC<PoolCardProps> = ({ pool }) => {
   }
 
   const stepOne = () => {
+
+
     return (
       <ActionBox>
         <TextRow>
@@ -422,14 +498,25 @@ const PoolCard2: React.FC<PoolCardProps> = ({ pool }) => {
             </Text>
 
             <div style={{ flex: 2, textAlign: 'center' }}>
-              <Balance decimals={4} fontSize="18px" value={getBalanceNumber(stakingTokenBalance)} />
+              {/* <Balance decimals={4} fontSize="18px" value={getBalanceNumber(stakingTokenBalance, getDecimals(stakingTokenAddress))} />
               <Balance
                 decimals={2}
                 suffix=")"
                 prefix="($"
                 fontSize="12px"
-                value={getBalanceNumber(getDollarValue(stakingTokenBalance))}
-              />
+                value={getBalanceNumber(getDollarValue(stakingTokenBalance),getDecimals(lpBaseTokenAddress))}
+              /> */}
+
+
+                  <Text fontSize="18px">
+                    {removeTrailingZero(getBalanceNumber(stakingTokenBalance, getDecimals(stakingTokenAddress)))}
+                  </Text>
+                  <Text style={{ marginTop: '-5px' }} fontSize="12px">
+                    (${parseFloat(getBalanceNumber(getDollarValue(stakingTokenBalance),getDecimals(lpBaseTokenAddress)).toFixed(2)).toLocaleString()})
+                  </Text>
+
+
+
             </div>
             {needsApproval ? (
               <Button disabled={requestedApproval} onClick={handleApprove}>
@@ -447,18 +534,28 @@ const PoolCard2: React.FC<PoolCardProps> = ({ pool }) => {
               Deposited
             </Text>
             <div style={{ flex: 2, textAlign: 'center' }}>
-              <Balance
+              {/* <Balance
                 decimals={4}
                 fontSize="18px"
-                value={getBalanceNumber(stakedBalance.multipliedBy(pricePerShare))}
+                value={getBalanceNumber(stakedBalance.multipliedBy(pricePerShare),getDecimals(stakingTokenAddress))}
               />
               <Balance
                 decimals={2}
                 suffix=")"
                 prefix="($"
                 fontSize="12px"
-                value={getBalanceNumber(stakeBalanceDollar)}
-              />
+                value={getBalanceNumber(stakeBalanceDollar,getDecimals(lpBaseTokenAddress))}
+              /> */}
+
+                  <Text fontSize="18px">
+                    {removeTrailingZero(getBalanceNumber(stakedBalance.multipliedBy(pricePerShare),getDecimals(stakingTokenAddress)))}
+                  </Text>
+                  <Text style={{ marginTop: '-5px' }} fontSize="12px">
+                    (${parseFloat(getBalanceNumber(stakeBalanceDollar,getDecimals(lpBaseTokenAddress)).toFixed(2)).toLocaleString()})
+                  </Text>
+
+
+
             </div>
             <Button
               style={{ marginTop: 'auto' }}
@@ -532,7 +629,14 @@ const PoolCard2: React.FC<PoolCardProps> = ({ pool }) => {
               In Wallet
             </Text>
             <div style={{ flex: 2, textAlign: 'center' }}>
-              <Balance decimals={4} fontSize="18px" value={getBalanceNumber(vsTokenBalance)} />
+              {/* <Balance decimals={4} fontSize="18px" value={getBalanceNumber(vsTokenBalance)} /> */}
+
+
+              <Text fontSize="18px">
+                  {removeTrailingZero(getBalanceNumber(vsTokenBalance))}
+              </Text>
+             
+
             </div>
 
             {needsVsApproval ? (
@@ -553,14 +657,24 @@ const PoolCard2: React.FC<PoolCardProps> = ({ pool }) => {
               Staked
             </Text>
             <div style={{ flex: 2, textAlign: 'center' }}>
-              <Balance decimals={4} fontSize="18px" value={getBalanceNumber(stakedVsBalance)} />
+              {/* <Balance decimals={4} fontSize="18px" value={getBalanceNumber(stakedVsBalance)} />
               <Balance
                 decimals={2}
                 suffix=")"
                 prefix="($"
                 fontSize="12px"
-                value={getBalanceNumber(stakeVsBalanceDollar)}
-              />
+                value={getBalanceNumber(stakeVsBalanceDollar,getDecimals(lpBaseTokenAddress))}
+              /> */}
+
+                  <Text fontSize="18px">
+                    {removeTrailingZero(getBalanceNumber(stakedVsBalance))}
+                  </Text>
+                  <Text style={{ marginTop: '-5px' }} fontSize="12px">
+                    (${parseFloat(getBalanceNumber(stakeVsBalanceDollar,getDecimals(lpBaseTokenAddress)).toFixed(2)).toLocaleString()})
+                  </Text>
+
+
+
             </div>
             <Button
               style={{ marginTop: 'auto' }}
@@ -606,7 +720,7 @@ const PoolCard2: React.FC<PoolCardProps> = ({ pool }) => {
             Currently boosting{' '}
           </Text>
           <Text color="success" fontSize="14px">
-            &nbsp;${getBalanceNumberPrecisionFloatFixed(overAllVStakedDollar, 18, 2)}&nbsp;
+            &nbsp;${getBalanceNumberPrecisionFloatFixed(overAllVStakedDollar, getDecimals(lpBaseTokenAddress), 2)}&nbsp;
           </Text>
           <Text color="grey" fontSize="14px">
             {' '}
@@ -798,10 +912,10 @@ const PoolCard2: React.FC<PoolCardProps> = ({ pool }) => {
               ) : (
                 <>
                   <Text fontSize="18px">
-                    {removeTrailingZero(getBalanceNumber(bothTotalStaked.multipliedBy(pricePerShare)))}
+                    {removeTrailingZero(getBalanceNumber(bothTotalStaked.multipliedBy(pricePerShare),getDecimals(stakingTokenAddress)))}
                   </Text>
                   <Text style={{ marginTop: '-5px' }} fontSize="12px">
-                    (${parseFloat(getBalanceNumber(bothTotalStakedDollar).toFixed(2)).toLocaleString()})
+                    (${parseFloat(getBalanceNumber(bothTotalStakedDollar,getDecimals(lpBaseTokenAddress)).toFixed(2)).toLocaleString()})
                   </Text>
                 </>
               )}
@@ -837,6 +951,7 @@ const PoolCard2: React.FC<PoolCardProps> = ({ pool }) => {
     }
     return <MidSectionMobile>{content}</MidSectionMobile>
   }
+  // console.log("right", totalStaked.toString())
   const right = () => {
     const content = (
       <TextEle>
@@ -847,7 +962,7 @@ const PoolCard2: React.FC<PoolCardProps> = ({ pool }) => {
             <Balance
               fontSize="18px"
               isDisabled={isFinished}
-              value={getBalanceNumber(totalStaked)}
+              value={getBalanceNumber(totalStaked,getDecimals(lpBaseTokenAddress))}
               decimals={2}
               prefix="$"
             />
@@ -902,7 +1017,7 @@ const PoolCard2: React.FC<PoolCardProps> = ({ pool }) => {
           <LongDivider />
 
           <FooterRow>
-            {/* {accountHasStakedBalance || accountHasVsStakedBalance ? (
+            {accountHasStakedBalance || accountHasVsStakedBalance ? (
               <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
                 <MidText color="secondary">Your {stakingTokenName}</MidText>
                 <StyledDetails>
@@ -986,7 +1101,7 @@ const PoolCard2: React.FC<PoolCardProps> = ({ pool }) => {
               </div>
             ) : (
               ''
-            )} */}
+            )}
 
             {hasMinWidth ? <VerticalDivider /> : ''}
             {/* <SparkBox>

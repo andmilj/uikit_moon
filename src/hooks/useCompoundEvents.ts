@@ -71,17 +71,18 @@ const useCompoundEvents = () => {
             const sc = new web3.eth.Contract(strategyAbi as unknown as AbiItem, s)
             const e = await sc
               .getPastEvents('Compound', {
-                fromBlock: blockNumber - (hoursBack * 3600) / 3,
+                fromBlock: blockNumber - (hoursBack * 3600) / 12,
                 toBlock: 'latest',
               })
               .then(function (r) {
-                // console.log(r) // same results as the optional callback above
+                // console.log(names[i], r) // same results as the optional callback above
                 return r.map((l) => ({
                   blockNumber: l.blockNumber,
                   caller: l.returnValues.caller,
                   lpAdded: l.returnValues.lpAdded,
                 }))
               })
+
             return e
           }),
         )

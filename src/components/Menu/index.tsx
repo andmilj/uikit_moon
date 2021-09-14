@@ -24,11 +24,11 @@ const Menu = (props) => {
       currentLang={selectedLanguage && selectedLanguage.code}
       langs={allLanguages}
       setLang={setSelectedLanguage}
-      // cakePriceUsd={cakePriceUsd.toNumber()}
-      cakePriceUsd={0}
+      cakePriceUsd={cakePriceUsd.toNumber()}
+      // cakePriceUsd={0}
       links={config}
-      priceLink=""
-      // priceLink={`https://kcc.poocoin.app/tokens/${contracts.cake[process.env.REACT_APP_CHAIN_ID]}`}
+      // priceLink=""
+      priceLink={`https://charts.freeriver.exchange/?token=${contracts.cake[process.env.REACT_APP_CHAIN_ID]}`}
       {...props}
     />
   )

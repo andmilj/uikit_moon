@@ -3,6 +3,7 @@ import MultiCallAbi from 'config/abi/Multicall.json'
 import { AbiItem } from 'web3-utils'
 import { getWeb3 } from 'utils/web3'
 import BigNumber from 'bignumber.js'
+import { getExpDecimals } from 'utils/formatBalance'
 import erc20 from 'config/abi/erc20.json'
 import masterchefABI from 'config/abi/masterchef.json'
 import multicall from 'utils/multicall'
@@ -82,14 +83,33 @@ const fetchFarms = async () => {
         tokenAmount = new BigNumber(lpTokenBalanceMC).div(new BigNumber(10).pow(tokenDecimals))
       }
       depositedLp = tokenAmount
+      // console.log("lpTokenBalanceMC",lpTokenBalanceMC.toString(), )
       // console.log("tokenAmount",tokenAmount.toString())
       if (farmConfig.tokenSymbol === QuoteToken.BUSD && farmConfig.quoteTokenSymbol === QuoteToken.BUSD) {
         tokenPriceVsQuote = new BigNumber(1)
       } else {
         tokenPriceVsQuote = new BigNumber(quoteTokenBlanceLP).div(new BigNumber(tokenBalanceLP))
+        // console.log("quoteTokenBlanceLP",quoteTokenBlanceLP.toString())
+        // console.log("tokenBalanceLP",tokenBalanceLP.toString())
         // console.log("tokenPriceVsQuote",tokenPriceVsQuote.toString())
       }
-      lpTotalInQuoteToken = tokenAmount.times(tokenPriceVsQuote)
+
+      // tokenAmount 3.86
+      // quoteTokenBlanceLP 5671226749169500554665
+      // tokenBalanceLP 2255885720792
+      // tokenPriceVsQuote 2513968990.93737652359561804102038932695218783203870240245385643793008526210244926432481703
+
+      // 1e6 wei usdc = 2565597762000000 wei movr
+    // 3e6
+    
+    // 0.00992
+
+    // quoteTokenBlanceLP 5734544420763389793068 MOVR
+    // tokenBalanceLP 2230768956997 USDC
+
+
+      lpTotalInQuoteToken = tokenAmount.times(new BigNumber(10).pow(tokenDecimals)).times(tokenPriceVsQuote).dividedBy(new BigNumber(10).pow(quoteTokenDecimals))
+      // .times(new BigNumber(10).pow(parseInt(quoteTokenDecimals) - parseInt(tokenDecimals)))
       // console.log("lpTotalInQuoteToken",lpTotalInQuoteToken.toString())
     } else {
       // Ratio in % a LP tokens that are in staking, vs the total number in circulation
@@ -98,9 +118,11 @@ const fetchFarms = async () => {
       // console.log("lpTokenRatio",lpTokenRatio.toString())
       // Total value in staking in quote token value
       lpTotalInQuoteToken = new BigNumber(quoteTokenBlanceLP)
-        .div(new BigNumber(10).pow(18))
+        .div(new BigNumber(10).pow(quoteTokenDecimals))
         .times(new BigNumber(2))
         .times(lpTokenRatio)
+      // console.log("quoteTokenBlanceLP",quoteTokenBlanceLP.toString())
+      // console.log("lpTokenRatio",lpTokenRatio.toString())
       // console.log("lpTotalInQuoteToken",lpTotalInQuoteToken.toString())
 
       // Amount of token in the LP that are considered staking (i.e amount of token * lp ratio)
@@ -123,19 +145,22 @@ const fetchFarms = async () => {
     const allocPoint = new BigNumber(info[1])
     const poolWeight = allocPoint.div(new BigNumber(totalAllocPoint))
 
-    // console.log({
-    //   ...farmConfig,
-    //   tokenAmount: tokenAmount.toJSON(),
-    //   // quoteTokenAmount: quoteTokenAmount,
-    //   lpTotalInQuoteToken: lpTotalInQuoteToken.toJSON(),
-    //   tokenPriceVsQuote: tokenPriceVsQuote.toJSON(),
-    //   poolWeight: poolWeight.toNumber(),
-    //   multiplier: `${allocPoint.div(100).toString()}X`,
-    //   rewardsMultiplier: rewardsMultiplier[0].toNumber(),
-    //   depositFeeBP: info.depositFeeBP,
-    //   eggPerBlock: new BigNumber(eggPerBlock).toNumber(),
-    //   depositedLp: new BigNumber(depositedLp).toJSON(),
-    // })
+
+
+    console.log("farmconfig", {
+      ...farmConfig,
+      tokenAmount: tokenAmount.toJSON(),
+      // quoteTokenAmount: quoteTokenAmount,
+      lpTotalInQuoteToken: lpTotalInQuoteToken.toJSON(),
+      tokenPriceVsQuote: tokenPriceVsQuote.toJSON(),
+      poolWeight: poolWeight.toNumber(),
+      multiplier: `${allocPoint.div(100).toString()}X`,
+      rewardsMultiplier: parseInt(rewardsMultiplier),
+      depositFeeBP: info[4],
+      eggPerBlock: new BigNumber(eggPerBlock).toNumber(),
+      depositedLp: new BigNumber(depositedLp).toJSON(),
+      // depositedKafe: new BigNumber(depositedKafe.toString()).toJSON(),
+    })
     return {
       ...farmConfig,
       tokenAmount: tokenAmount.toJSON(),

@@ -54,9 +54,9 @@ export const useCustomStake = (masterChefAddress, pid: number, refreshPools = fa
   const masterChefContract = useCustomMasterchef(masterChefAddress, masterchefAbi)
 
   const handleStake = useCallback(
-    async (amount: string) => {
+    async (amount: string, decimals = 18) => {
       try {
-        const txHash = await stake(masterChefContract, pid, amount, account)
+        const txHash = await stake(masterChefContract, pid, amount, account, decimals)
         console.info(txHash)
         dispatch(fetchFarmUserDataAsync(account))
         if (refreshPools) {

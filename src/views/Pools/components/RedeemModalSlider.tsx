@@ -17,6 +17,7 @@ interface RedeemModalProps {
   pricePerShare?: BigNumber
   startAtMax?: boolean
   redeemName: string
+  decimals?: number
 }
 
 const useStyles = makeStyles({
@@ -47,6 +48,7 @@ const RedeemModalSlider: React.FC<RedeemModalProps> = ({
   tokenName = '',
   pricePerShare = null,
   startAtMax = true,
+  decimals = 18,
 }) => {
   const [val, setVal] = useState(startAtMax ? max : new BigNumber(0))
   const [pendingTx, setPendingTx] = useState(false)
@@ -98,7 +100,7 @@ const RedeemModalSlider: React.FC<RedeemModalProps> = ({
 
       <div style={{ display: 'flex', flexDirection: 'row' }}>
         <MiniText color="grey">Redeem</MiniText>
-        <MiniText color="success">&nbsp;{getBalanceNumberPrecisionFloatFixed(val, 18, 5)}&nbsp;</MiniText>
+        <MiniText color="success">&nbsp;{getBalanceNumberPrecisionFloatFixed(val, decimals, 5)}&nbsp;</MiniText>
         <MiniText color="grey">{redeemName}</MiniText>
       </div>
 
@@ -117,7 +119,7 @@ const RedeemModalSlider: React.FC<RedeemModalProps> = ({
         <div style={{ display: 'flex', flexDirection: 'row' }}>
           <MiniText color="grey">Receive</MiniText>
           <MiniText color="success">
-            &nbsp;{getBalanceNumberPrecisionFloatFixed(val.multipliedBy(pricePerShare), 18, 5)}&nbsp;
+            &nbsp;{getBalanceNumberPrecisionFloatFixed(val.multipliedBy(pricePerShare), decimals, 5)}&nbsp;
           </MiniText>
           <MiniText color="grey">{tokenName}</MiniText>
         </div>

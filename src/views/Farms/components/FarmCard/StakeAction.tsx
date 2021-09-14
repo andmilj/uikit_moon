@@ -5,7 +5,7 @@ import { Button, Flex, Heading, IconButton, AddIcon, MinusIcon, useModal } from 
 import useI18n from 'hooks/useI18n'
 import { useCustomStake } from 'hooks/useStake'
 import { useCustomUnstake } from 'hooks/useUnstake'
-import { getBalanceNumber } from 'utils/formatBalance'
+import { getBalanceNumber, removeTrailingZero } from 'utils/formatBalance'
 import DepositModal from '../DepositModal'
 import WithdrawModal from '../WithdrawModal'
 
@@ -16,8 +16,8 @@ interface FarmCardActionsProps {
   pid?: number
   depositFeeBP?: number
   masterChefAddress: string
+  decimals?: number
 }
-
 const IconButtonWrapper = styled.div`
   display: flex;
   svg {
@@ -32,6 +32,7 @@ const StakeAction: React.FC<FarmCardActionsProps> = ({
   tokenName,
   pid,
   depositFeeBP,
+  decimals
 }) => {
   const TranslateString = useI18n()
   // const { onStake } = useStake(pid)
@@ -40,14 +41,14 @@ const StakeAction: React.FC<FarmCardActionsProps> = ({
   const { onStake } = useCustomStake(masterChefAddress, pid)
   const { onUnstake } = useCustomUnstake(masterChefAddress, pid)
 
-  const rawStakedBalance = getBalanceNumber(stakedBalance)
-  const displayBalance = rawStakedBalance.toLocaleString()
+  const rawStakedBalance = getBalanceNumber(stakedBalance, decimals)
+  const displayBalance = removeTrailingZero(rawStakedBalance)
 
   const [onPresentDeposit] = useModal(
-    <DepositModal max={tokenBalance} onConfirm={onStake} tokenName={tokenName} depositFeeBP={depositFeeBP} />,
+    <DepositModal max={tokenBalance} onConfirm={onStake} tokenName={tokenName} depositFeeBP={depositFeeBP} decimals={decimals}/>,
   )
   const [onPresentWithdraw] = useModal(
-    <WithdrawModal max={stakedBalance} onConfirm={onUnstake} tokenName={tokenName} />,
+    <WithdrawModal max={stakedBalance} onConfirm={onUnstake} tokenName={tokenName} decimals={decimals}/>,
   )
 
   const renderStakingButtons = () => {

@@ -49,6 +49,10 @@ export const useERC20 = (address: string) => {
   const erc20Abi = erc20 as unknown as AbiItem
   return useContract(erc20Abi, address)
 }
+export const useVaultContract = (address: string) => {
+  const v = vaultAbi as unknown as AbiItem
+  return useContract(v, address)
+}
 
 export const useCake = () => {
   return useERC20(getCakeAddress())

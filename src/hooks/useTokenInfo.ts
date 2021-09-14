@@ -12,6 +12,7 @@ import { useFarms, usePools, useRefreshWallet } from 'state/hooks'
 import tokens, { TokenInfo } from 'config/constants/tokens'
 import { useWallet } from 'use-wallet'
 import { getWeb3 } from 'utils/web3'
+import { getExpDecimals } from 'utils/formatBalance'
 import { uniqBy } from 'lodash'
 import useRefresh from './useRefresh'
 
@@ -45,14 +46,20 @@ const useTokenInfo = () => {
       const multi = new web3.eth.Contract(MultiCallAbi as unknown as AbiItem, getMulticallAddress())
       const nonWMOVR = nonLpTokens.filter((t) => t.address.toLowerCase() !== contracts.WMOVR.toLowerCase())
 
-      // get info about each chef
-      const calls = nonWMOVR.map((t) => [
-        t.routerForQuote,
-        getFuncData('getAmountsOut(uint256,address[])', [
-          '1000000000000000000',
-          t.routeVia ? [contracts.WMOVR, t.routeVia, t.address] : [contracts.WMOVR, t.address],
-        ]),
-      ])
+      const calls = nonWMOVR.map((t) => {
+        const base= t.base || contracts.WMOVR
+        const dec = getExpDecimals(base);
+
+        return [
+          t.routerForQuote,
+          getFuncData('getAmountsOut(uint256,address[])', [
+            dec.toString(),
+            t.routeVia ? [base, t.routeVia, t.address] : [base, t.address],
+          ])
+        ]
+
+      })
+      
       const calls2 = nonWMOVR.map((t) => [t.address, getFuncData('balanceOf(address)', [account])])
       const decimalCalls = nonWMOVR.map((t) => [t.address, getFuncData('decimals()', [])])
       const wmovrCall = [MOVR_CONFIG.address, getFuncData('balanceOf(address)', [account])]
@@ -72,13 +79,18 @@ const useTokenInfo = () => {
       // console.log(tokenBalances)
 
       const final: TokenInfo[] = nonWMOVR.map((t, i) => {
+
+
+        const base= t.base || contracts.WMOVR
+        const b = getExpDecimals(base);
         return {
           ...t,
-          priceVsQuoteToken: new BigNumber(1e18).dividedBy(new BigNumber(prices[i])),
+          priceVsQuoteToken: b.dividedBy(new BigNumber(prices[i])),
           balance: new BigNumber(tokenBalances[i]),
           decimals: new BigNumber(decimals[i]).toNumber(),
         }
       })
+    
       final.push({
         symbol: 'WMOVR',
         address: contracts.WMOVR,

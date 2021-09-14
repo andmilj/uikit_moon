@@ -19,7 +19,6 @@ const SOLAR_INFO = {
   // sortOrder: 1,
   // tokenPerBlockMultiplier: 0.857,
   tokenPerBlockFunc: contracts.PERBLOCK_SOLAR,
-  // hidden: true,
 }
 const MOONFARM_INFO = {
   poolCategory: PoolCategory.VAULT,
@@ -35,7 +34,6 @@ const MOONFARM_INFO = {
   // sortOrder: 1,
   // tokenPerBlockMultiplier: 0.857,
   tokenPerBlockFunc: contracts.PERBLOCK_MOON,
-  // hidden: true,
 }
 
 // const KUDEX_INFO = {
@@ -65,7 +63,6 @@ const MOONFARM_INFO = {
 //   tokenPerBlockFunc: contracts.PERBLOCK_KUD,
 //   pendingRewardsFunc: contracts.PENDING_KUD, // pendingKudex(uint256,address) https://emn178.github.io/online-tools/keccak_256.html
 
-//   // hidden: true,
 // }
 
 export const makeQuote = (add) => {
@@ -84,10 +81,11 @@ const pools: PoolConfig[] = [
     tokenName: 'SOLAR-MOVR (SOLARLP)',
     stakingTokenName: QuoteToken.SOLARMOVRSOLARLP,
     stakingTokenAddress: '0x7eda899b3522683636746a2f3a7814e6ffca75e1', // lp address
-    contractAddress: makeQuote('0x604a259e50C23943Ddc5D98B6F08769bf1E0fa27'),
-    // strategy: 0x9815b371861A57d27C514de00a7b5Fb34532811b
+    contractAddress: makeQuote('0xf68151a467CE39fB55F938135Ab83BBc7F2b0B7D'),
+    // strategy: 0x28D5a7e73b70BFF27a2bbD3aDfF37A61779a9E77
     ...SOLAR_INFO,
     lpBaseTokenAddress: contracts.WMOVR,
+    
   },
   {
     sousId: 1,
@@ -96,8 +94,8 @@ const pools: PoolConfig[] = [
     tokenName: 'SOLAR',
     stakingTokenName: QuoteToken.SOLAR,
     stakingTokenAddress: '0x6bd193ee6d2104f14f94e2ca6efefae561a4334b', // lp address
-    contractAddress: makeQuote('0x22e6719Fa4Cc386Ac6172a6F7Ed7ECc5d235b8c1'),
-    // strategy: 0x2C32829713Af0Add943bE901B2d7BEFAa6171977
+    contractAddress: makeQuote('0xD9e89665cfD2497C0Df486A73Daa30215ed4F774'),
+    // strategy: 0xd0c03B5a5db74B7e5A5a2708f2B7231AD714D844
     ...SOLAR_INFO,
     lpBaseTokenAddress: contracts.WMOVR,
     isLP: false,
@@ -107,15 +105,16 @@ const pools: PoolConfig[] = [
   {
     sousId: 2,
     poolId: 2,
-    image: 'MOVR',
-    tokenName: 'MOVR',
-    stakingTokenName: QuoteToken.MOVR,
+    image: 'WMOVR',
+    tokenName: 'WMOVR',
+    stakingTokenName: QuoteToken.WMOVR,
     stakingTokenAddress: '0x98878b06940ae243284ca214f92bb71a2b032b8a', // lp address
-    contractAddress: makeQuote('0xE00eeD5E67635A0c27ca10077189a0aF35FA9a3b'),
-    // strategy: 0x3481c1FAe8fFa9eEC1113b9b404C89447fE97303
+    contractAddress: makeQuote('0xdC443A80188cd2790f7F2A5E333d7679E5e7BcE3'),
+    // strategy: 0x862a9D8021CD73E9cEC675dCb0c6A7c9529CB180
     ...SOLAR_INFO,
     lpBaseTokenAddress: contracts.USDC,
     isLP: false,
+    
     // pendingRewardsFunc: 'pendingKUS',
     // tokenDecimals: 18,
   },
@@ -126,8 +125,8 @@ const pools: PoolConfig[] = [
     tokenName: 'RIB-SOLAR (SOLARLP)',
     stakingTokenName: QuoteToken.RIBSOLARSOLARLP,
     stakingTokenAddress: '0xf9b7495b833804e4d894fc5f7b39c10016e0a911', // lp address
-    contractAddress: makeQuote('0x5AF4bD9621Ff07aB98EC8C4CDef47979F43Bf87E'),
-    // strategy: 0x75b35C7aBAaF57ffeBfCF5a9748908e311CB3dB7
+    contractAddress: makeQuote('0x2E98C76898875073ADC805b85A2Fbd0E4e1a9b04'),
+    // strategy: 0x99e86dBdC5D05D23Bd60681A8574AD9625a79854
     ...SOLAR_INFO,
     lpBaseTokenAddress: contracts.SOLAR,
   },
@@ -138,8 +137,8 @@ const pools: PoolConfig[] = [
     tokenName: 'RIB-MOVR (SOLARLP)',
     stakingTokenName: QuoteToken.RIBMOVRSOLARLP,
     stakingTokenAddress: '0x0acdb54e610dabc82b8fa454b21ad425ae460df9', // lp address
-    contractAddress: makeQuote('0xE10621494a08E1b65AC2f10f7D1aFf7F6886491B'),
-    // strategy: 0xB8fBd7F4120F90b1DCF83BF0488aEc96B1114Ee7
+    contractAddress: makeQuote('0xa0c4d8C1c87a8cd972F0BCE86cda9Fb45169008F'),
+    // strategy: 0xb8b2A3843870FD747eA89e534e18690Ec913fFA8
     ...SOLAR_INFO,
     lpBaseTokenAddress: contracts.WMOVR,
   },
@@ -150,8 +149,8 @@ const pools: PoolConfig[] = [
     tokenName: 'RIB',
     stakingTokenName: QuoteToken.RIB,
     stakingTokenAddress: '0xbd90a6125a84e5c512129d622a75cdde176ade5e', // lp address
-    contractAddress: makeQuote('0xb356F291cDFe3A28140B5b70A3b39135B9Ce7e2d'),
-    // strategy: 0xAe94B52D9FB330D7170619d54bf6913D8773E662
+    contractAddress: makeQuote('0x9BBa20fC0657310A3B44b29C66242d466711A624'),
+    // strategy: 0xc6bC650178230672C7Ed4954Ef2f738FC0d3DE47
     ...SOLAR_INFO,
     isLP: false,
     lpBaseTokenAddress: contracts.WMOVR,
@@ -163,8 +162,8 @@ const pools: PoolConfig[] = [
     tokenName: 'USDC-MOVR (SOLARLP)',
     stakingTokenName: QuoteToken.USDCMOVRSOLARLP,
     stakingTokenAddress: '0xe537f70a8b62204832b8ba91940b77d3f79aeb81', // lp address
-    contractAddress: makeQuote('0x7025a55d6edd6871CF0be5961b79e61737B99d27'),
-    // strategy: 0x381bD834Fa3cA43f5A3C0866C813898A7B94aeA3
+    contractAddress: makeQuote('0x3dD58167941F032bb13310D31801cdC03cC94eB4'),
+    // strategy: 0x6dd7B14bd78366174e71C83feAB4275b642171E0
     ...SOLAR_INFO,
     lpBaseTokenAddress: contracts.WMOVR,
   },
@@ -175,8 +174,8 @@ const pools: PoolConfig[] = [
     tokenName: 'SOLAR-USDC (SOLARLP)',
     stakingTokenName: QuoteToken.SOLARUSDCSOLARLP,
     stakingTokenAddress: '0xdb66be1005f5fe1d2f486e75ce3c50b52535f886', // lp address
-    contractAddress: makeQuote('0xC1371932E5235585afecc6fBA127BEe8E035B55E'),
-    // strategy: 0xA2e56A3E7F9013AFe9738fB283C63261f7BA5082
+    contractAddress: makeQuote('0x6a970cfcAE96955410A50ADCCb58E47A1f707065'),
+    // strategy: 0x6C3AD761403F525A2386c778933cF0C7e8965242
     ...SOLAR_INFO,
     lpBaseTokenAddress: contracts.USDC,
   },
@@ -187,8 +186,8 @@ const pools: PoolConfig[] = [
     tokenName: 'DAI-USDC (SOLARLP)',
     stakingTokenName: QuoteToken.DAIUSDCSOLARLP,
     stakingTokenAddress: '0xfe1b71bdaee495dca331d28f5779e87bd32fbe53', // lp address
-    contractAddress: makeQuote('0x4a9bFF68b3485b63a4637A3918F4A9BeDff8e3f6'),
-    // strategy: 0x34f7e093F386EaF63721022697C17bcDaaf000C5
+    contractAddress: makeQuote('0xC9A7C932cA620FCCe4053E568b41FAF96FafAF4a'),
+    // strategy: 0x397a5ba9fe6bC13Ed4AA34Ff4bf3aAd3760329D4
     ...SOLAR_INFO,
     lpBaseTokenAddress: contracts.USDC,
   },
@@ -199,8 +198,8 @@ const pools: PoolConfig[] = [
     tokenName: 'BUSD-USDC (SOLARLP)',
     stakingTokenName: QuoteToken.BUSDUSDCSOLARLP,
     stakingTokenAddress: '0x384704557f73fbfae6e9297fd1e6075fc340dbe5', // lp address
-    contractAddress: makeQuote('0xB2c3493A8C8F62aD2406feE090683724C13F8064'),
-    // strategy: 0x7ADB2047C4727F9EF2c7F2614B0C8dEFa23E0BDC
+    contractAddress: makeQuote('0xe8216Dd845137B12389e179A4D0105294A8a7978'),
+    // strategy: 0x1aAAA06662E59Bcd5347d6c1d90d44f9c259aE1B
     ...SOLAR_INFO,
     lpBaseTokenAddress: contracts.USDC,
   },
@@ -211,8 +210,8 @@ const pools: PoolConfig[] = [
     tokenName: 'ETH-USDC (SOLARLP)',
     stakingTokenName: QuoteToken.ETHUSDCSOLARLP,
     stakingTokenAddress: '0xa0d8dfb2cc9dfe6905edd5b71c56ba92ad09a3dc', // lp address
-    contractAddress: makeQuote('0xB653a24eEa1FDE673a59eA22605E6E68C5322607'),
-    // strategy: 
+    contractAddress: makeQuote('0xB5EF6444910092675a474801fD9Aa6Be171c93CE'),
+    // strategy: 0xD513087d1E1F77C4D5cfC288746775636f0C7d72
     ...SOLAR_INFO,
     lpBaseTokenAddress: contracts.USDC,
   },
@@ -223,8 +222,8 @@ const pools: PoolConfig[] = [
     tokenName: 'BNB-BUSD (SOLARLP)',
     stakingTokenName: QuoteToken.BNBBUSDSOLARLP,
     stakingTokenAddress: '0xfb1d0d6141fc3305c63f189e39cc2f2f7e58f4c2', // lp address
-    contractAddress: makeQuote('0x3eD965718e581dcCFef403901667Efd65565Aa00'),
-    // strategy: 0x70DAaf8EAaeCe74F21309Bb53290F07f628b5E1b
+    contractAddress: makeQuote('0x626CCd58d89b891F55A587F1A605A05ce209F133'),
+    // strategy: 0x0C1f2F11E29D8A1f4bEed9BEB8b9a3398421200F
     ...SOLAR_INFO,
     lpBaseTokenAddress: contracts.BUSD,
   },
@@ -235,8 +234,8 @@ const pools: PoolConfig[] = [
     tokenName: 'MOON-MOVR (MOONLP)',
     stakingTokenName: QuoteToken.MOONMOVRMOONLP,
     stakingTokenAddress: '0xf18433bbe972d8f1b2e908e3eb6c0234c9b24e7b', // lp address
-    contractAddress: makeQuote('0xcff6F550b4E02701e5767bA9B5F96A5e51dCe9Cb'),
-    // strategy: 0xCEbdcA6C2587f839Cfc7A079cbeaf1065B7A40d9
+    contractAddress: makeQuote('0x34d547E83843eBdbadC73045e627cFB786B29201'),
+    // strategy: 0x6a00E47a4C8Da47e426630E54dC50532a0791944
     ...MOONFARM_INFO,
     lpBaseTokenAddress: contracts.WMOVR,
   },
@@ -247,8 +246,8 @@ const pools: PoolConfig[] = [
     tokenName: 'MSWAP-MOVR (MOONLP)',
     stakingTokenName: QuoteToken.MSWAPMOVRMOONLP,
     stakingTokenAddress: '0x66fFF9B5072CbdFb4bCe50563eC13B237d6A4972', // lp address
-    contractAddress: makeQuote('0x1670B2fb6359a8038D17076d713CB6b281583bAD'),
-    // strategy: 0xf8bc4B5234198cbbDc558e873EE3E0BD02C9A665
+    contractAddress: makeQuote('0x81885B1BD801334445920ccA9A33b0729Ec23337'),
+    // strategy: 0xD076D70A91997e610eC0618899b2259B0e7bFc78
     ...MOONFARM_INFO,
     lpBaseTokenAddress: contracts.WMOVR,
   },
@@ -259,8 +258,8 @@ const pools: PoolConfig[] = [
     tokenName: 'WMOVR',
     stakingTokenName: QuoteToken.WMOVR,
     stakingTokenAddress: '0x98878b06940ae243284ca214f92bb71a2b032b8a', // lp address
-    contractAddress: makeQuote('0xD84b5D03B5C49892Faea9d614DfcEB20aa7FfE8A'),
-    // strategy: 0xf39331180D0f4c82f0Bcd927a2Af1469834368fE
+    contractAddress: makeQuote('0x1920217068359c0F5c6e6f05f8823284D6dF6c22'),
+    // strategy: 0xA9355D3107906E40F8CCc16B954dAC28330b824B
     ...MOONFARM_INFO,
     lpBaseTokenAddress: contracts.USDC,
     isLP: false,
@@ -272,8 +271,8 @@ const pools: PoolConfig[] = [
     tokenName: 'MSWAP',
     stakingTokenName: QuoteToken.MSWAP,
     stakingTokenAddress: '0xb3fb48bf090bedff4f6f93ffb40221742e107db7', // lp address
-    contractAddress: makeQuote('0x9c5B62e7A989df1cfEFa02f127b9007d21995379'),
-    // strategy: 0x2D2f7Ae3B377570Fa049be0e476A99C00E9219Ef
+    contractAddress: makeQuote('0x372bA1dE767C523cf01f545023f49549304ED49B'),
+    // strategy: 0x53A7faa4E50eFdD0929E278654197D8803aC74F1
     ...MOONFARM_INFO,
     lpBaseTokenAddress: contracts.WMOVR,
     isLP: false,
@@ -285,8 +284,8 @@ const pools: PoolConfig[] = [
     tokenName: 'MOON',
     stakingTokenName: QuoteToken.MOON,
     stakingTokenAddress: '0xb497c3e9d27ba6b1fea9f1b941d8c79e66cfc9d6', // lp address
-    contractAddress: makeQuote('0x1A4F1e9C262B89FC0d716cb328c6C324883338b7'),
-    // strategy: 0xf2Db1F44D92213f8b0875F378AF69D973fe7eD71
+    contractAddress: makeQuote('0x9Aaf321Da4e04289C58bC1D84eDd539327899c15'),
+    // strategy: 0xB2c247396a9CA8cE8FcD9787f459B5e8aC04EBE5
     ...MOONFARM_INFO,
     lpBaseTokenAddress: contracts.WMOVR,
     isLP: false,
@@ -298,8 +297,8 @@ const pools: PoolConfig[] = [
     tokenName: 'USDC',
     stakingTokenName: QuoteToken.USDC,
     stakingTokenAddress: '0xe3f5a90f9cb311505cd691a46596599aa1a0ad7d', // lp address
-    contractAddress: makeQuote('0xbf188be769fa680bC44661C3D06E918F9D0863Dd'),
-    // strategy: 0x836F66D3CEEe42f46bA41c5d7d917d4D95276a23
+    contractAddress: makeQuote('0xab366E397Ad87e508e571366248Ecf0Fcf580da0'),
+    // strategy: 0x1573F010F6D856B45a8e87c75f81dA1080f342B4
     ...MOONFARM_INFO,
     lpBaseTokenAddress: contracts.WMOVR,
     isLP: false,
@@ -311,10 +310,10 @@ const pools: PoolConfig[] = [
     tokenName: 'DAI',
     stakingTokenName: QuoteToken.DAI,
     stakingTokenAddress: '0x80a16016cc4a2e6a2caca8a4a498b1699ff0f844', // lp address
-    contractAddress: makeQuote('0xbFb3577C50C03594DD2dEa6e565B72E9869FbdF7'),
-    // strategy: 0xBd79673C0243aB5404c9ee088DA9C9B5E9b9C560
+    contractAddress: makeQuote('0x21ad5F45467d1d8b3Aa7424efD12Ae805c290477'),
+    // strategy: 0x2BD4F31b65bbAC4D7421082F5905738B0d4443B0
     ...MOONFARM_INFO,
-    lpBaseTokenAddress: contracts.WMOVR,
+    lpBaseTokenAddress: contracts.USDC,
     isLP: false,
   },
   {
@@ -324,12 +323,13 @@ const pools: PoolConfig[] = [
     tokenName: 'BUSD',
     stakingTokenName: QuoteToken.BUSD,
     stakingTokenAddress: '0x5D9ab5522c64E1F6ef5e3627ECCc093f56167818', // lp address
-    contractAddress: makeQuote('0xDc001e8d07FbFdCA21bBA5De9a43C26D6e131A48'),
-    // strategy: 0xc5adfB025fDAAD22bB5d46cA64857b8984aab3ab
+    contractAddress: makeQuote('0x0ccd33838bBb91D3e16eEF59fb0C3ce7315C99A6'),
+    // strategy: 0x7E23B56C5373c9c9AE4326edBe8aD74a110b1896
     ...MOONFARM_INFO,
-    lpBaseTokenAddress: contracts.WMOVR,
+    lpBaseTokenAddress: contracts.USDC,
     isLP: false,
-    },
+    
+  },
   {
     sousId: 20,
     poolId: 20,
@@ -337,8 +337,8 @@ const pools: PoolConfig[] = [
     tokenName: 'MOON-USDC (MOONLP)',
     stakingTokenName: QuoteToken.MOONUSDCMOONLP,
     stakingTokenAddress: '0x5964a6c85a2f88e01f28f066ea36dc158864c638', // lp address
-    contractAddress: makeQuote('0xF43ee2C374BBb3A650c4624eBd769E9ad31fFB2f'),
-    // strategy: 0xF881A84e891a3bDBa07FcE373617200bA62C3C57
+    contractAddress: makeQuote('0x8d0Ca73068608fa32c3360943B78B75F03B469ab'),
+    // strategy: 0x1fa6700e1bA5Dd664B60506a3173d59Fcc1743F2
     ...MOONFARM_INFO,
     lpBaseTokenAddress: contracts.USDC,
   },
@@ -349,8 +349,8 @@ const pools: PoolConfig[] = [
     tokenName: 'MOVR-USDC (MOONLP)',
     stakingTokenName: QuoteToken.MOVRUSDCMOONLP,
     stakingTokenAddress: '0x74888A02891586EBecCc7B04A0F7a9b5098Daf05', // lp address
-    contractAddress: makeQuote('0x0093298b1714Fbb9c6E50444eA88d6Cfd4846cCa'),
-    // strategy: 0xCF6440E3D9c563Dae55dfdc01e82C3ad3d6aECf8
+    contractAddress: makeQuote('0x46395842C0d55fD61f9BcC805D45CB6aF92e99Fc'),
+    // strategy: 0x5b6cDc980CBc67A6b5fcA58B0367359567979eE6
     ...MOONFARM_INFO,
     lpBaseTokenAddress: contracts.USDC,
   },
@@ -361,8 +361,8 @@ const pools: PoolConfig[] = [
     tokenName: 'MSWAP-USDC (MOONLP)',
     stakingTokenName: QuoteToken.MSWAPUSDCMOONLP,
     stakingTokenAddress: '0x02158E0c90F1CD780c56b68F6904c8EE2f72eFB7', // lp address
-    contractAddress: makeQuote('0x5Db498915C711f1Ebec9faecC74610154efd49f7'),
-    // strategy: 0x66111aE6392C5940DB0C2739dc2785B186C36147
+    contractAddress: makeQuote('0x39402a9DC7526d9cA782b786150275d2DA9d5E89'),
+    // strategy: 0x60d573B63bDC5b5afC48cdBc906A449efBC725C9
     ...MOONFARM_INFO,
     lpBaseTokenAddress: contracts.USDC,
   },
@@ -373,8 +373,8 @@ const pools: PoolConfig[] = [
     tokenName: 'BUSD-USDC (MOONLP)',
     stakingTokenName: QuoteToken.BUSDUSDCMOONLP,
     stakingTokenAddress: '0x7Fae055c7836D135f0E755395b0179D4d5Af3E4D', // lp address
-    contractAddress: makeQuote('0xD622b218ed3198239b9E4337f6C28b8207D3Be1D'),
-    // strategy: 0xAD55E269D9598CF7C7c650a9898Fa2f5CaAb5C50
+    contractAddress: makeQuote('0x222e31addB2172b67db6D040f06De0987851d72B'),
+    // strategy: 0xc9d678D687A8649938D1703791d30FD678Ae8eCF
     ...MOONFARM_INFO,
     lpBaseTokenAddress: contracts.USDC,
   },
@@ -385,8 +385,8 @@ const pools: PoolConfig[] = [
     tokenName: 'DAI-USDC (MOONLP)',
     stakingTokenName: QuoteToken.DAIUSDCMOONLP,
     stakingTokenAddress: '0x07866497aAF2E8B201300759720C5Ac873DbF0e7', // lp address
-    contractAddress: makeQuote('0x4619553BA1705FFE98457600f5e70E6558992F11'),
-    // strategy: 0x35D21cA2059c090e5Ad639f481301FED9aB27e1e
+    contractAddress: makeQuote('0x7088553f71aAA8Ffb8C89e98E58AB505D46d3c6b'),
+    // strategy: 0x2992507ab3619f31E10FA7fC7d1C3502F3b5254b
     ...MOONFARM_INFO,
     lpBaseTokenAddress: contracts.USDC,
   },
@@ -397,8 +397,8 @@ const pools: PoolConfig[] = [
     tokenName: 'USDT-USDC (MOONLP)',
     stakingTokenName: QuoteToken.USDTUSDCMOONLP,
     stakingTokenAddress: '0x9EC8b8818fd07A24481f5635D5283B2aB85dbB5a', // lp address
-    contractAddress: makeQuote('0xd936F8934312b82898218E5608c0adf3B067a5B5'),
-    // strategy: 0xefAA7294304f8AA38095D6De20024611a46613f3
+    contractAddress: makeQuote('0x5E4A10a089768aED8Ff355CD6B8Fd4715B060e52'),
+    // strategy: 0x754EB4C710A2bC2c8B4bFA92a91B6811E15169C3
     ...MOONFARM_INFO,
     lpBaseTokenAddress: contracts.USDC,
   },
@@ -410,11 +410,12 @@ const pools: PoolConfig[] = [
     tokenName: 'mCAKE',
     stakingTokenName: QuoteToken.mCAKE,
     stakingTokenAddress: '0x4f43ffd28d00999d3c813b20dee9f315757c6e1b', // lp address
-    contractAddress: makeQuote('0x20BC20DEc3E89c7c65E8Ee6D24F742270322fBA0'),
-    // strategy: 0xBb498040b3b933c9FbC8F22F90624095bfbC4EC2
+    contractAddress: makeQuote('0x46944A4Dd92d263b385dd212eA0D1F6EDa50EfB6'),
+    // strategy: 0xD3009c94664D947650B5803a3dE3B8509FC9cbF4
     ...MOONFARM_INFO,
     lpBaseTokenAddress: contracts.WMOVR,
     isLP: false,
+
     },
   {
     sousId: 27,
@@ -423,8 +424,8 @@ const pools: PoolConfig[] = [
     tokenName: 'RivrDoge',
     stakingTokenName: QuoteToken.RivrDoge,
     stakingTokenAddress: '0x5D4360f1Be94bD6f182F09cFE5EF9832e65EB1ac', // lp address
-    contractAddress: makeQuote('0x30825264687407139e17d8c30dbDcE08203603A2'),
-    // strategy: 0xAD65e5D87A0226e53cfA354d58F6072733a9bcab
+    contractAddress: makeQuote('0x3fF00501bA0c429e11A8263d32373C159aF890C6'),
+    // strategy: 0x49cb834C4dF47D8F77B593530a067A5351987426
     ...MOONFARM_INFO,
     lpBaseTokenAddress: contracts.WMOVR,
     isLP: false,

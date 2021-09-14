@@ -7,46 +7,47 @@ const config: MenuEntry[] = [
     icon: 'HomeIcon',
     href: '/',
   },
-  // {
-  //   label: 'Trade',
-  //   icon: 'TradeIcon',
-  //   items: [
-  //     {
-  //       label: 'Swap (Kudex)',
-  //       href: `https://swap.kudex.finance/#/swap?inputCurrency=KCS&outputCurrency=${
-  //         contracts.cake[process.env.REACT_APP_CHAIN_ID]
-  //       }`,
-  //     },
-  //     {
-  //       label: 'Swap (Kuswap)',
-  //       href: `https://kuswap.finance/#/swap?inputCurrency=KCS&outputCurrency=${
-  //         contracts.cake[process.env.REACT_APP_CHAIN_ID]
-  //       }`,
-  //     },
-  //     {
-  //       label: 'Liquidity (Kudex)',
-  //       href: `https://swap.kudex.finance/#/add/${contracts.cake[process.env.REACT_APP_CHAIN_ID]}/ETH`,
-  //     },
-  //     {
-  //       label: 'Liquidity (Kuswap)',
-  //       href: `https://kuswap.finance/#/add/${contracts.cake[process.env.REACT_APP_CHAIN_ID]}/KCS`,
-  //     },
-  //     {
-  //       label: 'Charts',
-  //       href: `https://kcc.poocoin.app/tokens/${contracts.cake[process.env.REACT_APP_CHAIN_ID]}`,
-  //     },
-  //   ],
-  // },
-  // {
-  //   label: 'FrenchPress',
-  //   icon: 'FrenchpressIcon',
-  //   href: '/frenchpress',
-  // },
-  // {
-  //   label: 'Drips',
-  //   icon: 'DripIcon',
-  //   href: '/drips',
-  // },
+  {
+    label: 'Trade',
+    icon: 'TradeIcon',
+    items: [
+      {
+        label: 'Swap (Solarbeam)',
+        href: `https://solarbeam.io/exchange/swap?inputCurrency=ETH&outputCurrency=${
+          contracts.cake[process.env.REACT_APP_CHAIN_ID]
+        }`,
+      },
+      {
+        label: 'Swap (Moonswap)',
+        href: `https://swap.moonswap.in/#/swap?inputCurrency=KCS&outputCurrency=${
+          contracts.cake[process.env.REACT_APP_CHAIN_ID]
+        }`,
+      },
+      {
+        label: 'Liquidity (Solarbeam)',
+        href: `https://solarbeam.io/exchange/add/${contracts.cake[process.env.REACT_APP_CHAIN_ID]}/ETH`,
+      },
+      {
+        label: 'Liquidity (Moonswap)',
+        href: `https://swap.moonswap.in/#/add/${contracts.cake[process.env.REACT_APP_CHAIN_ID]}/ETH`,
+      },
+      {
+        label: 'Charts',
+        href: `https://charts.freeriver.exchange/?token=${contracts.cake[process.env.REACT_APP_CHAIN_ID]}`,
+      },
+
+    ],
+  },
+  {
+    label: 'FrenchPress',
+    icon: 'FrenchpressIcon',
+    href: '/frenchpress',
+  },
+  {
+    label: 'Drips',
+    icon: 'DripIcon',
+    href: '/drips',
+  },
   {
     label: 'Espresso',
     icon: 'EspressoIcon',
@@ -112,7 +113,7 @@ const config: MenuEntry[] = [
       },
       {
         label: 'Blog',
-        href: 'https://medium.com/@kukafefinance',
+        href: 'http://kafefinance.medium.com/e',
       },
     ],
   },

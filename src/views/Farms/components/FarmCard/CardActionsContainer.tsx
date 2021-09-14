@@ -6,6 +6,7 @@ import { provider } from 'web3-core'
 import { getContract } from 'utils/erc20'
 import { Button, Flex, Text } from '@pancakeswap-libs/uikit'
 import { Farm } from 'state/types'
+import { getDecimals } from 'utils/formatBalance'
 import { useFarmFromPid, useFarmFromSymbol, useFarmUser } from 'state/hooks'
 import useI18n from 'hooks/useI18n'
 import UnlockButton from 'components/UnlockButton'
@@ -57,6 +58,9 @@ const CardActions: React.FC<FarmCardActionsProps> = ({ farm, ethereum, account }
   const effPid = farm.farmType === 'native' ? pid : farm.customPid
 
   const renderApprovalOrStakeButton = () => {
+    const lpContractAddress = farm.isTokenOnly ? farm.tokenAddresses[process.env.REACT_APP_CHAIN_ID] : farm.lpAddresses[process.env.REACT_APP_CHAIN_ID]
+
+
     return isApproved ? (
       <StakeAction
         masterChefAddress={masterChefAddress}
@@ -65,6 +69,7 @@ const CardActions: React.FC<FarmCardActionsProps> = ({ farm, ethereum, account }
         tokenName={lpName}
         pid={effPid}
         depositFeeBP={depositFeeBP}
+        decimals={getDecimals(lpContractAddress)}
       />
     ) : (
       <Button mt="8px" fullWidth disabled={requestedApproval} onClick={handleApprove}>

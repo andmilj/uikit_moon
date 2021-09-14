@@ -20,7 +20,7 @@ import { groupBy, propertyOf } from 'lodash'
 import { calculateAPY, calculateAPYday } from 'utils/compoundApyHelpers'
 import contracts from 'config/constants/contracts'
 import useRefreshJson from 'hooks/useRefreshJson'
-import { isValidBase } from 'utils/formatBalance'
+import { getDecimals, getExpDecimals, isValidBase } from 'utils/formatBalance'
 
 const CHAIN_ID = process.env.REACT_APP_CHAIN_ID
 const web3 = getWeb3()
@@ -255,9 +255,10 @@ const fetchPrivatePoolsTotalStakingWithBase = async (lpPrivatePoolsWithBase, sou
       if (p.rewardToken.toLowerCase() === p.lpBaseTokenAddress.toLowerCase()) {
         return null
       }
-      return [
+    const path = contracts.getQuotePath(p.rewardToken, p.lpBaseTokenAddress)
+    return [
         p.routerForQuote,
-        getFuncData('getAmountsOut(uint256,address[])', ['1000000000000000000', [p.rewardToken, p.lpBaseTokenAddress]]),
+        getFuncData('getAmountsOut(uint256,address[])', ['1000000000000000000', path]),
       ]
     })
     .filter((n) => n)
@@ -270,7 +271,8 @@ const fetchPrivatePoolsTotalStakingWithBase = async (lpPrivatePoolsWithBase, sou
   const totalSupplys = results.slice(l, l * 2).map((r) => web3.eth.abi.decodeParameter('uint256', r))
   const lpInMasterchef = results.slice(l * 2, l * 3).map((r) => web3.eth.abi.decodeParameter('uint256', r))
 
-  const prices_ = results.slice(l * 3).map((r) => web3.eth.abi.decodeParameter('uint256[]', r)[1])
+  let prices_ = results.slice(l * 3).map((r) => web3.eth.abi.decodeParameter('uint256[]', r))
+  prices_ = prices_.map(p => new BigNumber(p[p.length - 1]))
 
   const prices = []
   let pIndex = 0
@@ -400,11 +402,12 @@ const fetchPoolsTotalStakingTokenSyn = async (tokenPools) => {
       if (p.stakingTokenAddress.toLowerCase() === p.lpBaseTokenAddress.toLowerCase()) {
         return null
       }
+    const path = contracts.getQuotePath(p.lpBaseTokenAddress,p.stakingTokenAddress)
       return [
         p.routerForQuote,
         getFuncData('getAmountsOut(uint256,address[])', [
           '1000000000000000000',
-          [p.lpBaseTokenAddress,p.stakingTokenAddress],
+          path,
         ]),
       ]
     })
@@ -415,9 +418,10 @@ const fetchPoolsTotalStakingTokenSyn = async (tokenPools) => {
       if (p.rewardToken.toLowerCase() === p.lpBaseTokenAddress.toLowerCase()) {
         return null
       }
-      return [
+    const path = contracts.getQuotePath(p.rewardToken, p.lpBaseTokenAddress)
+    return [
         p.routerForQuote,
-        getFuncData('getAmountsOut(uint256,address[])', ['1000000000000000000', [p.rewardToken, p.lpBaseTokenAddress]]),
+        getFuncData('getAmountsOut(uint256,address[])', ['1000000000000000000', path]),
       ]
     })
     .filter((n) => n)
@@ -442,10 +446,10 @@ const fetchPoolsTotalStakingTokenSyn = async (tokenPools) => {
   amtTokInVault = amtTokInVault.map(decodeInt)
   pricePerSharesToken = pricePerSharesToken.map(decodeInt)
 
-  const pricesResults = results
+  let pricesResults = results
     .slice(tokenPools.length * 3, tokenPools.length * 3 + priceStakingTokenCall.length + priceRewardCall.length)
-    .map((p) => new BigNumber(web3.eth.abi.decodeParameter('uint256[]', p)[1]))
-
+    .map((p) => web3.eth.abi.decodeParameter('uint256[]', p))
+  pricesResults = pricesResults.map(p => new BigNumber(p[p.length - 1]))
   // const amtTokInMaster = await multicall(erc20ABI, tokenPools.map((p) => ({
   //   address: p.underlyingMasterChef,
   //   name: 'totalSupply',
@@ -547,7 +551,7 @@ const fetchPoolsTotalStakingTokenSyn = async (tokenPools) => {
   const valueOfTokensInVaultInKcs = tokenPools.map((p, i) => {
     return new BigNumber(amtTokInVault[i].toString())
       .multipliedBy(new BigNumber(pricesOfStakingToken[i].toString()))
-      .dividedBy(1e18)
+      .dividedBy(getDecimals(p.stakingTokenAddress))
   })
   // console.log("amtTokInVault",amtTokInVault[0].toString())
   // console.log("pricesOfStakingToken",pricesOfStakingToken[0].toString())
@@ -587,11 +591,12 @@ const fetchPoolsTotalStakingToken = async (tokenPools) => {
       }
       const b = new BigNumber(10).pow(contracts.tokenDecimals[p.lpBaseTokenAddress.toLowerCase()] || 18)
       // console.log("b",b.toString())
-      return [
+    const path = contracts.getQuotePath(p.lpBaseTokenAddress,p.stakingTokenAddress)
+    return [
         p.routerForQuote,
         getFuncData('getAmountsOut(uint256,address[])', [
-          b,
-          [p.lpBaseTokenAddress,p.stakingTokenAddress],
+          b.toString(),
+          path,
         ]),
       ]
     })
@@ -602,9 +607,10 @@ const fetchPoolsTotalStakingToken = async (tokenPools) => {
         return null
       }
       const b = new BigNumber(10).pow(contracts.tokenDecimals[p.lpBaseTokenAddress.toLowerCase()] || 18)
-      return [
+    const path = contracts.getQuotePath(p.lpBaseTokenAddress, p.rewardToken)
+    return [
         p.routerForQuote,
-        getFuncData('getAmountsOut(uint256,address[])', [b, [p.lpBaseTokenAddress, p.rewardToken]]),
+        getFuncData('getAmountsOut(uint256,address[])', [b.toString(), path]),
       ]
     })
     .filter((n) => n)
@@ -645,9 +651,10 @@ const fetchPoolsTotalStakingToken = async (tokenPools) => {
   amtTokInVault = amtTokInVault.map(decodeInt)
   pricePerSharesToken = pricePerSharesToken.map(decodeInt)
 
-  const pricesResults = results
+  let pricesResults = results
     .slice(tokenPools.length * 3, tokenPools.length * 3 + priceStakingTokenCall.length + priceRewardCall.length)
-    .map((p) => new BigNumber(web3.eth.abi.decodeParameter('uint256[]', p)[1]))
+    .map((p) => web3.eth.abi.decodeParameter('uint256[]', p))
+  pricesResults = pricesResults.map(p => new BigNumber(p[p.length - 1]))
   // const amtTokInMaster = await multicall(erc20ABI, tokenPools.map((p) => ({
   //   address: p.stakingTokenAddress,
   //   name: 'balanceOf',
@@ -728,7 +735,7 @@ const fetchPoolsTotalStakingToken = async (tokenPools) => {
     // 0.002154427252435769
 
     // 1000000/2161086841624156 
-  // console.log("pricesResults", pricesResults[0].toString())
+  console.log("pricesResults", pricesResults[0].toString())
   const pricesOfStakingToken = []
   const pricesOfReward = []
   let pIndex = 0
@@ -736,25 +743,30 @@ const fetchPoolsTotalStakingToken = async (tokenPools) => {
     if (p.stakingTokenAddress.toLowerCase() === p.lpBaseTokenAddress.toLowerCase()) {
       pricesOfStakingToken.push(new BigNumber('1'))
     } else {
-      const b = new BigNumber(10).pow(contracts.tokenDecimals[p.stakingTokenAddress.toLowerCase()] || 18)
-      pricesOfStakingToken.push(b.dividedBy(pricesResults[pIndex]))
+      const b = new BigNumber(10).pow(contracts.tokenDecimals[p.lpBaseTokenAddress.toLowerCase()] || 18)
+      pricesOfStakingToken.push(b.dividedBy(pricesResults[pIndex].toString()))
       pIndex += 1
     }
   })
+
+ 
+// 1e18 -> 6773e9
+// 1e18/6773e9 -> 1
 
   tokenPools.forEach((p) => {
     if (p.rewardToken.toLowerCase() === p.lpBaseTokenAddress.toLowerCase()) {
       pricesOfReward.push(new BigNumber('1'))
     } else {
-      const b = new BigNumber(10).pow(contracts.tokenDecimals[p.stakingTokenAddress.toLowerCase()] || 18)
-      pricesOfReward.push(b.dividedBy(pricesResults[pIndex]))
+      const b = new BigNumber(10).pow(contracts.tokenDecimals[p.lpBaseTokenAddress.toLowerCase()] || 18)
+      pricesOfReward.push(b.dividedBy(pricesResults[pIndex].toString()))
       pIndex += 1
     }
   })
 
   // console.log("pricesOfStakingToken",pricesOfStakingToken[0].toString())
   // console.log("pricesOfReward",pricesOfReward[0].toString())
-
+  // console.log("amtTokInMaster",amtTokInMaster[0].toString())
+ 
   const apysTokenOnly = tokenPools.map((p, i) => {
     let effAmt = new BigNumber(amtTokInMaster[i].toString())
     if (p.projectName === 'moonkafe' && p.poolId === 0) {
@@ -764,14 +776,22 @@ const fetchPoolsTotalStakingToken = async (tokenPools) => {
       effAmt = new BigNumber(depositedKus)
       // console.log("depositedKus", effAmt.toString())
     }
-
+    
+    // console.log(effAmt.multipliedBy(pricesOfStakingToken[i]).toString(),
+    // new BigNumber(pricesOfReward[i].toString()).multipliedBy(1e18)
+    //   .multipliedBy(p.tokenPerBlock)
+    //   .multipliedBy(p.allocPoint)
+    //   .multipliedBy(p.rewardMultiplier)
+    //   .multipliedBy(BLOCKS_PER_YEAR)
+    //   .multipliedBy(1 - contracts.performanceFee).dividedBy(p.totalAllocPoint).toString()
+    // )
     return new BigNumber(pricesOfReward[i].toString())
-      .multipliedBy(p.tokenPerBlock)
+      .multipliedBy(p.tokenPerBlock).multipliedBy(1e18)
       .multipliedBy(p.allocPoint)
       .multipliedBy(p.rewardMultiplier)
       .multipliedBy(BLOCKS_PER_YEAR)
       .multipliedBy(1 - contracts.performanceFee)
-      .dividedBy(effAmt.multipliedBy(pricesOfStakingToken[i].toString()).dividedBy(1e18))
+      .dividedBy(effAmt.multipliedBy(pricesOfStakingToken[i].toString()))
       .dividedBy(p.totalAllocPoint)
       .multipliedBy(100)
   })
@@ -791,14 +811,16 @@ const fetchPoolsTotalStakingToken = async (tokenPools) => {
 
   // })
   const valueOfTokensInVaultInKcs = tokenPools.map((p, i) => {
+
     return new BigNumber(amtTokInVault[i].toString())
       .multipliedBy(new BigNumber(pricesOfStakingToken[i].toString()))
-      .dividedBy(1e18)
   })
   // console.log("amtTokInVault",amtTokInVault[0].toString())
   // console.log("pricesOfStakingToken",pricesOfStakingToken[0].toString())
-  // console.log("valueOfTokensInVaultInKcs",valueOfTokensInVaultInKcs[0].toString())
-
+  // console.log("totalStakedAsQuoteToken",valueOfTokensInVaultInKcs[0].toString())
+  // console.log("stakePriceAsQuoteToken",valueOfTokensInVaultInKcs[0].dividedBy(amtTokInVault[0]).multipliedBy(
+  //   new BigNumber(10).pow(getDecimals(tokenPools[0].lpBaseTokenAddress) - getDecimals(tokenPools[0].stakingTokenAddress))
+  // ).toJSON())
   return [
     ...tokenPools.map((p, index) => ({
       sousId: p.sousId,
@@ -851,10 +873,11 @@ const fetchPrivatePoolsTotalStakingToken = async (tokenPools, sousIdToPrivateSta
     if (p.stakingTokenAddress.toLowerCase() === p.lpBaseTokenAddress.toLowerCase()) {
       return null
     }
+    const path = contracts.getQuotePath(p.lpBaseTokenAddress,p.stakingTokenAddress)
     return {
       address: p.routerForQuote,
       name: 'getAmountsOut',
-      params: ['1000000000000000000', [p.lpBaseTokenAddress,p.stakingTokenAddress]],
+      params: ['1000000000000000000', path],
     }
   })
 
@@ -862,10 +885,11 @@ const fetchPrivatePoolsTotalStakingToken = async (tokenPools, sousIdToPrivateSta
     if (p.rewardToken.toLowerCase() === p.lpBaseTokenAddress.toLowerCase()) {
       return null
     }
+    const path = contracts.getQuotePath(p.rewardToken, p.lpBaseTokenAddress)
     return {
       address: p.routerForQuote,
       name: 'getAmountsOut',
-      params: ['1000000000000000000', [p.rewardToken, p.lpBaseTokenAddress]],
+      params: ['1000000000000000000', path],
     }
   })
 
@@ -873,7 +897,8 @@ const fetchPrivatePoolsTotalStakingToken = async (tokenPools, sousIdToPrivateSta
     routerABI,
     [...pricesOfStakingTokenCall, ...pricesOfRewardCall].filter((p) => p),
   )
-  const pricesResults = routerCalls.map((p) => new BigNumber(p[0][1]))
+  let pricesResults = routerCalls.map((p) => p[0])
+  pricesResults = pricesResults.map((p) => new BigNumber(p[p.length-1]))
 
   const pricesOfStakingToken = []
   const pricesOfReward = []
@@ -980,9 +1005,10 @@ const fetchPoolsTotalStakingWithBaseSyn = async (lpPoolsWithBase) => {
     if (p.rewardToken.toLowerCase() === p.lpBaseTokenAddress.toLowerCase()) {
       return null
     }
+    const path = contracts.getQuotePath(p.rewardToken, p.lpBaseTokenAddress)
     return [
       p.routerForQuote,
-      getFuncData('getAmountsOut(uint256,address[])', ['1000000000000000000', [p.rewardToken, p.lpBaseTokenAddress]]),
+      getFuncData('getAmountsOut(uint256,address[])', ['1000000000000000000', path]),
     ]
   })
 
@@ -1093,7 +1119,8 @@ const fetchPoolsTotalStakingWithBaseSyn = async (lpPoolsWithBase) => {
 
   // })
   let prices2_ = results.slice(lpPoolsWithBase.length * 5) // await multicall(routerABI, priceOfRewardCalls2.filter(p=>p))
-  prices2_ = prices2_.map((p) => web3.eth.abi.decodeParameter('uint256[]', p)[1])
+  prices2_ = prices2_.map((p) => web3.eth.abi.decodeParameter('uint256[]', p))
+  prices2_ = prices2_.map((p) => new BigNumber(p[p.length-1]))
 
   const prices2 = []
   let pIndex = 0
@@ -1154,9 +1181,10 @@ const fetchPoolsTotalStakingWithBase = async (lpPoolsWithBase) => {
     if (p.rewardToken.toLowerCase() === p.lpBaseTokenAddress.toLowerCase()) {
       return null
     }
+    const path = contracts.getQuotePath(p.rewardToken, p.lpBaseTokenAddress)
     return [
       p.routerForQuote,
-      getFuncData('getAmountsOut(uint256,address[])', ['1000000000000000000', [p.rewardToken, p.lpBaseTokenAddress]]),
+      getFuncData('getAmountsOut(uint256,address[])', ['1000000000000000000', path]),
     ]
   })
 
@@ -1203,10 +1231,10 @@ const fetchPoolsTotalStakingWithBase = async (lpPoolsWithBase) => {
   // const amtUSDTInLps = resultsOfErc20call.slice(0, lpPoolsWithBase.length);
   // const totalSupplys2 = resultsOfErc20call.slice(lpPoolsWithBase.length, lpPoolsWithBase.length*2);
   // const lpInMasterchef2 = resultsOfErc20call.slice(lpPoolsWithBase.length*2, lpPoolsWithBase.length*3);
-  // console.log('stakingtoken', lpPoolsWithBase[0].stakingTokenAddress)
-  // console.log('amtBaseInLps', amtUSDTInLps[0].toString())
-  // console.log('totalSupplys', totalSupplys2[0].toString())
-  // console.log('lpInMasterchef', lpInMasterchef2[0].toString())
+  console.log('stakingtoken', lpPoolsWithBase[0].stakingTokenAddress)
+  console.log('amtBaseInLps', amtUSDTInLps[0].toString())
+  console.log('totalSupplys', totalSupplys2[0].toString())
+  console.log('lpInMasterchef', lpInMasterchef2[0].toString())
 
   // const lpInVaultCalls = lpPoolsWithBase.map((p) => ({
   //   address: p.contractAddress[CHAIN_ID],
@@ -1222,8 +1250,8 @@ const fetchPoolsTotalStakingWithBase = async (lpPoolsWithBase) => {
   // const vaultCalls = await multicall(vaultABI, [...lpInVaultCalls,...pricePerShareCalls]);
   // const lpInVault2 = vaultCalls.slice(0, lpPoolsWithBase.length);
   // const pricePerShares2 = vaultCalls.slice(lpPoolsWithBase.length, lpPoolsWithBase.length*2);
-  // console.log('lpInVault2', lpInVault2[0].toString())
-  // console.log('pricePerShares2', pricePerShares2[0].toString())
+  console.log('lpInVault2', lpInVault2[0].toString())
+  console.log('pricePerShares2', pricePerShares2[0].toString())
 
   const valueOfLpsInMasterChefInUSDT = lpPoolsWithBase.map((p, i) => {
     return new BigNumber(amtUSDTInLps[i].toString())
@@ -1231,7 +1259,7 @@ const fetchPoolsTotalStakingWithBase = async (lpPoolsWithBase) => {
       .multipliedBy(lpInMasterchef2[i].toString())
       .dividedBy(totalSupplys2[i].toString())
   })
-  // console.log('valueOfLpsInMasterChefInBase', valueOfLpsInMasterChefInUSDT[0].toString())
+  console.log('valueOfLpsInMasterChefInBase', valueOfLpsInMasterChefInUSDT[0].toString())
 
   const valueOfLpsInVaultInUSDT = lpPoolsWithBase.map((p, i) => {
     return new BigNumber(amtUSDTInLps[i].toString())
@@ -1239,7 +1267,7 @@ const fetchPoolsTotalStakingWithBase = async (lpPoolsWithBase) => {
       .multipliedBy(lpInVault2[i].toString())
       .dividedBy(totalSupplys2[i].toString())
   })
-  // console.log('valueOfLpsInVaultInBase', valueOfLpsInVaultInUSDT[0].toString())
+  console.log('valueOfLpsInVaultInBase', valueOfLpsInVaultInUSDT[0].toString())
   // 2762 // so many kus in the lp
   // 443
   // 2675
@@ -1267,7 +1295,9 @@ const fetchPoolsTotalStakingWithBase = async (lpPoolsWithBase) => {
 
   // })
   let prices2_ = results.slice(lpPoolsWithBase.length * 5) // await multicall(routerABI, priceOfRewardCalls2.filter(p=>p))
-  prices2_ = prices2_.map((p) => web3.eth.abi.decodeParameter('uint256[]', p)[1])
+  prices2_ = prices2_.map((p) => web3.eth.abi.decodeParameter('uint256[]', p))
+  prices2_ = prices2_.map((p) => new BigNumber(p[p.length - 1]))
+
 
   const prices2 = []
   let pIndex = 0
@@ -1281,7 +1311,7 @@ const fetchPoolsTotalStakingWithBase = async (lpPoolsWithBase) => {
   })
 
   const apys2 = lpPoolsWithBase.map((p, i) => {
-    // console.log(prices2[i].toString(), p.tokenPerBlock, p.allocPoint, p.rewardMultiplier, p.totalAllocPoint)
+    console.log(prices2[i].toString(), p.tokenPerBlock, p.allocPoint, p.rewardMultiplier, p.totalAllocPoint)
     return new BigNumber(prices2[i].toString())
       .multipliedBy(p.tokenPerBlock)
       .multipliedBy(p.allocPoint)
@@ -1316,7 +1346,7 @@ const fetchPoolsTotalStakingWithBase = async (lpPoolsWithBase) => {
     ...lpPoolsWithBase.map((p, index) => ({
       sousId: p.sousId,
       totalStakedAsQuoteToken: valueOfLpsInVaultInUSDT[index].toJSON(),
-      stakePriceAsQuoteToken: valueOfLpsInVaultInUSDT[index].dividedBy(lpInVault2[index]).toJSON(),
+      stakePriceAsQuoteToken: valueOfLpsInMasterChefInUSDT[index].dividedBy(lpInMasterchef2[index]).toJSON(),
       apy: apys2[index].toJSON(),
       // apyCompound: apyscompound2[index].toJSON(),
       // apyCompoundDay: apyscompound2Day[index].toJSON(),

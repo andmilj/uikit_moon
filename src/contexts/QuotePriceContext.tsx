@@ -5,7 +5,7 @@ import usePriceMswap from 'hooks/usePriceMswap'
 import usePriceSolar from 'hooks/usePriceSolar'
 import usePriceEth from 'hooks/usePriceEth'
 import usePriceBnb from 'hooks/usePriceBnb'
-// import useCakePrice from 'hooks/useCakePrice'
+import useCakePrice from 'hooks/useCakePrice'
 
 import React, { useState, useEffect } from 'react'
 import { QuotePrices } from 'utils/formatBalance'
@@ -26,7 +26,7 @@ const QuotePriceContextProvider = ({ children }) => {
     free:  new BigNumber(0),
   })
   const movrPrice = usePrice()
-  // const cakePrice = useCakePrice()
+  const cakePrice = useCakePrice()
   const bnbPrice = usePriceBnb()
   const ethPrice = usePriceEth()
 
@@ -39,7 +39,7 @@ const QuotePriceContextProvider = ({ children }) => {
     const getPrice = () => {
       setPrice({
         movr: movrPrice || new BigNumber(0),
-        kafe: new BigNumber(0), // cakePrice,
+        kafe: cakePrice || new BigNumber(0), // cakePrice,
         eth: ethPrice || new BigNumber(0),
         bnb: bnbPrice || new BigNumber(0),
         moon: moonPrice || new BigNumber(0),
@@ -58,7 +58,7 @@ const QuotePriceContextProvider = ({ children }) => {
       // } )
     }
     getPrice()
-  }, [movrPrice, ethPrice, bnbPrice, moonPrice, mswapPrice, solarPrice, freePrice])
+  }, [movrPrice, ethPrice, bnbPrice, moonPrice, mswapPrice, cakePrice, solarPrice, freePrice])
 
   return <QuotePriceContext.Provider value={price}>{children}</QuotePriceContext.Provider>
 }

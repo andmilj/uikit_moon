@@ -3,6 +3,7 @@ import MASTERCHEF_ABI from 'config/abi/masterchef.json'
 import BigNumber from 'bignumber.js'
 import { PrivatePoolInfo } from 'state/types'
 import poolConfigs from 'config/constants/pools'
+import farmConfigs from 'config/constants/farms'
 import contracts from './contracts'
 
 export interface TokenConfig {
@@ -31,20 +32,19 @@ export interface TokenInfo extends TokenConfig {
 // kudex, kuswap, boneswap, kandy, kubeans
 
 const tokens: TokenConfig[] = [
-
-
+  { symbol: 'KAFE', address: contracts.KAFE, routerForQuote: contracts.solarRouter},
   
   // { symbol: 'BTC', address: contracts.BTC, routerForQuote: contracts.solar },
-  { symbol: 'USDT', address: contracts.USDT, routerForQuote: contracts.moonRouter },
+  { symbol: 'USDT', address: contracts.USDT, routerForQuote: contracts.moonRouter, routeVia: contracts.USDC},
   { symbol: 'USDC', address: contracts.USDC, routerForQuote: contracts.solarRouter },
   // { symbol: 'BNB', address: contracts.BNB, routerForQuote: contracts.kuswapRouter },
   // { symbol: 'BUSD', address: contracts.BUSD, routerForQuote: contracts.kuswapRouter },
   // { symbol: 'ETH', address: contracts.ETH, routerForQuote: contracts.kuswapRouter },
-  { symbol: 'DAI', address: contracts.DAI, routerForQuote: contracts.moonRouter },
+  { symbol: 'DAI', address: contracts.DAI, routerForQuote: contracts.moonRouter, routeVia: contracts.USDC },
 
   { symbol: 'MOON', address: contracts.MOON, routerForQuote: contracts.moonRouter },
   { symbol: 'SOLAR', address: contracts.SOLAR, routerForQuote: contracts.solarRouter },
-  { symbol: 'MSWAP', address: contracts.MSWAP, routerForQuote: contracts.moonRouter, routeVia: contracts.USDT},
+  { symbol: 'MSWAP', address: contracts.MSWAP, routerForQuote: contracts.moonRouter, routeVia: contracts.USDC},
   { symbol: 'FREE', address: contracts.FREE, routerForQuote: contracts.freeRouter },
 
   // { symbol: 'KDOGE', address: contracts.FREE, routerForQuote: contracts.moonRouter },
@@ -58,6 +58,21 @@ const tokens: TokenConfig[] = [
   //   routeVia: contracts.KSF,
   // },
   // { symbol: "KUP", address: "0x4928946Bd0a8D736c2924DaC752E83a6e1949Aa6", routerForQuote: contracts.kupRouter},
+  ...farmConfigs
+  .map(p => {
+    const image = (p.isTokenOnly) ? p.tokenSymbol : `${p.tokenSymbol}-${p.quoteTokenSymbol.toString()}`
+    const address = (p.isTokenOnly) ? p.tokenAddresses[process.env.REACT_APP_CHAIN_ID] : p.lpAddresses[process.env.REACT_APP_CHAIN_ID]
+    
+    return {
+      image,
+      symbol: image,
+      address: address.toLowerCase(),
+      routerForQuote: p.routerForQuote,
+      isLP: !p.isTokenOnly,
+      base: p.quoteTokenAdresses[process.env.REACT_APP_CHAIN_ID],
+    }
+  }),
+
 
   ...poolConfigs
     .filter((p) => !p.hidden)

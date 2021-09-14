@@ -33,6 +33,11 @@ const RewardPriceContextProvider = ({ children }) => {
         })),
       ]
 
+      data.push({
+        rewardToken: contracts.KAFE,
+        quoteRouters: [contracts.solarRouter],
+      })
+
       farmConfigs
         .filter((c) => c.farmType === 'guest')
         .forEach((c) => {

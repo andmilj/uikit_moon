@@ -9,6 +9,7 @@ import usePrice from 'hooks/usePrice'
 import styled from 'styled-components'
 import { Card, CardBody, TicketRound, Text, Heading, Flex } from '@pancakeswap-libs/uikit'
 import contracts from 'config/constants/contracts'
+import { sortBy } from 'lodash'
 
 interface CardProps {
   pool?: Pool
@@ -47,8 +48,8 @@ const PoolStatusCard: React.FC<CardProps> = ({ pool, event }) => {
   const block = useBlock()
 
   const quotePrice = useQuotePrice()
-
-  const latestEvent = event ? event.compoundEvents[event.compoundEvents.length - 1] : null
+  const allEvents = (event && event.compoundEvents) ? sortBy(event.compoundEvents, e => e.blockNumber) : [];
+  const latestEvent = (event && event.compoundEvents) ? allEvents[allEvents.length - 1] : null
   const interval = event ? event.desiredCompoundInterval : '?'
   // const toDisplayNumber = (n) => {
   //   if (!n){
@@ -71,7 +72,8 @@ const PoolStatusCard: React.FC<CardProps> = ({ pool, event }) => {
       return '0'
     }
     const blocks = new BigNumber(block).minus(latestEvent.blockNumber).toNumber()
-    const secs = blocks * 3
+    // console.log(pool.image, "diff block", blocks, block, latestEvent.blockNumber )
+    const secs = blocks * 12
     const mins = Math.floor(secs / 60)
     const leftOverSecs = secs % 60
     let f = `${mins}m`

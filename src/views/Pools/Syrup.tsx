@@ -92,6 +92,7 @@ const Farm: React.FC = () => {
       new BigNumber(pool.totalStakedAsQuoteToken),
       pool.lpBaseTokenAddress.toLowerCase(),
     )
+    // console.log("totalStaked",pool.totalStakedAsQuoteToken,totalStaked.toString())
     const vsApy = getVsApy(pool, dollarProfitsPerYearVs[pool.sousId], getDollarValue)
 
     const privatePoolInfo =
@@ -107,8 +108,8 @@ const Farm: React.FC = () => {
           }
         : {}
 
-    let stakeBalanceDollar
-    let stakeVsBalanceDollar
+    let stakeBalanceDollar = new BigNumber(0)
+    let stakeVsBalanceDollar = new BigNumber(0)
 
     let bothTotalStaked = new BigNumber(0) // stakedBalance.plus(stakedVsBalance);
     let bothTotalStakedDollar = new BigNumber(0) // stakeBalanceDollar.plus(stakeVsBalanceDollar);
@@ -128,6 +129,7 @@ const Farm: React.FC = () => {
           .multipliedBy(pool.stakePriceAsQuoteToken),
         pool.lpBaseTokenAddress,
       )
+      // console.log("stakeBalanceDollar",stakeBalanceDollar.toString())
       bothTotalStaked = bothTotalStaked.plus(pool.userData.stakedBalance)
       bothTotalStakedDollar = bothTotalStakedDollar.plus(stakeBalanceDollar)
     }

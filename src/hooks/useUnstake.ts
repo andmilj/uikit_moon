@@ -62,9 +62,9 @@ export const useCustomUnstake = (masterChefAddress, pid: number, refreshPools = 
   const masterChefContract = useCustomMasterchef(masterChefAddress, masterchefAbi)
 
   const handleUnstake = useCallback(
-    async (amount: string) => {
+    async (amount: string, decimals = 18) => {
       try {
-        const txHash = await unstake(masterChefContract, pid, amount, account)
+        const txHash = await unstake(masterChefContract, pid, amount, account, decimals)
         console.info(txHash)
         dispatch(fetchFarmUserDataAsync(account))
         if (refreshPools) {

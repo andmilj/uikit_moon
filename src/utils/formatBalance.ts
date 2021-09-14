@@ -38,6 +38,8 @@ export const toDollar = (amt, base, prices: QuotePrices) => {
   switch (base) {
     case contracts.MOVR.toLowerCase():
       return prices.movr.multipliedBy(amt)
+      case contracts.WMOVR.toLowerCase():
+        return prices.movr.multipliedBy(amt)
     // case contracts.KCS.toLowerCase():
     //   return prices.kcs.multipliedBy(amt)
     // case contracts.KAFE.toLowerCase():
@@ -62,6 +64,8 @@ export const toDollar = (amt, base, prices: QuotePrices) => {
 export const toDollarQuote = (amt, quote, prices: QuotePrices) => {
   switch (quote) {
     case QuoteToken.MOVR:
+      return prices.movr.multipliedBy(amt)
+    case QuoteToken.WMOVR:
       return prices.movr.multipliedBy(amt)
     case QuoteToken.KCS:
       return prices.kcs.multipliedBy(amt)
@@ -90,6 +94,8 @@ export const toDollarQuote = (amt, quote, prices: QuotePrices) => {
 export const isValidBase = (add) => {
   switch (add.toLowerCase()) {
     case contracts.MOVR.toLowerCase():
+      return true
+    case contracts.WMOVR.toLowerCase():
       return true
     case contracts.USDT.toLowerCase():
       return true
@@ -144,9 +150,9 @@ export const getAddressName = (add) => {
   }
 }
 
-export const removeTrailingZero = (n, decimals = 2) => {
+export const removeTrailingZero = (n, decimals = 4) => {
   if (new BigNumber(n).isLessThan(0.01)) {
-    return parseFloat(n).toPrecision(4).toLocaleString()
+    return parseFloat(n).toPrecision(decimals).toLocaleString()
   }
   return parseFloat(n.toFixed(decimals)).toLocaleString()
 }
@@ -172,4 +178,13 @@ export const getLiquidLink = (stakingTokenName, liquidityUrlPathParts) => {
     return `https://solarbeam.io/exchange/swap?inputCurrency=ETH`
   }
   return `https://solarbeam.io/exchange/swap?inputCurrency=ETH&outputCurrency=${tok}`
+}
+
+
+export const getDecimals = (tokenAddress) => {
+  return contracts.tokenDecimals[tokenAddress.toLowerCase()] || 18;
+}
+
+export const getExpDecimals = (tokenAddress) => {
+  return new BigNumber(10).pow(getDecimals(tokenAddress));
 }

@@ -1,7 +1,7 @@
 import useCakePrice from 'hooks/useCakePrice'
 import { QuoteToken } from 'config/constants/types'
 import contracts from 'config/constants/contracts'
-import { toDollar, toDollarQuote } from 'utils/formatBalance'
+import { getExpDecimals, toDollar, toDollarQuote } from 'utils/formatBalance'
 import { useWallet } from 'use-wallet'
 import BigNumber from 'bignumber.js'
 import { useEffect, useMemo } from 'react'
@@ -25,7 +25,7 @@ export const useFetchPublicData = () => {
   const { account } = useWallet()
   useEffect(() => {
     console.log('refresh useFetchPublicData')
-    // dispatch(fetchFarmsPublicDataAsync())
+    dispatch(fetchFarmsPublicDataAsync())
     dispatch(fetchPoolsPublicDataAsync())
     // dispatch(fetchGuestsPublicDataAsync())
   }, [dispatch, slowRefresh])
@@ -33,7 +33,7 @@ export const useFetchPublicData = () => {
   useEffect(() => {
     if (account) {
       console.log('refresh useFetchPublicData account')
-      // dispatch(fetchFarmUserDataAsync(account))
+      dispatch(fetchFarmUserDataAsync(account))
       dispatch(fetchPoolsUserDataAsync(account))
       // dispatch(fetchGuestsUserDataAsync(account))
       dispatch(fetchChefsPublicDataAsync(account))
@@ -192,6 +192,7 @@ export const useTotalPersonalValue = ({ includeFarms = true }): BigNumber => {
           let val = new BigNumber(farm.userData.stakedBalance)
             .multipliedBy(farm.lpTotalInQuoteToken)
             .div(farm.depositedLp)
+
           val = toDollarQuote(val, farm.quoteTokenSymbol, quotePrice)
           value = value.plus(val.times(1e18))
         }
@@ -219,7 +220,7 @@ export const useTotalPersonalValue = ({ includeFarms = true }): BigNumber => {
           )
         }
 
-        value = value.plus(stakeBalanceDollar)
+        value = value.plus(stakeBalanceDollar.multipliedBy(1e18).dividedBy(getExpDecimals(pool.lpBaseTokenAddress)))
       }
       if (pool.userData && pool.userData.stakedVsBalance) {
         const stakedBalance = new BigNumber(pool.userData.stakedVsBalance).multipliedBy(pool.pricePerShare)
@@ -235,7 +236,7 @@ export const useTotalPersonalValue = ({ includeFarms = true }): BigNumber => {
           )
         }
 
-        value = value.plus(stakeBalanceDollar)
+        value = value.plus(stakeBalanceDollar.multipliedBy(1e18).dividedBy(getExpDecimals(pool.lpBaseTokenAddress)))
       }
 
       if (
@@ -258,7 +259,7 @@ export const useTotalPersonalValue = ({ includeFarms = true }): BigNumber => {
             quotePrice,
           )
         }
-        value = value.plus(stakeBalanceDollar)
+        value = value.plus(stakeBalanceDollar.multipliedBy(1e18).dividedBy(getExpDecimals(pool.lpBaseTokenAddress)))
       }
     }
   }
@@ -278,7 +279,8 @@ export const useTotalPersonalValue = ({ includeFarms = true }): BigNumber => {
         g.lpBaseTokenAddress.toLowerCase(),
         quotePrice,
       )
-      value = value.plus(temp)
+      // value = value.plus(temp)
+      value = value.plus(temp.multipliedBy(1e18).dividedBy(getExpDecimals(g.lpBaseTokenAddress)))
     }
 
     const hasVaultShare = g.vaultShareFarmPid >= 0
@@ -291,7 +293,8 @@ export const useTotalPersonalValue = ({ includeFarms = true }): BigNumber => {
           g.lpBaseTokenAddress.toLowerCase(),
           quotePrice,
         )
-        value = value.plus(temp)
+        // value = value.plus(temp)
+        value = value.plus(temp.multipliedBy(1e18).dividedBy(getExpDecimals(g.lpBaseTokenAddress)))
       }
     }
   }
@@ -310,8 +313,10 @@ export const useTotalValue = (): BigNumber => {
     const farm = farms[i]
     if (farm.lpTotalInQuoteToken) {
       const val = toDollarQuote(farm.lpTotalInQuoteToken, farm.quoteTokenSymbol, quotePrice)
-
-      value = value.plus(val)
+      console.log(farm.lpSymbol, val, val.toString())
+      if (!new BigNumber(val).isNaN()){
+        value = value.plus(val)
+      }
     }
   }
 
@@ -326,7 +331,9 @@ export const useTotalValue = (): BigNumber => {
         pool.lpBaseTokenAddress.toLowerCase(),
         quotePrice,
       )
-      value = value.plus(temp.dividedBy(1e18))
+      // console.log(pool.image, temp.toString(),temp.dividedBy(getExpDecimals(pool.lpBaseTokenAddress)).toString())
+      value = value.plus(temp.dividedBy(getExpDecimals(pool.lpBaseTokenAddress)))
+      // console.log("value", value.toString())
     }
   }
 
@@ -341,10 +348,10 @@ export const useTotalValue = (): BigNumber => {
         g.lpBaseTokenAddress.toLowerCase(),
         quotePrice,
       )
-      value = value.plus(temp.dividedBy(1e18))
+      value = value.plus(temp.dividedBy(getExpDecimals(g.lpBaseTokenAddress)))
     }
   }
 
-  // console.log(value, value.toString())
+  console.log(value, value.toString())
   return value
 }

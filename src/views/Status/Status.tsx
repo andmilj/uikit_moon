@@ -60,7 +60,7 @@ const Status: React.FC = () => {
     }
     return false
   }
-  const hasTiku = guestConfig.find((c) => !c.hidden && c.projectName === 'Tiku' && hasTikuStake())
+  // const hasTiku = guestConfig.find((c) => !c.hidden && c.projectName === 'Tiku' && hasTikuStake())
 
   const hasStake = (p) => {
     if (p.userData && p.userData.stakedBalance && new BigNumber(p.userData.stakedBalance).isGreaterThan(0)) {
@@ -146,7 +146,7 @@ const Status: React.FC = () => {
         <Divider />
         {poolKeys.map((k) => (
           <>
-            <Heading style={{ marginBottom: '5px' }} as="h2">
+            <Heading key={k} style={{ marginBottom: '5px' }} as="h2">
               {capitalizeFirstLetter(k)} Vaults
             </Heading>
             {publicGroups[k].map((p) => (
@@ -155,14 +155,14 @@ const Status: React.FC = () => {
           </>
         ))}
 
-        <Heading style={{ marginBottom: '5px' }} as="h2">
+        {/* <Heading style={{ marginBottom: '5px' }} as="h2">
           TIKU Vaults
         </Heading>
         {(!onlyStaked || hasTiku) && tikuPool ? (
           <PoolTikuStatusCard pool={tikuPool} event={events[tikuPool.sousId]} />
         ) : (
           ''
-        )}
+        )} */}
 
         {/* <Heading as="h2">
           Public Vaults

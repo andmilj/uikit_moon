@@ -8,23 +8,23 @@ const makeQuote = (add) => {
 }
 
 
-export default {
+const contracts = {
   cake: {
-    // 1285: '0x516F50028780B60e2FE08eFa853124438f9E46a7',
-    // 31337: '0x516F50028780B60e2FE08eFa853124438f9E46a7',
+    1285: '0x52f04C806EB82930F40D410259b7AF8E18d3BDc9',
+    // 31337: '0xcD26D70fE2C928C3a4FD9764d15b3ad906C138CA',
   },
-  hasLaunchedFarm: false,
+  hasLaunchedFarm: true,
   cakeKcsPair: {
-    // 1285: '0x9ABEd90465B15Bd95A50a1E984385510C4AB399d',
+    1285: '0xb60B5ddAe68aE71481d26659A1D0E9A9D941a8d1',
     // 31337: '0x9ABEd90465B15Bd95A50a1E984385510C4AB399d',
   },
   masterChef: {
-    1285: '0xf03b75831397D4695a6b9dDdEEA0E578faa30907', // placeholder
-    // 31337: '0x3Cd0651a06b293e6c21C894aFb71cC8251802fc5',
+    1285: '0x91aD62286cb69d2C6abdB952564e0EFEA082869c', // placeholder
+    // 31337: '0xcF8cF91fA0eE6D64aCf0b6A4Ac67073eff96A22F',
   },
   wbnb: {
     1285: '0x98878b06940ae243284ca214f92bb71a2b032b8a',
-    31337: '0x98878b06940ae243284ca214f92bb71a2b032b8a',
+    // 31337: '0x98878b06940ae243284ca214f92bb71a2b032b8a',
   },
   lottery: {
     56: '',
@@ -35,8 +35,9 @@ export default {
     97: '',
   },
   mulltiCall: makeQuote('0xe584193B093390a1A1270af2579B3b69AF84d445'),
+  router: makeQuote('0xdF71f363940A2298e831F18f44266C80015c8Dfd'),
 
-  router: makeQuote(''),
+
   quoteUsdt: makeQuote('0xB44a9B6905aF7c801311e8F4E76932ee959c663C'),
   quoteUsdc: makeQuote('0xE3F5a90F9cb311505cd691a46596599aA1A0AD7D'),
   quoteBnb: makeQuote('0x2bF9b864cdc97b08B6D79ad4663e71B8aB65c45c'),
@@ -47,7 +48,7 @@ export default {
   quoteRib: makeQuote('0xbD90A6125a84E5C512129D622a75CDDE176aDE5E'),
   quoteFree: makeQuote('0x63F2ADf5f76F00d48fe2CBef19000AF13Bb8de82'),
 
-  KAFE: '',
+  KAFE: '0x52f04C806EB82930F40D410259b7AF8E18d3BDc9',
 
   WMOVR: '0x98878b06940ae243284ca214f92bb71a2b032b8a',
   MOVR: '0x98878b06940ae243284ca214f92bb71a2b032b8a',
@@ -117,7 +118,7 @@ export default {
   seaRouter: '0x802B0B134B76765378e10F1Ef5175349751af90a',
   freeRouter: '0x0d0ac50741f2Aed4D19325bE385EBeFe49C0d186',
 
-  teamWallets: ['0x9aB7A2E735231Af9D7555AF5AF24d664bB138bE3', '0x453A9aCF28e09f67F443Ecf5295a6f7E071c05c8'],
+  teamWallets: [], // ['0x9aB7A2E735231Af9D7555AF5AF24d664bB138bE3', '0x453A9aCF28e09f67F443Ecf5295a6f7E071c05c8'],
   teamWalletsNumber: [
     // new BigNumber('5000').multipliedBy(1e18).toString(), // to shibance
   ],
@@ -129,9 +130,33 @@ export default {
     } // solar
     return false;
   },
-
+  globalStartBlock: 528000,
   tokenDecimals:{
     ["0xE3F5a90F9cb311505cd691a46596599aA1A0AD7D".toLowerCase()]: 6, // USDC
     ["0xB44a9B6905aF7c801311e8F4E76932ee959c663C".toLowerCase()]: 6, // USDT
+    ["0x4f43ffd28d00999d3c813b20dee9f315757c6e1b".toLowerCase()]: 9, // USDT
+  },
+
+
+  topics: {
+    vaultDeposit: "90890809c654f11d6e72a28fa60149770a0d11ec6c92319d6ceb2bb0a4ea1a15",
+    vaultWithdraw: "f279e6a1f5e320cca91135676d9cb6e44ca8a08c0b88342bcdb1144f6511b568",
+  },
+
+
+  getQuotePath: (start,end) => {
+    if (customQuotePaths[start.toLowerCase()] && customQuotePaths[start.toLowerCase()][end.toLowerCase()]){
+      return customQuotePaths[start.toLowerCase()][end.toLowerCase()]
+    } 
+    return [start, end]
+
   }
 }
+
+const customQuotePaths = {
+  [contracts.SOLAR.toLowerCase()]: {
+    [contracts.BUSD.toLowerCase()]: [contracts.SOLAR, contracts.USDC, contracts.BUSD]
+  }
+}
+
+export default contracts
