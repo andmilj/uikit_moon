@@ -51,7 +51,7 @@ const config: MenuEntry[] = [
   {
     label: 'Espresso',
     icon: 'EspressoIcon',
-    href: '/espresso',
+    href: '/espresso/moonkafe',
   },
   {
     label: 'Portfolio',

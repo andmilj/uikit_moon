@@ -39,6 +39,7 @@ const displayTime = (millis) => {
 const Status: React.FC = () => {
   const { account } = useWallet()
   const events = useCompoundEvents()
+  // console.log("events", events)
   const block = useBlock()
   const currentMillis = useCurrentTime()
   const pools = usePools(account)

@@ -30,7 +30,7 @@ export const PoolsSlice = createSlice({
   reducers: {
     setPoolsPublicData: (state, action) => {
       const livePoolsData: Pool[] = action.payload
-      console.log('livePoolsData', livePoolsData)
+      // console.log('livePoolsData', livePoolsData)
       state.data = state.data.map((pool) => {
         const livePoolData = livePoolsData.find((entry) => entry.sousId === pool.sousId)
         return { ...pool, ...livePoolData }

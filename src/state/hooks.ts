@@ -313,7 +313,7 @@ export const useTotalValue = (): BigNumber => {
     const farm = farms[i]
     if (farm.lpTotalInQuoteToken) {
       const val = toDollarQuote(farm.lpTotalInQuoteToken, farm.quoteTokenSymbol, quotePrice)
-      console.log(farm.lpSymbol, val, val.toString())
+      // console.log(farm.lpSymbol, val, val.toString())
       if (!new BigNumber(val).isNaN()){
         value = value.plus(val)
       }
@@ -352,6 +352,6 @@ export const useTotalValue = (): BigNumber => {
     }
   }
 
-  console.log(value, value.toString())
+  // console.log(value, value.toString())
   return value
 }

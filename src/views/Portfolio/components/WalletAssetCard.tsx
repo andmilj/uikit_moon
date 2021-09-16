@@ -12,7 +12,7 @@ import Tooltip from '@material-ui/core/Tooltip'
 import { Image, Text, useModal } from '@pancakeswap-libs/uikit'
 import contracts from 'config/constants/contracts'
 import { TokenInfo } from 'config/constants/tokens'
-import { getBalanceNumberPrecisionFloatFixed, mightHide } from 'utils/formatBalance'
+import { getBalanceNumber, getBalanceNumberPrecisionFloatFixed, mightHide, removeTrailingZero } from 'utils/formatBalance'
 import { PoolCategory } from 'config/constants/types'
 import SelectVaultModal from './SelectVaultModal'
 import MigrateFromWalletModal from './MigrateFromWalletModal'
@@ -194,7 +194,7 @@ const WalletAssetCard: React.FC<WalletAssetCardProps> = ({ token, onRocketClick 
         </FlexRowDiv>
 
         <Text color="grey" fontSize="14px">
-          {mightHide(`${getBalanceNumberPrecisionFloatFixed(token.balance, token.decimals, 2)}`, hideBalances)}{' '}
+          {mightHide(`${removeTrailingZero(getBalanceNumber(token.balance, token.decimals))}`, hideBalances)}{' '}
           {token.image || token.symbol}
           {hasMinWidth ? (<>
             {` - $${token.valuePer}`}

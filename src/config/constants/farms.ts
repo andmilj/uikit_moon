@@ -26,7 +26,6 @@ const farms: FarmConfig[] = [
     // lpBaseTokenAddress: "0x4446fc4eb47f2f6586f9faab68b3498f86c07521", // wkcs
     routerForQuote: contracts.solarRouter,
     farmType: 'native',
-    farmStart: 1631667600,
   },
   {
     pid: 1,
@@ -41,7 +40,6 @@ const farms: FarmConfig[] = [
     isTokenOnly: true,
     routerForQuote: contracts.solarRouter,
     farmType: 'native',
-    farmStart: 1631667600,
   },
   {
     pid: 2,
@@ -56,7 +54,6 @@ const farms: FarmConfig[] = [
     isTokenOnly: true,
     routerForQuote: contracts.solarRouter,
     farmType: 'native',
-    farmStart: 1631667600,
   },
   {
     pid: 3,
@@ -72,7 +69,21 @@ const farms: FarmConfig[] = [
     // lpBaseTokenAddress: "0x4446fc4eb47f2f6586f9faab68b3498f86c07521", // wkcs
     routerForQuote: contracts.solarRouter,
     farmType: 'native',
-    farmStart: 1631667600,
+  },
+  {
+    pid: 6,
+    risk: 5,
+    lpSymbol: 'KAFE-MOVR MOONLP',
+    lpAddresses: makeQuote("0xe5FFF70b2e265f6784e2300bb88A29D5CB012B8A"),
+    tokenSymbol: 'KAFE',
+    tokenAddresses: contracts.cake,
+    quoteTokenSymbol: QuoteToken.WMOVR,
+    quoteTokenAdresses: contracts.wbnb,
+
+    isTokenOnly: false,
+    // lpBaseTokenAddress: "0x4446fc4eb47f2f6586f9faab68b3498f86c07521", // wkcs
+    routerForQuote: contracts.moonRouter,
+    farmType: 'native',
   },
   {
     pid: 4,
@@ -88,7 +99,6 @@ const farms: FarmConfig[] = [
     // lpBaseTokenAddress: "0x4446fc4eb47f2f6586f9faab68b3498f86c07521", // wkcs
     routerForQuote: contracts.solarRouter,
     farmType: 'native',
-    farmStart: 1631667600,
   },
   {
     pid: 5,
@@ -104,8 +114,9 @@ const farms: FarmConfig[] = [
     // lpBaseTokenAddress: "0x4446fc4eb47f2f6586f9faab68b3498f86c07521", // wkcs
     routerForQuote: contracts.solarRouter,
     farmType: 'native',
-    farmStart: 1631667600,
+    // farmStart: 1631667600,
   },
+
   
 ]
 

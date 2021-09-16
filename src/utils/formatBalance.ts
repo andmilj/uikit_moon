@@ -42,8 +42,8 @@ export const toDollar = (amt, base, prices: QuotePrices) => {
         return prices.movr.multipliedBy(amt)
     // case contracts.KCS.toLowerCase():
     //   return prices.kcs.multipliedBy(amt)
-    // case contracts.KAFE.toLowerCase():
-    //   return prices.kafe.multipliedBy(amt)
+    case contracts.KAFE.toLowerCase():
+      return prices.kafe.multipliedBy(amt)
     case contracts.ETH.toLowerCase():
       return prices.eth.multipliedBy(amt)
     case contracts.BNB.toLowerCase():
@@ -69,8 +69,8 @@ export const toDollarQuote = (amt, quote, prices: QuotePrices) => {
       return prices.movr.multipliedBy(amt)
     case QuoteToken.KCS:
       return prices.kcs.multipliedBy(amt)
-    // case QuoteToken.KAFE:
-    //   return prices.kafe.multipliedBy(amt)
+    case QuoteToken.KAFE:
+      return prices.kafe.multipliedBy(amt)
     // case QuoteToken.CAKE:
     //   return prices.kafe.multipliedBy(amt)
     case QuoteToken.ETH:
@@ -98,6 +98,8 @@ export const isValidBase = (add) => {
     case contracts.WMOVR.toLowerCase():
       return true
     case contracts.USDT.toLowerCase():
+      return true
+    case contracts.KAFE.toLowerCase():
       return true
     case contracts.USDC.toLowerCase():
       return true
@@ -127,6 +129,8 @@ export const getAddressName = (add) => {
       return 'WMOVR'
     case contracts.USDT.toLowerCase():
       return 'USDT'
+    case contracts.KAFE.toLowerCase():
+      return 'KAFE'
     case contracts.USDC.toLowerCase():
       return 'USDC'
     case contracts.BUSD.toLowerCase():

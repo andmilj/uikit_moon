@@ -19,6 +19,7 @@ const SOLAR_INFO = {
   // sortOrder: 1,
   // tokenPerBlockMultiplier: 0.857,
   tokenPerBlockFunc: contracts.PERBLOCK_SOLAR,
+  // hidden: true,
 }
 const MOONFARM_INFO = {
   poolCategory: PoolCategory.VAULT,
@@ -34,8 +35,24 @@ const MOONFARM_INFO = {
   // sortOrder: 1,
   // tokenPerBlockMultiplier: 0.857,
   tokenPerBlockFunc: contracts.PERBLOCK_MOON,
+  // hidden: true,
 }
+const MOONKAFE_INFO = {
+  poolCategory: PoolCategory.VAULT,
+  isFinished: false,
+  projectLink: 'https://moon.kafe.finance/',
+  projectName: 'moonkafe',
 
+  isLP: true,
+  rewardToken: contracts.KAFE,
+  routerForQuote: contracts.solarRouter,
+  underlyingMasterChef: '0x91aD62286cb69d2C6abdB952564e0EFEA082869c',
+  masterChefAbi: KUDEXMASTERCHEF_ABI,
+  // sortOrder: 1,
+  // tokenPerBlockMultiplier: 0.857,
+  tokenPerBlockFunc: contracts.PERBLOCK_KAFE,
+  // hidden: true,
+}
 // const KUDEX_INFO = {
 //   poolCategory: PoolCategory.PRIVATEVAULT,
 //   isFinished: false,
@@ -43,7 +60,7 @@ const MOONFARM_INFO = {
 //   projectName: 'kudex',
 
 //   isLP: true,
-//   rewardToken: '0xBd451b952dE19F2C7bA2c8c516b0740484E953B2',
+//   rewardToken: '0xBd451b952dE19F2C7bA2c8c516bu0740484E953B2',
 //   rewardTokenName: QuoteToken.KUD,
 //   routerForQuote: '0x6074e20633d2d8fbdf82119867a81581cabe06dd',
 //   underlyingMasterChef: '0x243e46d50130f346bede1d9548b41c49c6440872',
@@ -85,7 +102,15 @@ const pools: PoolConfig[] = [
     // strategy: 0x28D5a7e73b70BFF27a2bbD3aDfF37A61779a9E77
     ...SOLAR_INFO,
     lpBaseTokenAddress: contracts.WMOVR,
-    
+    vaultShareFarmPid: 7,
+    vaultShareToken: {
+      tokenAddresses: makeQuote(contracts.SOLAR),
+      quoteTokenSymbol: QuoteToken.WMOVR,
+      quoteTokenAdresses: contracts.wbnb,
+    },
+    // boostFinished: true,
+    // disclaimerNegative: 'Boost Ended',
+    disclaimerPositive: "Boosted",
   },
   {
     sousId: 1,
@@ -234,10 +259,19 @@ const pools: PoolConfig[] = [
     tokenName: 'MOON-MOVR (MOONLP)',
     stakingTokenName: QuoteToken.MOONMOVRMOONLP,
     stakingTokenAddress: '0xf18433bbe972d8f1b2e908e3eb6c0234c9b24e7b', // lp address
-    contractAddress: makeQuote('0x34d547E83843eBdbadC73045e627cFB786B29201'),
-    // strategy: 0x6a00E47a4C8Da47e426630E54dC50532a0791944
+    contractAddress: makeQuote('0x2CCC4641EDeE417a4752F6011499C219499b8190'),
+    // strategy: 0xA164DEB841dDfb2e257226df48961b315dFBf0f9
     ...MOONFARM_INFO,
     lpBaseTokenAddress: contracts.WMOVR,
+    vaultShareFarmPid: 8,
+    vaultShareToken: {
+      tokenAddresses: makeQuote(contracts.MOON),
+      quoteTokenSymbol: QuoteToken.WMOVR,
+      quoteTokenAdresses: contracts.wbnb,
+    },
+    // boostFinished: true,
+    // disclaimerNegative: 'Boost Ended',
+    disclaimerPositive: "Boosted",
   },
   {
     sousId: 13,
@@ -429,7 +463,110 @@ const pools: PoolConfig[] = [
     ...MOONFARM_INFO,
     lpBaseTokenAddress: contracts.WMOVR,
     isLP: false,
-    }
+    },
+    {
+      sousId: 28,
+      poolId: 0,
+      image: 'KAFE',
+      tokenName: 'KAFE',
+      stakingTokenName: QuoteToken.KAFE,
+      stakingTokenAddress: contracts.KAFE, // lp address
+      contractAddress: makeQuote('0x1C5398aB5ACBD58437B5391A114C790C55701743'),
+      // strategy: 0xD509a79FeAda2654ee23761c4924DaF61f64754c
+      ...MOONKAFE_INFO,
+      lpBaseTokenAddress: contracts.WMOVR,
+      isLP: false,
+    },
+    {
+      sousId: 29,
+      poolId: 1,
+      image: 'WMOVR',
+      tokenName: 'WMOVR',
+      stakingTokenName: QuoteToken.WMOVR,
+      stakingTokenAddress: contracts.WMOVR, // lp address
+      contractAddress: makeQuote('0xba998D265625D34b6c84a6B8237658216A27BFbB'),
+      // strategy: 0x16678eDB02936BBCF2C064bCac1EeD54609A69Ff
+      ...MOONKAFE_INFO,
+      lpBaseTokenAddress: contracts.USDC,
+      isLP: false,
+      depositFee: 3.5,
+    },
+    {
+      sousId: 30,
+      poolId: 2,
+      image: 'USDC',
+      tokenName: 'USDC',
+      stakingTokenName: QuoteToken.USDC,
+      stakingTokenAddress: contracts.USDC, // lp address
+      contractAddress: makeQuote('0x19acE41c2aAcB78d0AD9cdbdBA340F75A8E17B4d'),
+      // strategy: 0x678434E2ae11b7Fe9F1aF35cf47841A56d6C45a8
+      ...MOONKAFE_INFO,
+      lpBaseTokenAddress: contracts.WMOVR,
+      isLP: false,
+      depositFee: 3.5,
+    },
+    {
+      sousId: 31,
+      poolId: 3,
+      image: 'KAFE-MOVR',
+      tokenName: 'KAFE-MOVR (SOLARLP)',
+      stakingTokenName: QuoteToken.KAFEMOVRSOLARLP,
+      stakingTokenAddress: "0xb60B5ddAe68aE71481d26659A1D0E9A9D941a8d1", // lp address
+      contractAddress: makeQuote('0xf5791D77c5975610aF1bE35b423189A8f5Eb6923'),
+      // strategy: 0xa28dCE7f091F97da759386E9e80323aCE55426E0
+      ...MOONKAFE_INFO,
+      lpBaseTokenAddress: contracts.WMOVR,
+    },
+    {
+      sousId: 32,
+      poolId: 4,
+      image: 'KAFE-USDC',
+      tokenName: 'KAFE-USDC (SOLARLP)',
+      stakingTokenName: QuoteToken.KAFEUSDDCSOLARLP,
+      stakingTokenAddress: "0xF6d6F801C568C4b4aeFbC2c9859D755318d40fAe", // lp address
+      contractAddress: makeQuote('0x5bc257E44843B710f4813FC07716e761D7cF1A41'),
+      // strategy: 0x527dF2073fdB2E13De95323F9a640FD054C389CA
+      ...MOONKAFE_INFO,
+      lpBaseTokenAddress: contracts.USDC,
+    },
+    {
+      sousId: 33,
+      poolId: 6,
+      image: 'KAFE-MOVR',
+      tokenName: 'KAFE-MOVR (MOONLP)',
+      stakingTokenName: QuoteToken.KAFEMOVRMOONLP,
+      stakingTokenAddress: "0xe5FFF70b2e265f6784e2300bb88A29D5CB012B8A", // lp address
+      contractAddress: makeQuote('0xB9FC48b5364014b912DED9c3535EAEde80e2b6cc'),
+      // strategy: 0x251274e4B1cF2bEbEAFF82024358A9C7B5cFcc43
+      ...MOONKAFE_INFO,
+      lpBaseTokenAddress: contracts.WMOVR,
+    },
+    {
+      sousId: 34,
+      poolId: 5,
+      image: 'USDC-MOVR',
+      tokenName: 'USDC-MOVR (SOLARLP)',
+      stakingTokenName: QuoteToken.USDCMOVRSOLARLP,
+      stakingTokenAddress: "0xe537f70a8b62204832B8Ba91940B77d3f79AEb81", // lp address
+      contractAddress: makeQuote('0x8AD8E1aD610204F1Fa40857De82732710471d36d'),
+      // strategy: 0x94B7A6c0FaAA047B59f073F016b0E651448049a1
+      ...MOONKAFE_INFO,
+      lpBaseTokenAddress: contracts.WMOVR,
+      depositFee: 3.5,
+    },
+    {
+      sousId: 35,
+      poolId: 30,
+      image: 'BEANS-MOVR',
+      tokenName: 'BEANS-MOVR (MOONLP)',
+      stakingTokenName: QuoteToken.BEANSMOVRMOONLP,
+      stakingTokenAddress: '0x20472b3CCA87f1e8AEd70E1Cf3Ac31E97eD13A1E', // lp address
+      contractAddress: makeQuote('0x2F81dD0c54DE7e301C1d8D860c9E5D50Df426F51'),
+      // strategy: 0x119Ff34e7e66B0Be370762cB8a615BbBFd396549
+      ...MOONFARM_INFO,
+      lpBaseTokenAddress: contracts.WMOVR,
+      // hidden: false,
+    },
 ]
 
 export default pools

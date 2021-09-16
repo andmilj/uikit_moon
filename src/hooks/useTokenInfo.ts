@@ -49,12 +49,12 @@ const useTokenInfo = () => {
       const calls = nonWMOVR.map((t) => {
         const base= t.base || contracts.WMOVR
         const dec = getExpDecimals(base);
-
+        // console.log(t.symbol, t.routeVia ? [base, ...t.routeVia.split("_"), t.address] : [base, t.address])
         return [
           t.routerForQuote,
           getFuncData('getAmountsOut(uint256,address[])', [
             dec.toString(),
-            t.routeVia ? [base, t.routeVia, t.address] : [base, t.address],
+            t.routeVia ? [base, ...t.routeVia.split("_"), t.address] : [base, t.address],
           ])
         ]
 

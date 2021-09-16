@@ -27,7 +27,7 @@ import PoolCard2 from 'views/Pools/components/PoolCard2'
 
 import orderBy from 'lodash/orderBy'
 import useQuotePrice from 'hooks/useQuotePrice'
-import { getBalanceNumber, getBalanceNumberPrecisionFloatFixed, mightHide, toDollar } from 'utils/formatBalance'
+import { getBalanceNumber, getBalanceNumberPrecisionFloatFixed, getDecimals, mightHide, toDollar } from 'utils/formatBalance'
 import { getCakeProfitsPerYearVs, getVsApy, hasTikuStake, hasVaultStake } from 'utils/callHelpers'
 import Balance from 'components/Balance'
 import useTokenInfo from 'hooks/useTokenInfo'
@@ -41,7 +41,6 @@ import ChefFarmCard from './components/ChefFarmCard'
 import WalletAssetCard from './components/WalletAssetCard'
 import SelectVaultModal from './components/SelectVaultModal'
 import MigrateFromFarmModal from './components/MigrateFromFarmModal'
-import MigrateFromWalletModal from './components/MigrateFromWalletModal'
 
 const FlexRowDiv = styled.div`
   display: flex;
@@ -411,7 +410,8 @@ const Portfolio: React.FC = () => {
             .multipliedBy(pool.stakePriceAsQuoteToken),
           pool.lpBaseTokenAddress,
         )
-        earningsPerDay = earningsPerDay.plus(stakeBalanceDollar.multipliedBy(pool.apy).dividedBy(36500))
+        earningsPerDay = earningsPerDay.plus(stakeBalanceDollar.multipliedBy(new BigNumber(10).pow(18-getDecimals(pool.lpBaseTokenAddress))).multipliedBy(pool.apy).dividedBy(36500))
+        // console.log(pool.image, "earningsPerDay", earningsPerDay.toString())
         bothTotalStaked = bothTotalStaked.plus(pool.userData.stakedBalance)
         bothTotalStakedDollar = bothTotalStakedDollar.plus(stakeBalanceDollar)
       }
@@ -427,6 +427,7 @@ const Portfolio: React.FC = () => {
         // console.log(privatePoolInfo.stakedAmt, total.toString())
         earningsPerDay = earningsPerDay.plus(
           getDollar(total.multipliedBy(pool.stakePriceAsQuoteToken), pool.lpBaseTokenAddress)
+          .multipliedBy(new BigNumber(10).pow(18-getDecimals(pool.lpBaseTokenAddress)))
             .multipliedBy(pool.apy)
             .dividedBy(36500),
         )
@@ -618,7 +619,7 @@ const Portfolio: React.FC = () => {
     // console.log("chefTvlsApy", f)
     return f
   }
-
+  // console.log("stakedValuesPerPool",stakedValuesPerPool)
   const chefTvlApys = getChefTvlApys(stakedValues, stakedValuesPerPool)
   // console.log("chefTvlApys",chefTvlApys)
 

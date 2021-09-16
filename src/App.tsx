@@ -1,8 +1,9 @@
 import useWeb3 from 'hooks/useWeb3'
+import styled from 'styled-components'
 import React, { useEffect, Suspense, lazy } from 'react'
 import { HashRouter as Router, Redirect, Route, Switch } from 'react-router-dom'
 import { useWallet } from 'use-wallet'
-import { ResetCSS } from '@pancakeswap-libs/uikit'
+import { Button, ResetCSS } from '@pancakeswap-libs/uikit'
 import BigNumber from 'bignumber.js'
 import { useFetchPublicData } from 'state/hooks'
 import GlobalStyle from './style/Global'
@@ -49,9 +50,13 @@ const App: React.FC = () => {
   //   }
   //   f()
   // });
+  // const refresh = () => {
+  //   window.location.reload(true);
+  // }
 
   return (
     <Router>
+      {/* <HardRefresh onClick={refresh}>Refresh</HardRefresh> */}
       <ResetCSS />
       <GlobalStyle />
       <Menu>
@@ -101,7 +106,18 @@ const App: React.FC = () => {
       </Menu>
       {/* <NftGlobalNotification /> */}
     </Router>
+
   )
 }
 
 export default React.memo(App)
+
+
+// const HardRefresh = styled(Button)`
+//   position: fixed;
+//   right: 0px;
+//   top: 50px;
+//   z-index: 20;
+
+
+// `

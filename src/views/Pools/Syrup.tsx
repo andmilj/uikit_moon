@@ -78,7 +78,7 @@ const Farm: React.FC = () => {
   )
   Object.keys(dollarProfitsPerYearVs).forEach((_sousId) => {
     const _pool = combinedPools.find((p) => p.sousId === parseInt(_sousId))
-    // console.log(_pool.image, dollarProfitsPerYearVs[_sousId].toString(),_pool.vaultShareRewardToken)
+    // console.log(_sousId, _pool.image, dollarProfitsPerYearVs[_sousId].toString())
     dollarProfitsPerYearVs[_sousId] = getDollarValue(
       dollarProfitsPerYearVs[_sousId],
       _pool.vaultShareRewardToken || contracts.KAFE,
@@ -327,13 +327,14 @@ const Farm: React.FC = () => {
           {/* <Route exact path={`${path}`}>
           {getProjectPools("kukafe")}
         </Route> */}
+          <Route path={`${path}/moonkafe`}>{getProjectPools('moonkafe')}</Route>
           <Route path={`${path}/solarbeam`}>{getProjectPools('solarbeam')}</Route>
           <Route path={`${path}/moonfarm`}>{getProjectPools('moonfarm')}</Route>
         </FlexLayout>
-
+{/* 
         <div style={{display: 'flex', justifyContent:'center', flexDirection:'row', flex:1, width: '100%'}}>
           <Text fontSize="14px" color="failure">⚠️Random snapshots will be taken throughout prelaunch phase, so stay staked for maximum KAFE!</Text>
-        </div>
+        </div> */}
 
         <div style={{ display: 'flex', justifyContent: 'center', flexDirection: 'row', flex: 1, width: '100%' }}>
           <Text fontSize="14px" color="contrast">

@@ -19,10 +19,10 @@ const PriceContextMswapProvider = ({ children }) => {
         // console.log("calling" , '1000000000000', [contracts.MSWAP, contracts.USDT, contracts.wbnb[process.env.REACT_APP_CHAIN_ID]])
         const router = getReadOnlyCustomRouter(contracts.moonRouter)
         const amts = await router.methods
-          .getAmountsOut('1000000000000', [contracts.MSWAP, contracts.wbnb[process.env.REACT_APP_CHAIN_ID]])
+          .getAmountsOut('1000000000000', [contracts.MSWAP, contracts.WMOVR])
           .call()
 
-        const tokenPrice = kcsPrice.multipliedBy(new BigNumber(amts[2])).dividedBy(1e12)
+        const tokenPrice = kcsPrice.multipliedBy(new BigNumber(amts[amts.length - 1])).dividedBy(1e12)
         const val = tokenPrice.toFixed(6)
         if (val !== previousPrice.current) {
           previousPrice.current = val

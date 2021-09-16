@@ -13,7 +13,7 @@ import { Pool } from 'state/types'
 import ReactTooltip from 'react-tooltip'
 import { useMediaQuery } from '@material-ui/core'
 import { getCakeProfitsPerYearVs, getVsApy } from 'utils/callHelpers'
-import { getBalanceNumber, getBalanceNumberPrecisionFloatFixed, toDollar } from 'utils/formatBalance'
+import { getBalanceNumber, getBalanceNumberPrecisionFloatFixed, removeTrailingZero, toDollar } from 'utils/formatBalance'
 import Balance from 'components/Balance'
 import { calculateAPY } from 'utils/compoundApyHelpers'
 import contracts from 'config/constants/contracts'
@@ -200,7 +200,7 @@ const SelectVaultModal: React.FC<ModalProps> = ({ onConfirm, onDismiss }) => {
       const totalStaked = getDollarValue(new BigNumber(v.totalStakedAsQuoteToken), v.lpBaseTokenAddress.toLowerCase())
       const vsApy =
         v.vaultShareFarmPid >= 0 ? getVsApy(v, dollarProfitsPerYearVs[v.sousId], getDollarValue) : new BigNumber(0)
-      // console.log(totalStaked.toString(), vsApy.toString())
+      console.log(totalStaked.toString(), v.apy.toString())
       return {
         ...v,
         vsApy,
@@ -212,7 +212,7 @@ const SelectVaultModal: React.FC<ModalProps> = ({ onConfirm, onDismiss }) => {
   })
   const toDisplayable = (n) => {
     if (n.isGreaterThan(500000)) {
-      return n.toFixed(0)
+      return parseFloat(n).toPrecision(4).toLocaleString()
     }
     return n.toFixed(2)
   }
@@ -228,6 +228,7 @@ const SelectVaultModal: React.FC<ModalProps> = ({ onConfirm, onDismiss }) => {
   const getEnhancedCompoundedApy = (v) => {
     let a = new BigNumber(v.apy)
     const oldCompounded = calculateAPY({ compoundPeriodInSecs: 86400, apr: a })
+    console.log("oldCompounded",oldCompounded.toString())
     if (v.vaultShareFarmPid >= 0) {
       a = a.plus(v.vsApy)
     }

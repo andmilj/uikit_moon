@@ -638,7 +638,7 @@ const fetchPoolsTotalStakingToken = async (tokenPools) => {
       ...pricePerShareCalls,
       ...priceStakingTokenCall,
       ...priceRewardCall,
-      // ...optionalCalls,
+      ...optionalCalls,
     ])
     .call()
   results = results[1]
@@ -670,7 +670,7 @@ const fetchPoolsTotalStakingToken = async (tokenPools) => {
       depositedKafe = decodeInt(results[results.length - 1]) as unknown as number
     }
   }
-
+  
   // kafe
   // const depositedKafe1 = await web3.eth.call({
   //   to: contracts.masterChef[CHAIN_ID], // contract address
@@ -732,10 +732,8 @@ const fetchPoolsTotalStakingToken = async (tokenPools) => {
   // const routerCalls = await multicall(routerABI, [...priceStakingTokenCall,...priceRewardCall].filter(p=>p))
   // const pricesResults = routerCalls.map(p => p[0][1]);
 
-    // 0.002154427252435769
-
-    // 1000000/2161086841624156 
-  console.log("pricesResults", pricesResults[0].toString())
+  
+  // console.log("pricesResults", pricesResults[0].toString())
   const pricesOfStakingToken = []
   const pricesOfReward = []
   let pIndex = 0
@@ -1231,10 +1229,10 @@ const fetchPoolsTotalStakingWithBase = async (lpPoolsWithBase) => {
   // const amtUSDTInLps = resultsOfErc20call.slice(0, lpPoolsWithBase.length);
   // const totalSupplys2 = resultsOfErc20call.slice(lpPoolsWithBase.length, lpPoolsWithBase.length*2);
   // const lpInMasterchef2 = resultsOfErc20call.slice(lpPoolsWithBase.length*2, lpPoolsWithBase.length*3);
-  console.log('stakingtoken', lpPoolsWithBase[0].stakingTokenAddress)
-  console.log('amtBaseInLps', amtUSDTInLps[0].toString())
-  console.log('totalSupplys', totalSupplys2[0].toString())
-  console.log('lpInMasterchef', lpInMasterchef2[0].toString())
+  // console.log('stakingtoken', lpPoolsWithBase[0].stakingTokenAddress)
+  // console.log('amtBaseInLps', amtUSDTInLps[0].toString())
+  // console.log('totalSupplys', totalSupplys2[0].toString())
+  // console.log('lpInMasterchef', lpInMasterchef2[0].toString())
 
   // const lpInVaultCalls = lpPoolsWithBase.map((p) => ({
   //   address: p.contractAddress[CHAIN_ID],
@@ -1250,8 +1248,8 @@ const fetchPoolsTotalStakingWithBase = async (lpPoolsWithBase) => {
   // const vaultCalls = await multicall(vaultABI, [...lpInVaultCalls,...pricePerShareCalls]);
   // const lpInVault2 = vaultCalls.slice(0, lpPoolsWithBase.length);
   // const pricePerShares2 = vaultCalls.slice(lpPoolsWithBase.length, lpPoolsWithBase.length*2);
-  console.log('lpInVault2', lpInVault2[0].toString())
-  console.log('pricePerShares2', pricePerShares2[0].toString())
+  // console.log('lpInVault2', lpInVault2[0].toString())
+  // console.log('pricePerShares2', pricePerShares2[0].toString())
 
   const valueOfLpsInMasterChefInUSDT = lpPoolsWithBase.map((p, i) => {
     return new BigNumber(amtUSDTInLps[i].toString())
@@ -1259,7 +1257,7 @@ const fetchPoolsTotalStakingWithBase = async (lpPoolsWithBase) => {
       .multipliedBy(lpInMasterchef2[i].toString())
       .dividedBy(totalSupplys2[i].toString())
   })
-  console.log('valueOfLpsInMasterChefInBase', valueOfLpsInMasterChefInUSDT[0].toString())
+  // console.log('valueOfLpsInMasterChefInBase', valueOfLpsInMasterChefInUSDT[0].toString())
 
   const valueOfLpsInVaultInUSDT = lpPoolsWithBase.map((p, i) => {
     return new BigNumber(amtUSDTInLps[i].toString())
@@ -1267,7 +1265,7 @@ const fetchPoolsTotalStakingWithBase = async (lpPoolsWithBase) => {
       .multipliedBy(lpInVault2[i].toString())
       .dividedBy(totalSupplys2[i].toString())
   })
-  console.log('valueOfLpsInVaultInBase', valueOfLpsInVaultInUSDT[0].toString())
+  // console.log('valueOfLpsInVaultInBase', valueOfLpsInVaultInUSDT[0].toString())
   // 2762 // so many kus in the lp
   // 443
   // 2675
@@ -1311,7 +1309,7 @@ const fetchPoolsTotalStakingWithBase = async (lpPoolsWithBase) => {
   })
 
   const apys2 = lpPoolsWithBase.map((p, i) => {
-    console.log(prices2[i].toString(), p.tokenPerBlock, p.allocPoint, p.rewardMultiplier, p.totalAllocPoint)
+    // console.log(prices2[i].toString(), p.tokenPerBlock, p.allocPoint, p.rewardMultiplier, p.totalAllocPoint)
     return new BigNumber(prices2[i].toString())
       .multipliedBy(p.tokenPerBlock)
       .multipliedBy(p.allocPoint)
@@ -1504,6 +1502,7 @@ export const fetchPoolsTotalStatking = async () => {
   const t1 = Date.now()
   // console.log("fetchPoolsTotalStatking1")
   const vaultShareFarmInfos = await fetchPoolsVaultShareFarmsInfo()
+  // console.log("vaultShareFarmInfos",vaultShareFarmInfos)
   const t2 = Date.now()
   // console.log("fetchPoolsTotalStatking2")
 

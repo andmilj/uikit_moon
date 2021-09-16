@@ -26,6 +26,7 @@ import { usePrivateSousApprove, useSousApprove } from 'hooks/useApprove'
 import { usePrivateSousStake, useSousStake } from 'hooks/useStake'
 import { useChefUnstake, usePrivateSousEntry } from 'hooks/useUnstake'
 import { useCreateVault } from 'hooks/useCreateVault'
+import { removeTrailingZero } from 'utils/formatBalance'
 import { useAllowance } from 'hooks/useAllowance'
 import { useStakeBalance } from '../hooks/useStakeBalance'
 
@@ -471,14 +472,14 @@ const MigrateFromFarmModal: React.FC<ModalProps> = ({ onConfirm, onDismiss }) =>
     if (success) {
       return (
         <Text>
-          Staked {finalVal.dividedBy(1e18).toFixed(2)} {tokenName} in Moonkafe
+          Staked {removeTrailingZero(finalVal.dividedBy(1e18),2)} {tokenName} in Espresso Vault
         </Text>
       )
     }
     return (
       <SectionCol>
         <Text>
-          Stake {(stakePending ? finalVal : val).dividedBy(1e18).toFixed(2)} {tokenName} in Moonkafe
+          Stake {removeTrailingZero((stakePending ? finalVal : val).dividedBy(1e18), 2)} {tokenName} in Espresso Vault
         </Text>
         {stakePending ? (
           ''
@@ -503,7 +504,7 @@ const MigrateFromFarmModal: React.FC<ModalProps> = ({ onConfirm, onDismiss }) =>
         <Section>
           <ActionStep>1</ActionStep>
           <Text>
-            Unstake {amtInOldChef.dividedBy(1e18).toFixed(2)} {tokenName} from {oldChef?.name}
+            Unstake {removeTrailingZero(amtInOldChef.dividedBy(1e18),2)} {tokenName} from {oldChef?.name}
           </Text>
           <Expand />
           {unstakeAction()}

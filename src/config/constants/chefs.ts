@@ -98,6 +98,7 @@ export const getAbiFromChef = (chef) => {
   switch (chef.name) {
     case 'solarbeam': // deposit fee
     case 'moonfarm': // deposit fee
+    case 'moonkafe': // deposit fee
       return MASTERCHEF_ABI //  JSON.parse(JSON.stringify(MASTERCHEF_ABI))
       // return JSON.parse(JSON.stringify(KUSWAP_CHEF_ABI))
       // return JSON.parse(JSON.stringify(KUDEXMASTERCHEF_ABI))
@@ -141,7 +142,8 @@ export const chefs: ChefConfig[] = [
 
       0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 
       10, 12, 13, 14, 16, 17, 18, 19,
-      20, 21, 22, 23, 24, 25, 26, 27, 28, 29
+      20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 
+      30
     
     ],
     // poolIds: [
@@ -159,5 +161,30 @@ export const chefs: ChefConfig[] = [
     stakingMode: false,
     hasDepositFee: true,
   },
+
+  {
+    chefId: 2,
+    type: ChefType.MASTERCHEF,
+    image: '',
+    name: 'moonkafe',
+    projectLink: 'https://moon.kafe.finance/',
+    masterchefAddress: '0x91aD62286cb69d2C6abdB952564e0EFEA082869c',
+    rewardToken: contracts.KAFE,
+    rewardTokenSymbol: 'KAFE',
+    poolIds: [
+      // 12 (eth), 15 (btc) removed as there is no liq pool
+      0, 1, 2, 3, 4, 5, 6
+    ],
+    perBlockSignature: contracts.PERBLOCK_KAFE,
+    pendingRewardsSignature: contracts.PENDING_KAFE,
+    factories: ['0x049581aEB6Fe262727f290165C29BDAB065a1B68'],
+    // depositedCakeSignature: 'totalSolarInPools()',
+    quoteRouters: ['0xdF71f363940A2298e831F18f44266C80015c8Dfd'],
+    referralMode: false,
+    stakingMode: false,
+    hasDepositFee: true,
+  },
+
+
 ]
 export default chefs

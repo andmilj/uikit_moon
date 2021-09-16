@@ -247,8 +247,8 @@ const FarmCard: React.FC<FarmCardProps> = ({ farm, removed, ethereum, account })
           isTokenOnly={farm.isTokenOnly}
           bscScanAddress={
             farm.isTokenOnly
-              ? `https://explorer.kcc.io/en/token/${farm.tokenAddresses[process.env.REACT_APP_CHAIN_ID]}`
-              : `https://explorer.kcc.io/en/token/${farm.lpAddresses[process.env.REACT_APP_CHAIN_ID]}`
+              ? `https://blockscout.moonriver.moonbeam.network/tokens/${farm.tokenAddresses[process.env.REACT_APP_CHAIN_ID]}`
+              : `https://blockscout.moonriver.moonbeam.network/tokens/${farm.lpAddresses[process.env.REACT_APP_CHAIN_ID]}`
           }
           totalValueFormated={totalValueFormated}
           lpLabel={lpLabel}

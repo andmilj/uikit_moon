@@ -1,10 +1,14 @@
 import contracts from 'config/constants/contracts'
-import React from 'react'
+import detectEthereumProvider from '@metamask/detect-provider';
+import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
-import { Heading, Text, BaseLayout, IconButton } from '@pancakeswap-libs/uikit'
+import { Heading, Text, BaseLayout, IconButton, Button } from '@pancakeswap-libs/uikit'
 import useI18n from 'hooks/useI18n'
+import { useWallet } from 'use-wallet'
 import Page from 'components/layout/Page'
 import { Helmet } from 'react-helmet'
+import { switchNetwork } from 'utils/callHelpers'
+import { getWeb3 } from 'utils/web3'
 import FarmStakingCard from './components/FarmStakingCard'
 import CakeStats from './components/CakeStats'
 import TotalValueLockedCard from './components/TotalValueLockedCard'
@@ -57,7 +61,72 @@ const Cards = styled(BaseLayout)`
 
 const Home: React.FC = () => {
   const TranslateString = useI18n()
+  const {connect} = useWallet();
+  const [currChain, setCurrChain] = useState(parseInt(process.env.REACT_APP_CHAIN_ID))
+  useEffect(() => {
 
+
+
+    const check = async () => {
+      const provider = await detectEthereumProvider()
+
+      if (provider) {
+        const chainId = await (provider as any).request({
+          method: 'eth_chainId'
+        })
+        const c = parseInt(chainId)
+        
+        setCurrChain(c);
+      } else {
+        // if the provider is not detected, detectEthereumProvider resolves to null
+        console.error('Please install MetaMask!')
+      }
+
+    }
+    check();
+  },[])
+  const switchN = async() => {
+
+    const provider = await detectEthereumProvider();
+    // console.log(window.ethereum)
+    await (provider as any).request({
+      method: 'wallet_addEthereumChain',
+      params: [{
+        chainId: "0x505",
+        chainName: 'Moonriver',
+        nativeCurrency: {
+            name: 'MOVR',
+            symbol: 'MOVR',
+            decimals: 18
+        },
+        rpcUrls: ['https://rpc.moonriver.moonbeam.network'],
+        blockExplorerUrls: ['https://blockscout.moonriver.moonbeam.network/']
+      }]
+      
+    })
+    .catch(error => {
+      console.log(error)
+    });
+
+    setTimeout(() => {
+      window.location.reload()
+    }, 1000)
+
+    
+  }
+  
+  const getConnectAssist = () => {
+    // console.log("current chainid", chainId);
+    if (currChain !== parseFloat(process.env.REACT_APP_CHAIN_ID)){
+
+
+      return <Button onClick={switchN}>Switch to Moonriver</Button>
+
+     
+    }
+    return "";
+    
+  }
   return (
     <>
       <Helmet>
@@ -70,6 +139,9 @@ const Home: React.FC = () => {
           <img src="images/moonriver.png" alt="moonriver"/>
 
           </IconButton> */}
+          {getConnectAssist()}
+
+
           <Heading as="h1" size="xl" mb="24px" color="secondary">
             {TranslateString(576, 'Moonkafe Finance')}
           </Heading>

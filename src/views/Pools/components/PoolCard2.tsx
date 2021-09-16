@@ -230,10 +230,10 @@ const PoolCard2: React.FC<PoolCardProps> = ({ pool }) => {
       }
       const w = getWeb3();
       const blockNumber = await w.eth.getBlockNumber()
-      console.log("blockNumber", blockNumber)
+      // console.log("blockNumber", blockNumber)
       console.log('Getting past events for', tokenName)
       let zeroEventBlock = new BigNumber(await vsTokenContract.methods.blockAtZeroCapital(myAccount).call()).toNumber();
-      console.log("zeroEventBlock",zeroEventBlock)
+      // console.log("zeroEventBlock",zeroEventBlock)
       if (zeroEventBlock === 0){
         zeroEventBlock = contracts.globalStartBlock;
       }
@@ -292,7 +292,7 @@ const PoolCard2: React.FC<PoolCardProps> = ({ pool }) => {
         }
       })
       const { sum: total, res: cumSums } = findCumulativeSum(arr)
-      console.log(total.toString(), cumSums.map(c => c.toString()))
+      // console.log(total.toString(), cumSums.map(c => c.toString()))
 
       setCapital(total)
       setCapitalCum(cumSums)
@@ -646,7 +646,7 @@ const PoolCard2: React.FC<PoolCardProps> = ({ pool }) => {
             ) : (
               <>
                 <Button disabled={vsTokenBalance.isZero()} onClick={onPresentVsDeposit}>
-                  Stake
+                  Boost
                 </Button>
               </>
             )}
@@ -654,7 +654,7 @@ const PoolCard2: React.FC<PoolCardProps> = ({ pool }) => {
 
           <TextEle>
             <Text color="grey" fontSize="11px">
-              Staked
+              Boosting
             </Text>
             <div style={{ flex: 2, textAlign: 'center' }}>
               {/* <Balance decimals={4} fontSize="18px" value={getBalanceNumber(stakedVsBalance)} />
@@ -681,7 +681,7 @@ const PoolCard2: React.FC<PoolCardProps> = ({ pool }) => {
               disabled={stakedVsBalance.eq(new BigNumber(0))}
               onClick={onPresentVsWithdraw}
             >
-              Unstake
+              Unboost
             </Button>
           </TextEle>
         </TextRow>
@@ -844,9 +844,15 @@ const PoolCard2: React.FC<PoolCardProps> = ({ pool }) => {
 
             {/* {disclaimerPositive ? (<span data-multiline="true" data-type="success" data-tip={disclaimerPositive}>✔️</span>):("")} */}
           </span>
-          <Text style={{ marginTop: '-5px' }} color="grey" fontSize="15px">
+          <FlexRowDiv style={{justifyContent: 'flex-start', alignItems:'flex-end', color: 'grey', fontSize: '15px'}}>
+            <div>Uses</div>
+            &nbsp;
+            <MyLink href={projectLink}>{projectName}</MyLink>
+
+          </FlexRowDiv>
+          {/* <Text style={{ marginTop: '-5px' }} color="grey" fontSize="15px">
             Uses <MyLink href={projectLink}>{projectName}</MyLink>
-          </Text>
+          </Text> */}
           {/* <MultiplierTag variant="secondary">{pool.projectName.toUpperCase()}</MultiplierTag> */}
           <TextRow>
             {depositFee ? <MultiplierTag variant="failure">{depositFee}% Deposit Fee</MultiplierTag> : ''}
@@ -1034,7 +1040,7 @@ const PoolCard2: React.FC<PoolCardProps> = ({ pool }) => {
                     >
                       <div>
                         Capital
-                        <span data-tip="Capital calculated from deposits/withdrawals since block 0">&nbsp;*</span>
+                        <span data-tip="Capital calculation resets upon full withdrawal">&nbsp;*</span>
                         <ReactTooltip />
                       </div>
 

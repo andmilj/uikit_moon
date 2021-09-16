@@ -5,11 +5,8 @@ import { toast } from 'react-toastify'
 import BigNumber from 'bignumber.js'
 import { Pool } from 'state/types'
 import useQuotePrice from 'hooks/useQuotePrice'
-import usePrice from 'hooks/usePrice'
 import styled from 'styled-components'
 import { Card, CardBody, TicketRound, Text, Heading, Flex } from '@pancakeswap-libs/uikit'
-import contracts from 'config/constants/contracts'
-import { sortBy } from 'lodash'
 
 interface CardProps {
   pool?: Pool
@@ -48,8 +45,8 @@ const PoolStatusCard: React.FC<CardProps> = ({ pool, event }) => {
   const block = useBlock()
 
   const quotePrice = useQuotePrice()
-  const allEvents = (event && event.compoundEvents) ? sortBy(event.compoundEvents, e => e.blockNumber) : [];
-  const latestEvent = (event && event.compoundEvents) ? allEvents[allEvents.length - 1] : null
+
+  const latestEvent = event ? event.compoundEvents[event.compoundEvents.length - 1] : null
   const interval = event ? event.desiredCompoundInterval : '?'
   // const toDisplayNumber = (n) => {
   //   if (!n){
@@ -72,8 +69,7 @@ const PoolStatusCard: React.FC<CardProps> = ({ pool, event }) => {
       return '0'
     }
     const blocks = new BigNumber(block).minus(latestEvent.blockNumber).toNumber()
-    // console.log(pool.image, "diff block", blocks, block, latestEvent.blockNumber )
-    const secs = blocks * 12
+    const secs = blocks * 3
     const mins = Math.floor(secs / 60)
     const leftOverSecs = secs % 60
     let f = `${mins}m`
@@ -93,11 +89,7 @@ const PoolStatusCard: React.FC<CardProps> = ({ pool, event }) => {
   }
 
   const getTvlDollar = () => {
-    const totalStaked = toDollar(
-      new BigNumber(pool.totalStakedAsQuoteToken),
-      pool.lpBaseTokenAddress.toLowerCase(),
-      quotePrice,
-    )
+    const totalStaked = toDollar(new BigNumber(pool.totalStakedAsQuoteToken), pool.lpBaseTokenAddress, quotePrice)
 
     return totalStaked
   }
@@ -105,7 +97,7 @@ const PoolStatusCard: React.FC<CardProps> = ({ pool, event }) => {
   const getLpDollar = (amt) => {
     const stakeBalanceDollar = toDollar(
       amt.multipliedBy(pool.stakePriceAsQuoteToken),
-      pool.lpBaseTokenAddress.toLowerCase(),
+      pool.lpBaseTokenAddress,
       quotePrice,
     )
 
@@ -180,7 +172,14 @@ const PoolStatusCard: React.FC<CardProps> = ({ pool, event }) => {
               </Text>
             </Section>
           ) : (
-            ''
+            <Section style={{ flex: 1, marginLeft: '5px', marginRight: '5px' }}>
+              <Text>
+                $0
+              </Text>
+              <Text fontSize="10px" color="grey">
+                Profits Compounded
+              </Text>
+            </Section>
           )}
 
           <Section style={{ flex: 1, marginLeft: '5px', marginRight: '5px' }}>

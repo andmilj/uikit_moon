@@ -73,15 +73,18 @@ const contracts = {
 
   TOTALALLOCPOINT: 'totalAllocPoint()',
 
+  PENDING_KAFE: 'pendingKafe(uint256,address)',
   PENDING_SOLAR: 'pendingSolar(uint256,address)',
   PENDING_MOON: 'pendingmoonfarm(uint256,address)',
 
+  
+  PERBLOCK_KAFE: 'kafePerBlock()',
   PERBLOCK_SOLAR: 'solarPerBlock()',
   PERBLOCK_MOON: 'moonfarmPerBlock()',
 
   DEPOSITED_KUD: 'depositedKud()',
 
-  VERSION: '1.0',
+  VERSION: '1.1',
   compoundPeriodInSecs: 600,
   performanceFee: 0.035,
 
@@ -130,7 +133,7 @@ const contracts = {
     } // solar
     return false;
   },
-  globalStartBlock: 528000,
+  globalStartBlock: 529970,
   tokenDecimals:{
     ["0xE3F5a90F9cb311505cd691a46596599aA1A0AD7D".toLowerCase()]: 6, // USDC
     ["0xB44a9B6905aF7c801311e8F4E76932ee959c663C".toLowerCase()]: 6, // USDT
@@ -141,6 +144,7 @@ const contracts = {
   topics: {
     vaultDeposit: "90890809c654f11d6e72a28fa60149770a0d11ec6c92319d6ceb2bb0a4ea1a15",
     vaultWithdraw: "f279e6a1f5e320cca91135676d9cb6e44ca8a08c0b88342bcdb1144f6511b568",
+    strategyCompound: "169f1815ebdea059aac3bb00ec9a9594c7a5ffcb64a17e8392b5d84909a14556"
   },
 
 

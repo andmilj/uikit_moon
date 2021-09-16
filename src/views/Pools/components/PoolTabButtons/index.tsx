@@ -9,12 +9,12 @@ const PoolTabButtons = () => {
 
   const locationToIndex = (_location) => {
     switch (_location.pathname.replace(url, '')) {
-      // case '/moonkafe':
-      //   return 1
-      case '/solarbeam':
+      case '/moonkafe':
         return 1
+      case '/solarbeam':
+        return 2
         case '/moonfarm':
-          return 2
+          return 3
 
       default:
         return 0
@@ -25,11 +25,11 @@ const PoolTabButtons = () => {
     <Wrapper>
       <ButtonMenu2 activeIndex={locationToIndex(location)} size="sm" variant="primary">
         <ButtonMenuItem as={Link} to={`${url}`}>
-          Your Stake
+          My Stake
         </ButtonMenuItem>
-        {/* <ButtonMenuItem as={Link} to={`${url}/moonkafe`}>
+        <ButtonMenuItem as={Link} to={`${url}/moonkafe`}>
           Moonkafe
-        </ButtonMenuItem> */}
+        </ButtonMenuItem>
         <ButtonMenuItem as={Link} to={`${url}/solarbeam`}>
           Solarbeam
         </ButtonMenuItem>

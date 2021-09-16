@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import { Helmet } from 'react-helmet'
-import useBlock from 'hooks/useBlock'
-import { PoolCategory } from 'config/constants/types'
 import styled from 'styled-components'
 import moment from 'moment'
-import { ButtonMenu, Heading, ButtonMenuItem, Text, LinkExternal } from '@pancakeswap-libs/uikit'
+import { Heading, LinkExternal } from '@pancakeswap-libs/uikit'
 import Page from 'components/layout/Page'
 
 const Wrapper = styled.div`

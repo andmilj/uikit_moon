@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { ModalProvider } from '@pancakeswap-libs/uikit'
 // import bsc, { UseWalletProvider } from 'use-wallet'
 // import * as bsc from 'use-wallet'
@@ -24,7 +24,8 @@ import { PriceContextFreeProvider } from 'contexts/PriceContextFree'
 const Providers: React.FC = ({ children }) => {
   const rpcUrl = getRpcUrl()
   const chainId = parseInt(process.env.REACT_APP_CHAIN_ID)
-  console.log('chainId', chainId)
+
+
   return (
     <Provider store={store}>
       <ThemeContextProvider>

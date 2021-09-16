@@ -2,7 +2,6 @@ import BigNumber from 'bignumber.js'
 import { BLOCKS_PER_YEAR } from 'config'
 import contracts from 'config/constants/contracts'
 import { ethers } from 'ethers'
-import useWeb3 from 'hooks/useWeb3'
 import { Pool } from 'state/types'
 import { getWeb3 } from './web3'
 
@@ -341,4 +340,29 @@ export const findCumulativeSum = (arr) => {
   )
   return creds
 }
+
+
+export const switchNetwork = ({ _web3, params, connectWallet }) => {
+  if (_web3) {
+    _switchNetwork({ _web3, params })
+  } else {
+    connectWallet()
+      .then(w => {
+        if (w) {
+          _switchNetwork({ _web3: w, params });
+        }
+      })
+  }
+};
+
+const _switchNetwork = ({ _web3, params }) => {
+  _web3.currentProvider.request({
+    method: 'wallet_addEthereumChain',
+    params: [params]
+  })
+  .catch(error => {
+    console.log(error)
+  });
+}
+
 

@@ -147,20 +147,20 @@ const fetchFarms = async () => {
 
 
 
-    console.log("farmconfig", {
-      ...farmConfig,
-      tokenAmount: tokenAmount.toJSON(),
-      // quoteTokenAmount: quoteTokenAmount,
-      lpTotalInQuoteToken: lpTotalInQuoteToken.toJSON(),
-      tokenPriceVsQuote: tokenPriceVsQuote.toJSON(),
-      poolWeight: poolWeight.toNumber(),
-      multiplier: `${allocPoint.div(100).toString()}X`,
-      rewardsMultiplier: parseInt(rewardsMultiplier),
-      depositFeeBP: info[4],
-      eggPerBlock: new BigNumber(eggPerBlock).toNumber(),
-      depositedLp: new BigNumber(depositedLp).toJSON(),
-      // depositedKafe: new BigNumber(depositedKafe.toString()).toJSON(),
-    })
+    // console.log("farmconfig", {
+    //   ...farmConfig,
+    //   tokenAmount: tokenAmount.toJSON(),
+    //   // quoteTokenAmount: quoteTokenAmount,
+    //   lpTotalInQuoteToken: lpTotalInQuoteToken.toJSON(),
+    //   tokenPriceVsQuote: tokenPriceVsQuote.toJSON(),
+    //   poolWeight: poolWeight.toNumber(),
+    //   multiplier: `${allocPoint.div(100).toString()}X`,
+    //   rewardsMultiplier: parseInt(rewardsMultiplier),
+    //   depositFeeBP: info[4],
+    //   eggPerBlock: new BigNumber(eggPerBlock).toNumber(),
+    //   depositedLp: new BigNumber(depositedLp).toJSON(),
+    //   // depositedKafe: new BigNumber(depositedKafe.toString()).toJSON(),
+    // })
     return {
       ...farmConfig,
       tokenAmount: tokenAmount.toJSON(),
