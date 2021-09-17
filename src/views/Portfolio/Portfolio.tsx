@@ -27,7 +27,7 @@ import PoolCard2 from 'views/Pools/components/PoolCard2'
 
 import orderBy from 'lodash/orderBy'
 import useQuotePrice from 'hooks/useQuotePrice'
-import { getBalanceNumber, getBalanceNumberPrecisionFloatFixed, getDecimals, mightHide, toDollar } from 'utils/formatBalance'
+import { getBalanceNumber, getBalanceNumberPrecisionFloatFixed, getDecimals, getExpDecimals, mightHide, toDollar } from 'utils/formatBalance'
 import { getCakeProfitsPerYearVs, getVsApy, hasTikuStake, hasVaultStake } from 'utils/callHelpers'
 import Balance from 'components/Balance'
 import useTokenInfo from 'hooks/useTokenInfo'
@@ -560,13 +560,14 @@ const Portfolio: React.FC = () => {
                 )
               } else {
                 val = getDollar(
-                  new BigNumber(userPoolInfo.stakedBalance).multipliedBy(pool.tokenPriceVsQuote).dividedBy(1e18),
+                  new BigNumber(userPoolInfo.stakedBalance).multipliedBy(pool.tokenPriceVsQuote).dividedBy(getExpDecimals(pool.lpToken)),
                   pool.baseToken,
                 )
               }
               if (!resultsPerPool[chef.chefId]) {
                 resultsPerPool[chef.chefId] = {}
               }
+              // console.log(pool.pid,pool.tokString, val.toString())
               resultsPerPool[chef.chefId][pid] = val
               results[chef.chefId] = results[chef.chefId].plus(val)
             }
@@ -631,6 +632,7 @@ const Portfolio: React.FC = () => {
       if (poolStakeInfos) {
         const poolIds = Object.keys(poolStakeInfos)
         poolIds.forEach((pid) => {
+          // console.log("poolStakeInfos",pid, poolStakeInfos[pid].toString())
           if (chefTvlApys && chefTvlApys[chefId] && chefTvlApys[chefId][pid]) {
             const { apy } = chefTvlApys[chefId][pid]
             if (apy) {

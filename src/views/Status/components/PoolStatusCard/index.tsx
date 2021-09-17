@@ -1,6 +1,6 @@
 import React from 'react'
 import useBlock from 'hooks/useBlock'
-import { getBalanceNumberPrecisionFloatFixed, toDollar } from 'utils/formatBalance'
+import { getBalanceNumberPrecisionFloatFixed, getDecimals, toDollar } from 'utils/formatBalance'
 import { toast } from 'react-toastify'
 import BigNumber from 'bignumber.js'
 import { Pool } from 'state/types'
@@ -165,7 +165,7 @@ const PoolStatusCard: React.FC<CardProps> = ({ pool, event }) => {
           {latestEvent ? (
             <Section style={{ flex: 1, marginLeft: '5px', marginRight: '5px' }}>
               <Text>
-                ${getBalanceNumberPrecisionFloatFixed(getLpDollar(new BigNumber(latestEvent.lpAdded)), 18, 5)}
+                ${getBalanceNumberPrecisionFloatFixed(getLpDollar(new BigNumber(latestEvent.lpAdded)), getDecimals(pool.lpBaseTokenAddress), 5)}
               </Text>
               <Text fontSize="10px" color="grey">
                 Profits Compounded
@@ -184,7 +184,7 @@ const PoolStatusCard: React.FC<CardProps> = ({ pool, event }) => {
 
           <Section style={{ flex: 1, marginLeft: '5px', marginRight: '5px' }}>
             <Text>
-              ${pool.totalStakedAsQuoteToken ? getBalanceNumberPrecisionFloatFixed(getTvlDollar(), 18, 2) : '?'}
+              ${pool.totalStakedAsQuoteToken ? getBalanceNumberPrecisionFloatFixed(getTvlDollar(), getDecimals(pool.lpBaseTokenAddress), 2) : '?'}
             </Text>
             <Text fontSize="10px" color="grey">
               TVL

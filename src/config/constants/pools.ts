@@ -139,6 +139,7 @@ const pools: PoolConfig[] = [
     ...SOLAR_INFO,
     lpBaseTokenAddress: contracts.USDC,
     isLP: false,
+    depositFee: 5,
     
     // pendingRewardsFunc: 'pendingKUS',
     // tokenDecimals: 18,
@@ -179,6 +180,7 @@ const pools: PoolConfig[] = [
     ...SOLAR_INFO,
     isLP: false,
     lpBaseTokenAddress: contracts.WMOVR,
+    depositFee: 5,
   },
   {
     sousId: 6,
@@ -528,6 +530,7 @@ const pools: PoolConfig[] = [
       // strategy: 0x527dF2073fdB2E13De95323F9a640FD054C389CA
       ...MOONKAFE_INFO,
       lpBaseTokenAddress: contracts.USDC,
+      // hidden: false,
     },
     {
       sousId: 33,

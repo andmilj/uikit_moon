@@ -39,7 +39,6 @@ const displayTime = (millis) => {
 const Status: React.FC = () => {
   const { account } = useWallet()
   const events = useCompoundEvents()
-  // console.log("events", events)
   const block = useBlock()
   const currentMillis = useCurrentTime()
   const pools = usePools(account)
@@ -126,7 +125,7 @@ const Status: React.FC = () => {
         {/* <Wrapper> */}
         {/* <ButtonMenu activeIndex={activeIndex} onClick={handleClick} size="sm" variant="subtle">
             <ButtonMenuItem>{TranslateString(999, 'Next draw')}</ButtonMenuItem>
-            <ButtonMenuItem>{TranslateString(999, 'Past draws')}</ButtonMenuItem>
+            <ButtonMenuItem>{TranslateS tring(999, 'Past draws')}</ButtonMenuItem>
           </ButtonMenu> */}
         {/* </Wrapper> */}
         <Heading as="h1" size="xxl" mb="16px">

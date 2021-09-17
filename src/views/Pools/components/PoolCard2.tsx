@@ -1049,9 +1049,9 @@ const PoolCard2: React.FC<PoolCardProps> = ({ pool }) => {
                       ) : (
                         <>
                           {' '}
-                          <Text fontSize="14px">{removeTrailingZero(getBalanceNumber(capital))}</Text>
+                          <Text fontSize="14px">{removeTrailingZero(getBalanceNumber(capital,getDecimals(lpBaseTokenAddress)))}</Text>
                           <Text style={{ marginTop: '-5px' }} fontSize="12px">
-                            (${getBalanceNumber(capitalDollar).toFixed(2)})
+                            (${getBalanceNumber(capitalDollar,getDecimals(lpBaseTokenAddress)).toFixed(2)})
                           </Text>
                         </>
                       )}
@@ -1075,10 +1075,10 @@ const PoolCard2: React.FC<PoolCardProps> = ({ pool }) => {
                         <>
                           {' '}
                           <Text fontSize="14px">
-                            {removeTrailingZero(getBalanceNumber(bothTotalStaked.multipliedBy(pricePerShare)))}
+                            {removeTrailingZero(getBalanceNumber(bothTotalStaked.multipliedBy(pricePerShare),getDecimals(lpBaseTokenAddress)))}
                           </Text>
                           <Text style={{ marginTop: '-5px' }} fontSize="12px">
-                            (${getBalanceNumber(bothTotalStakedDollar).toFixed(2)})
+                            (${getBalanceNumber(bothTotalStakedDollar,getDecimals(lpBaseTokenAddress)).toFixed(2)})
                           </Text>
                         </>
                       )}
