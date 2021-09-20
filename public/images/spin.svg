@@ -1,7 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="none"  xmlns:v="https://vecta.io/nano" viewBox="0 0 700 700">
 <style>
 :root {
-    --dot-radius:  30px;
+    --dot-radius:  40px;
     --path-radius: 150px;
     --vp-width:    700px;
     --vp-height:   700px;
@@ -85,7 +85,7 @@
 <defs>
   <g id="circles">
     <symbol id="dot">
-      <circle cx="30" cy="30" r="30" />
+      <circle cx="40" cy="40" r="30" />
     </symbol>
 
     <symbol id="moving-dot">

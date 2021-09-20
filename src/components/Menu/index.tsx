@@ -29,7 +29,7 @@ const Menu = (props) => {
       setLang={setSelectedLanguage}
       cakePriceUsd={cakePriceUsd.toNumber()}
       // cakePriceUsd={0}
-      needRefresh={latestVer !== contracts.VERSION}
+      needRefresh ={latestVer !== contracts.VERSION}
       links={config}
       // priceLink=""
       priceLink={`https://charts.freeriver.exchange/?token=${contracts.cake[process.env.REACT_APP_CHAIN_ID]}`}

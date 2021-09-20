@@ -83,8 +83,8 @@ const App: React.FC = () => {
       {/* {latestVer !== contracts.VERSION && <HardRefresh onClick={refresh}>
           <Spinner src="images/spinner.png" />
         </HardRefresh>} */}
-{/* 
-        <HardRefresh>
+
+        {/* <HardRefresh>
           <img src="images/spin.svg" alt="spin"/>
         </HardRefresh> */}
       <ResetCSS />
@@ -147,7 +147,19 @@ const HardRefresh = styled.div`
   position: fixed;
   right: 0px;
   top: 80px;
+  width: 50px;
+  height: 50px;
   z-index: 20;
+  >img{
+
+    width: 50px;
+    height: 50px;
+    transform: scale(1.65);
+  }
+  >img:hover {
+    transform: scale(1.8);
+
+  }
 
 
 `
