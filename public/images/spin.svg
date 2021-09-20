@@ -1,0 +1,146 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="none"  xmlns:v="https://vecta.io/nano" viewBox="0 0 700 700">
+<style>
+:root {
+    --dot-radius:  30px;
+    --path-radius: 150px;
+    --vp-width:    700px;
+    --vp-height:   700px;
+  
+    --static-dot-color: hsl(10, 100%, 65%);
+    --moving-dot-color: hsl(28, 94%, 65%);
+  }
+  
+  main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  p {
+    color: var(--static-dot-color);
+  
+    font-size: 0.7rem;
+    letter-spacing: 0.1rem;
+  }
+  
+  a {
+    color: var(--moving-dot-color);
+    text-decoration: none;
+  }
+  
+  /* --------------------------------------------------
+     Classes
+     -------------------------------------------------- */
+  
+  .dot {
+    fill: var(--static-dot-color);
+  }
+  
+  .dot--light {
+    fill: var(--moving-dot-color);
+    filter: url('#glow');
+  }
+  
+  .dot--glowing {
+    fill: var(--moving-dot-color);
+    filter: url('#outer-glow');
+  }
+  
+  .scanner {
+    will-change: transform;
+    animation: 3s scan 0s infinite linear both;
+  }
+  
+  .circles {
+    filter: url("#goo");
+  }
+  
+  .centered {
+    /* FF lets us use percentages, but Chrome doesn't like that. That
+     * means we have to hard-code the dimensions of the viewport.
+     */
+    transform:
+      translate(
+        calc((var(--vp-width) * 0.5) - var(--dot-radius)),
+        calc((var(--vp-height) * 0.5) - var(--dot-radius))
+      );
+  }
+  
+  .credits {
+    margin-bottom: calc(1.5rem * 2);
+  }
+  
+  
+  @keyframes scan {
+    from {
+      transform: rotate(0deg) translateY(calc(var(--path-radius) * -1)) rotate(0deg);
+    }
+  
+    to {
+      transform: rotate(360deg) translateY(calc(var(--path-radius) * -1)) rotate(-360deg);
+    }
+  }
+</style>
+<defs>
+  <g id="circles">
+    <symbol id="dot">
+      <circle cx="30" cy="30" r="30" />
+    </symbol>
+
+    <symbol id="moving-dot">
+      <circle class="scanner" cx="175" cy="175" r="28" />
+    </symbol>
+  </g>
+
+  <g id="filters">
+    <filter id="goo">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="10" result="blur" />
+      <feColorMatrix in="blur"
+                     mode="matrix"
+                     values="1 0 0 0 0
+                             0 1 0 0 0
+                             0 0 1 0 0
+                             0 0 0 19 -9"
+                     result="goo" />
+      <feComposite in="SourceGraphic" in2="goo" operator="atop" />
+    </filter>
+
+  
+    <filter id="glow" filterUnits="userSpaceOnUse" x="-20%" y="-20%" height="140%" width="140%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="12" />
+    </filter>
+
+    
+    <filter id="outer-glow" filterUnits="userSpaceOnUse" x="-50%" y="-50%" height="220%" width="220%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="30" result="outer-glow"/>
+    </filter>
+  </g>
+</defs>
+
+<svg aria-labelledby="title"
+     aria-describedby="desc"
+     aria-busy="true"
+     role="progressbar"
+     aria-valuemin="0"
+     aria-valuemax="100">
+  <title id="title">Circular Loader with Gooey Effect</title>
+ 
+  <g class="circles centered">
+    <use class="dot" href="#dot" x="106"  y="106"/>
+    <use class="dot" href="#dot" x="0"    y="150"/>
+    <use class="dot" href="#dot" x="-106" y="106"/>
+    <use class="dot" href="#dot" x="-150" y="0"/>
+    <use class="dot" href="#dot" x="-106" y="-106"/>
+    <use class="dot" href="#dot" x="0"    y="-150"/>
+    <use class="dot" href="#dot" x="106"  y="-106"/>
+    <use class="dot" href="#dot" x="150"  y="0"/>
+    <use class="dot--light" href="#moving-dot" x="-150" y="-150" />
+  </g>
+
+
+  <g class="centered">
+    <use class="dot--glowing" href="#moving-dot" x="-150" y="-150" />
+  </g>
+</svg>
+</svg>

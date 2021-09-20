@@ -12,6 +12,7 @@ import { useFetchPublicData } from 'state/hooks'
 import GlobalStyle from './style/Global'
 import Menu from './components/Menu'
 import PageLoader from './components/PageLoader'
+// import TestSpinner from 'TestSpinner';
 // import NftGlobalNotification from './views/Nft/components/NftGlobalNotification'
 // import auth from './auth.ts'; // Sample authentication provider
 
@@ -40,6 +41,8 @@ BigNumber.config({
   EXPONENTIAL_AT: 1000,
   DECIMAL_PLACES: 80,
 })
+
+
 
 const App: React.FC = () => {
   const { account, connect } = useWallet()
@@ -80,6 +83,10 @@ const App: React.FC = () => {
       {/* {latestVer !== contracts.VERSION && <HardRefresh onClick={refresh}>
           <Spinner src="images/spinner.png" />
         </HardRefresh>} */}
+{/* 
+        <HardRefresh>
+          <img src="images/spin.svg" alt="spin"/>
+        </HardRefresh> */}
       <ResetCSS />
       <GlobalStyle />
       <Menu>
