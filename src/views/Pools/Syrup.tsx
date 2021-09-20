@@ -222,8 +222,7 @@ const Farm: React.FC = () => {
         <title>Moonkafe Finance</title>
       </Helmet>
       <WidePage>
-        {/* <Hero style={{width: "100%"}}> */}
-          <HeroRow>
+        {hasMinWidth ? (<HeroRow>
             <HeroLeft>
               <Heading as="h1" size="xxl" mb="16px">
                 MOONKAFE Vaults
@@ -241,7 +240,25 @@ const Farm: React.FC = () => {
               
             </HeroRight>
             
-          </HeroRow>
+          </HeroRow>):(<HeroRow>
+            <HeroLeft>
+              <Heading as="h1" size="xxl" mb="16px">
+                MOONKAFE Vaults
+              </Heading>
+              <Text>Stake LP into autocompounding vaults</Text>
+              <Text>You can unstake at any time</Text>
+
+                            
+              <Text>3.5% performance fees on profits</Text>
+              <Text>0.1% withdrawal fees on capital</Text>
+              
+            </HeroLeft>
+
+          
+            
+          </HeroRow>)}
+        {/* <Hero style={{width: "100%"}}> */}
+          
         {/* </Hero> */}
 
         <FlexRowDiv>

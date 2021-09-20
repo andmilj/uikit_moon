@@ -529,7 +529,7 @@ const PoolCard2: React.FC<PoolCardProps> = ({ pool }) => {
 
         <HorizontalDivider />
 
-        <TextRow style={{ justifyContent: 'space-around' }}>
+        <TextRow style={{ justifyContent: 'space-around', flexWrap: "wrap" }}>
           <TextEle style={{ height: '100%' }}>
             <Text color="grey" fontSize="11px">
               In Wallet
@@ -661,7 +661,7 @@ const PoolCard2: React.FC<PoolCardProps> = ({ pool }) => {
 
         <HorizontalDivider />
 
-        <TextRow style={{ justifyContent: 'space-around' }}>
+        <TextRow style={{ justifyContent: 'space-around', flexWrap: "wrap" }}>
           <TextEle>
             <Text color="grey" fontSize="11px">
               In Wallet
