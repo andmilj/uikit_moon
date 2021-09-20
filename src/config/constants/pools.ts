@@ -211,8 +211,7 @@ const pools: PoolConfig[] = [
     // strategy: 0x6dd7B14bd78366174e71C83feAB4275b642171E0
     ...SOLAR_INFO,
     lpBaseTokenAddress: contracts.WMOVR,
-    depositFee: 3.5,
-
+    // depositFee: 3.5,
   },
   {
     sousId: 7,

@@ -38,9 +38,9 @@ const PoolTabButtons = () => {
         <ButtonMenuItem as={Link} to={`${url}/moonfarm`}>
           Moonfarm
         </ButtonMenuItem>
-        {/* <ButtonMenuItem as={Link} to={`${url}/freeriver`}>
+        <ButtonMenuItem as={Link} to={`${url}/freeriver`}>
           Freeriver
-        </ButtonMenuItem> */}
+        </ButtonMenuItem>
       </ButtonMenu2>
     </Wrapper>
   )
