@@ -238,6 +238,30 @@ export const chefs: ChefConfig[] = [
   },
 
 
+  {
+    chefId: 5,
+    type: ChefType.MASTERCHEF,
+    image: '',
+    name: 'dragon',
+    projectLink: 'https://dragon.freeriver.exchange',
+    masterchefAddress: '0x71996CDc2874978C8fFE7580F6d2f5F11238Ecc2',
+    rewardToken: contracts.DRAGON,
+    rewardTokenSymbol: 'DRAGON',
+    poolIds: [
+      // 12 (eth), 15 (btc) removed as there is no liq pool
+      0, 1, 2, 3, 4, 5, 6, 7
+    ],
+    perBlockSignature: contracts.PERBLOCK_DRAGON,
+    pendingRewardsSignature: contracts.PENDING_DRAGON,
+    factories: ['0x52abD262B13bef4E65Ff624880E8A0595a17af48'],
+    // depositedCakeSignature: 'totalSolarInPools()',
+    quoteRouters: ['0x0d0ac50741f2Aed4D19325bE385EBeFe49C0d186'],
+    referralMode: false,
+    stakingMode: false,
+    hasDepositFee: true,
+  },
+
+
 
 ]
 export default chefs

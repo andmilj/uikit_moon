@@ -69,7 +69,22 @@ const FREE_INFO = {
   rewardRateFunction: 'rewardRate()',
   // hidden: true,
 }
+const DRAGON_INFO = {
+  poolCategory: PoolCategory.VAULT,
+  isFinished: false,
+  projectLink: 'https://dragon.freeriver.exchange',
+  projectName: 'dragon',
 
+  isLP: true,
+  rewardToken: contracts.DRAGON,
+  routerForQuote: contracts.freeRouter,
+  underlyingMasterChef: '0x71996CDc2874978C8fFE7580F6d2f5F11238Ecc2',
+  masterChefAbi: KUDEXMASTERCHEF_ABI,
+  // sortOrder: 1,
+  // tokenPerBlockMultiplier: 0.857,
+  tokenPerBlockFunc: contracts.PERBLOCK_DRAGON,
+  // hidden: true,
+}
 // const KUDEX_INFO = {
 //   poolCategory: PoolCategory.PRIVATEVAULT,
 //   isFinished: false,
@@ -711,6 +726,108 @@ const pools: PoolConfig[] = [
       ...FREE_INFO,
       underlyingMasterChef: '0x7355894158181566BCB6CF09c0A6fEbA13b9c2D3',
       lpBaseTokenAddress: contracts.USDC, // wkcs
+    },
+
+    {
+      sousId: 43,
+      poolId: 0,
+      image: 'DRAGON-USDC',
+      tokenName: 'DRAGON-USDC (FREELP)',
+      stakingTokenName: QuoteToken.DRAGONUSDCFREELP,
+      stakingTokenAddress: '0xfD3d74D1e6FF4CE57b360507ea7db7AD8541c554', // lp address
+      contractAddress: makeQuote('0x2a3C1b8ac3634B27d4409Fc43e7BBf1fB97B12A2'),
+      // strategy: 0xE2aF738a590773008C49788946B5A623f0AC6Ff6
+      ...DRAGON_INFO,
+      lpBaseTokenAddress: contracts.USDC,
+    },
+    {
+      sousId: 44,
+      poolId: 1,
+      image: 'DRAGON-MOVR',
+      tokenName: 'DRAGON-MOVR (FREELP)',
+      stakingTokenName: QuoteToken.DRAGONMOVRFREELP,
+      stakingTokenAddress: '0x77ef76AA05c78376a3b624621b499c503308d0C6', // lp address
+      contractAddress: makeQuote('0x17c3BF96cB920794a98CfEcDD09D102Ab1C14633'),
+      // strategy: 0xf9C34D0b81ef4d2DC71892c0162422c92C0a7E7E
+      ...DRAGON_INFO,
+      lpBaseTokenAddress: contracts.MOVR,
+    },
+    {
+      sousId: 45,
+      poolId: 2,
+      image: 'MOVR-USDC',
+      tokenName: 'MOVR-USDC (FREELP)',
+      stakingTokenName: QuoteToken.MOVRUSDCFREELP,
+      stakingTokenAddress: '0x8C105c1800FB5baf368ca8A91a2121891966dB3E', // lp address
+      contractAddress: makeQuote('0xd9304bC22f2C5001eFfE21342B90f425C97f7b9f'),
+      // strategy: 0x64b79575F3Fd64a9887e4878A5cD65D3C3eE8D10
+      ...DRAGON_INFO,
+      lpBaseTokenAddress: contracts.USDC,
+      depositFee: 4,
+    },
+    {
+      sousId: 46,
+      poolId: 3,
+      image: 'FREE-MOVR',
+      tokenName: 'FREE-MOVR (FREELP)',
+      stakingTokenName: QuoteToken.FREEMOVRFREELP,
+      stakingTokenAddress: '0x043BA93eE173adf942c1dfa4115803555a65759e', // lp address
+      contractAddress: makeQuote('0xCce06dee4f92471e4eb745Ab93F00A98BCEADe32'),
+      // strategy: 0xcABeefb7042DD7a71Cbe906e27F2498BcA6De8Ce
+      ...DRAGON_INFO,
+      lpBaseTokenAddress: contracts.WMOVR,
+    },
+    {
+      sousId: 47,
+      poolId: 4,
+      image: 'FREE-USDC',
+      tokenName: 'FREE-USDC (FREELP)',
+      stakingTokenName: QuoteToken.FREEUSDCFREELP,
+      stakingTokenAddress: '0x2397E65E2fCc07e33b49E657D8eEbFf634CfB288', // lp address
+      contractAddress: makeQuote('0xdC557d005d8c45fF7C6ad27840Af5065e35DBBe9'),
+      // strategy: 0x73f971f2b5E603C153c76081436c973eeCb96d14
+      ...DRAGON_INFO,
+      lpBaseTokenAddress: contracts.USDC,
+    },
+    {
+      sousId: 48,
+      poolId: 5,
+      image: 'DRAGON',
+      tokenName: 'DRAGON',
+      stakingTokenName: QuoteToken.DRAGON,
+      stakingTokenAddress: '0x062bD733268269d7Ecb85Cd3EA84281E6bEd7f5F', // lp address
+      contractAddress: makeQuote('0xA6Ab63f0ac643Fab33Da75122Cb700679c683C45'),
+      // strategy: 0x54DD703255097919b6E4b63B85e2fa60ADb9BF53
+      ...DRAGON_INFO,
+      lpBaseTokenAddress: contracts.USDC,
+      isLP: false,
+    },
+    {
+      sousId: 49,
+      poolId: 6,
+      image: 'USDC',
+      tokenName: 'USDC',
+      stakingTokenName: QuoteToken.USDC,
+      stakingTokenAddress: '0xE3F5a90F9cb311505cd691a46596599aA1A0AD7D', // lp address
+      contractAddress: makeQuote('0x2F1dC17e5dAb5E67fD2e1078aD4cb92643F1C48d'),
+      // strategy: 0x74a9aA5C74B608CC51488e946CEFC21963bc98BE
+      ...DRAGON_INFO,
+      lpBaseTokenAddress: contracts.WMOVR,
+      depositFee: 4,
+      isLP: false,
+    },
+    {
+      sousId: 50,
+      poolId: 7,
+      image: 'FREE',
+      tokenName: 'FREE',
+      stakingTokenName: QuoteToken.FREE,
+      stakingTokenAddress: '0x63F2ADf5f76F00d48fe2CBef19000AF13Bb8de82', // lp address
+      contractAddress: makeQuote('0x624c9244DD2fA2701bAd7e6E6c4a71a61497A54E'),
+      // strategy: 0x623E8275E273764E14E5323065A2C6140A2456fb
+      ...DRAGON_INFO,
+      lpBaseTokenAddress: contracts.USDC,
+      isLP: false,
     },
 ]
 

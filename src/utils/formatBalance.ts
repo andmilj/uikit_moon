@@ -199,6 +199,12 @@ export const getLiquidLink = (stakingTokenName, liquidityUrlPathParts, projectNa
   if (projectName === "moonfarm"){
     return `https://swap.moonfarm.in/#/swap?inputCurrency=ETH&outputCurrency=${tok}`
   }
+  if (projectName === "dragon"){
+    return `https://freeriver.exchange/#/swap?inputCurrency=ETH&outputCurrency=${tok}`
+  }
+  if (projectName === "freeriver"){
+    return `https://freeriver.exchange/#/swap?inputCurrency=ETH&outputCurrency=${tok}`
+  }
   return `https://solarbeam.io/exchange/swap?inputCurrency=ETH&outputCurrency=${tok}`
 }
 

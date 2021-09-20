@@ -51,6 +51,7 @@ const contracts = {
   KAFE: '0x52f04C806EB82930F40D410259b7AF8E18d3BDc9',
   BEANS: '0xC2392DD3e3fED2c8Ed9f7f0bDf6026fcd1348453',
   LAIKA: '0x65e66a61D0a8F1e686C2D6083ad611a10D84D97A',
+  DRAGON: '0x062bd733268269d7ecb85cd3ea84281e6bed7f5f',
 
   WMOVR: '0x98878b06940ae243284ca214f92bb71a2b032b8a',
   MOVR: '0x98878b06940ae243284ca214f92bb71a2b032b8a',
@@ -78,11 +79,13 @@ MSWAP: '0xB3FB48bF090bEDFF4f6F93FFb40221742E107db7',
   PENDING_KAFE: 'pendingKafe(uint256,address)',
   PENDING_SOLAR: 'pendingSolar(uint256,address)',
   PENDING_MOON: 'pendingmoonfarm(uint256,address)',
+  PENDING_DRAGON: 'pendingEgg(uint256,address)',
 
   
   PERBLOCK_KAFE: 'kafePerBlock()',
   PERBLOCK_SOLAR: 'solarPerBlock()',
   PERBLOCK_MOON: 'moonfarmPerBlock()',
+  PERBLOCK_DRAGON: 'eggPerBlock()',
 
   DEPOSITED_KUD: 'depositedKud()',
 

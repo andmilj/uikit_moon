@@ -57,6 +57,7 @@ const tokens: TokenConfig[] = [
 
   { symbol: 'BEANS', address: "0xC2392DD3e3fED2c8Ed9f7f0bDf6026fcd1348453", routerForQuote: contracts.moonRouter },
   { symbol: 'BBMS', address: "0xC0FC9E41C84803fcE8A54Ca8bEcb73cEC3E9A533", routerForQuote: contracts.moonRouter },
+  { symbol: 'DRAGON', address: "0x062bD733268269d7Ecb85Cd3EA84281E6bEd7f5F", routerForQuote: contracts.freeRouter },
   // {
   //   symbol: 'RS',
   //   address: '0x1bbd57143428452a4deb42519391a0a436481c8e',

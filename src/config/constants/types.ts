@@ -43,6 +43,7 @@ export enum QuoteToken {
   'mCAKE' = 'mCAKE',
   'RivrDoge' = 'RivrDoge',
   'BEANS' = 'BEANS',
+  'DRAGON' = 'DRAGON',
 
   'SOLARMOVRSOLARLP' = 'SOLAR-MOVR SOLARLP',
 
@@ -76,6 +77,8 @@ export enum QuoteToken {
 'FREEMOVRFREELP' = 'FREE-MOVR FREELP',
 'FREEUSDCFREELP' = 'FREE-USDC FREELP',
 'MOVRUSDCFREELP' = 'MOVR-USDC FREELP',
+'DRAGONUSDCFREELP' = 'DRAGON-USDC FREELP',
+'DRAGONMOVRFREELP' = 'DRAGON-MOVR FREELP',
 }
 
 export enum PoolCategory {

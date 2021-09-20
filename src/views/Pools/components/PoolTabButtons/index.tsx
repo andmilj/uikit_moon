@@ -17,7 +17,8 @@ const PoolTabButtons = () => {
           return 3
         case '/freeriver':
             return 4
-  
+            case '/dragon':
+              return 5
       default:
         return 0
     }
@@ -40,6 +41,9 @@ const PoolTabButtons = () => {
         </ButtonMenuItem>
         <ButtonMenuItem as={Link} to={`${url}/freeriver`}>
           Freeriver
+        </ButtonMenuItem>
+        <ButtonMenuItem as={Link} to={`${url}/dragon`}>
+          Dragon
         </ButtonMenuItem>
       </ButtonMenu2>
     </Wrapper>

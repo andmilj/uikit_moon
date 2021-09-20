@@ -336,6 +336,7 @@ const Farm: React.FC = () => {
           <Route path={`${path}/solarbeam`}>{getProjectPools('solarbeam')}</Route>
           <Route path={`${path}/moonfarm`}>{getProjectPools('moonfarm')}</Route>
           <Route path={`${path}/freeriver`}>{getProjectPools('freeriver')}</Route>
+          <Route path={`${path}/dragon`}>{getProjectPools('dragon')}</Route>
         </FlexLayout>
 {/* 
         <div style={{display: 'flex', justifyContent:'center', flexDirection:'row', flex:1, width: '100%'}}>
