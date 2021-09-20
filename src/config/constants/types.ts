@@ -42,6 +42,7 @@ export enum QuoteToken {
   'DAI' = 'DAI',
   'mCAKE' = 'mCAKE',
   'RivrDoge' = 'RivrDoge',
+  'BEANS' = 'BEANS',
 
   'SOLARMOVRSOLARLP' = 'SOLAR-MOVR SOLARLP',
 
@@ -53,6 +54,9 @@ export enum QuoteToken {
   'BUSDUSDCSOLARLP' = 'BUSD-USDC SOLARLP',
   'ETHUSDCSOLARLP' = 'ETH-USDC SOLARLP',
   'BNBBUSDSOLARLP' = 'BNB-BUSD SOLARLP',
+  
+  'USDTUSDCSOLARLP' = 'USDT-USDC SOLARLP',
+  'WBTCUSDCSOLARLP' = 'WBTC-USDC SOLARLP',
 
   'MOONMOVRMOONLP' = 'MOON-MOVR MOONLP',
   'MSWAPMOVRMOONLP' = 'MSWAP-MOVR MOONLP',
@@ -63,10 +67,15 @@ export enum QuoteToken {
   'DAIUSDCMOONLP' = 'DAI-USDC MOONLP',
   'USDTUSDCMOONLP' = 'USDT-USDC MOONLP',
   'BEANSMOVRMOONLP' = 'BEANS-MOVR MOONLP',
+  'LAIKAMOVRMOONLP' = 'LAIKA-MOVR MOONLP',
   
   'KAFEMOVRSOLARLP' = 'KAFE-MOVR SOLARLP',
   'KAFEUSDDCSOLARLP' = 'KAFE-USDC SOLARLP',
-  'KAFEMOVRMOONLP' = 'KAFE-MOVR MOONLP'
+  'KAFEMOVRMOONLP' = 'KAFE-MOVR MOONLP',
+
+'FREEMOVRFREELP' = 'FREE-MOVR FREELP',
+'FREEUSDCFREELP' = 'FREE-USDC FREELP',
+'MOVRUSDCFREELP' = 'MOVR-USDC FREELP',
 }
 
 export enum PoolCategory {
@@ -169,6 +178,7 @@ export interface PoolConfig {
   // harvest?: boolean
   isFinished?: boolean
   boostFinished?: boolean
+  boostEndBlock?: number
   // tokenDecimals: number
 
   isLP?: boolean

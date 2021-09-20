@@ -1582,16 +1582,16 @@ export const fetchPoolsTotalStatking = async () => {
   // const lpPoolsWithUSDTBase = poolsConfig.filter(p => !p.hidden && p.poolCategory===PoolCategory.VAULT && p.isLP && p.lpBaseTokenAddress.toLowerCase()==="0x0039f574ee5cc39bdd162e9a88e3eb1f111baf48".toLowerCase());
   // const temp3 = await fetchPoolsTotalStakingUSDTBase(lpPoolsWithUSDTBase);
 
-  console.log('t0-t0_', t0 - t0_)
-  console.log('t1-t0', t1 - t0)
-  console.log('t2-t1', t2 - t1)
-  console.log('t3-t2', t3 - t2)
-  console.log('t4-t3', t4 - t3)
-  console.log('t5-t4', t5 - t4)
-  console.log('t6-t5', t6 - t5)
-  console.log('t7-t6', t7 - t6)
-  console.log('t8-t7', t8 - t7)
-  console.log('t9-t8', t9 - t8)
+  // console.log('t0-t0_', t0 - t0_)
+  // console.log('t1-t0', t1 - t0)
+  // console.log('t2-t1', t2 - t1)
+  // console.log('t3-t2', t3 - t2)
+  // console.log('t4-t3', t4 - t3)
+  // console.log('t5-t4', t5 - t4)
+  // console.log('t6-t5', t6 - t5)
+  // console.log('t7-t6', t7 - t6)
+  // console.log('t8-t7', t8 - t7)
+  // console.log('t9-t8', t9 - t8)
   const result = [...temp1, ...temp2, ...temp4, ...temp5, ...temp1syn, ...temp2syn]
 
   const keys = Object.keys(vaultShareFarmInfos).map((i) => parseInt(i))

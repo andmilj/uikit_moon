@@ -33,6 +33,7 @@ export interface QuotePrices {
   mswap?: BigNumber
   solar?: BigNumber
   free?: BigNumber
+  beans?: BigNumber
 }
 export const toDollar = (amt, base, prices: QuotePrices) => {
   switch (base) {
@@ -56,7 +57,9 @@ export const toDollar = (amt, base, prices: QuotePrices) => {
       return prices.solar.multipliedBy(amt)
     case contracts.FREE.toLowerCase():
       return prices.free.multipliedBy(amt)
-
+    case contracts.BEANS.toLowerCase():
+      return prices.beans.multipliedBy(amt)
+  
     default:
       return amt // assume 1 dollar per tok
   }
@@ -85,7 +88,9 @@ export const toDollarQuote = (amt, quote, prices: QuotePrices) => {
       return prices.solar.multipliedBy(amt)
     case QuoteToken.FREE:
       return prices.free.multipliedBy(amt)
-
+    case QuoteToken.BEANS:
+      return prices.beans.multipliedBy(amt)
+  
     default:
       return amt // assume 1 dollar per tok
   }
@@ -119,6 +124,8 @@ export const isValidBase = (add) => {
       return true
     case contracts.FREE.toLowerCase():
       return true
+    case contracts.BEANS.toLowerCase():
+      return true
     default:
       return false
   }
@@ -149,6 +156,11 @@ export const getAddressName = (add) => {
       return 'BNB'
     case contracts.FREE.toLowerCase():
       return 'FREE'
+    case contracts.BEANS.toLowerCase():
+        return 'BEANS'
+    case contracts.LAIKA.toLowerCase():
+        return 'LAIKA'
+
     default:
       return false
   }
@@ -165,7 +177,7 @@ export const mightHide = (n, hide: boolean) => {
   return hide ? '*****' : n
 }
 
-export const getLiquidLink = (stakingTokenName, liquidityUrlPathParts) => {
+export const getLiquidLink = (stakingTokenName, liquidityUrlPathParts, projectName="") => {
   if (stakingTokenName.toString().includes('SOLARLP')) {
     return `https://solarbeam.io/exchange/add/${liquidityUrlPathParts}`
   }
@@ -179,7 +191,13 @@ export const getLiquidLink = (stakingTokenName, liquidityUrlPathParts) => {
 
   const tok = liquidityUrlPathParts.split('/')[0]
   if (tok === 'ETH') {
+    if (projectName === "moonfarm"){
+      return `https://swap.moonfarm.in/#/swap?inputCurrency=ETH`
+    }
     return `https://solarbeam.io/exchange/swap?inputCurrency=ETH`
+  }
+  if (projectName === "moonfarm"){
+    return `https://swap.moonfarm.in/#/swap?inputCurrency=ETH&outputCurrency=${tok}`
   }
   return `https://solarbeam.io/exchange/swap?inputCurrency=ETH&outputCurrency=${tok}`
 }
@@ -191,4 +209,9 @@ export const getDecimals = (tokenAddress) => {
 
 export const getExpDecimals = (tokenAddress) => {
   return new BigNumber(10).pow(getDecimals(tokenAddress));
+}
+
+export const printBNDict = (d) => {
+  const temp = Object.keys(d).map(k => `${k}: ${d[k].toString()}`)
+  return `\n${temp.join("\n")}`
 }

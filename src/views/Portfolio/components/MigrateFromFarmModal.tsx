@@ -55,7 +55,10 @@ const Container = styled(FlexColDiv)`
 const Section = styled(FlexRowDiv)`
   width: 100%;
 `
-const SectionCol = styled(FlexColDiv)``
+const SectionCol = styled(FlexColDiv)`
+  align-items: flex-start;
+
+`
 const Dropdown2 = styled(Dropdown)`
   // border: 1px solid grey;
   // cursor: pointer;
@@ -204,6 +207,8 @@ const MigrateFromFarmModal: React.FC<ModalProps> = ({ onConfirm, onDismiss }) =>
     oldChef ? oldChef.masterchefAddress : defaultChefAddress,
     oldPool ? oldPool.pid : 0,
   )
+
+  
   const { onUnstake } = useChefUnstake(
     oldChef ? oldChef.masterchefAddress : defaultChefAddress,
     getAbiFromChef(oldChef),
@@ -485,7 +490,7 @@ const MigrateFromFarmModal: React.FC<ModalProps> = ({ onConfirm, onDismiss }) =>
           ''
         ) : (
           <Slider
-            style={{ width: '95%' }}
+            style={{ width: '95%' , marginTop: "-8px"}}
             defaultValue={100}
             valueLabelDisplay="off"
             step={1}

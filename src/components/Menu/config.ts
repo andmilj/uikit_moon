@@ -113,7 +113,7 @@ const config: MenuEntry[] = [
       },
       {
         label: 'Blog',
-        href: 'http://kafefinance.medium.com/e',
+        href: 'http://kafefinance.medium.com/',
       },
     ],
   },

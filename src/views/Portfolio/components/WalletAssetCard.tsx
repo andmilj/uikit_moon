@@ -1,5 +1,7 @@
 import BigNumber from 'bignumber.js'
 import ReactTooltip from 'react-tooltip'
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
 import React, { useState } from 'react'
 import { useWallet } from 'use-wallet'
 import { withStyles, makeStyles } from '@material-ui/core/styles'
@@ -86,7 +88,7 @@ const BoostIconContainer = styled.div`
   min-width: 20px;
 `
 const WalletAssetCard: React.FC<WalletAssetCardProps> = ({ token, onRocketClick }) => {
-  const { account } = useWallet()
+  const { account, ethereum} = useWallet()
   const logoWidth = token.image ? 46 : 32
   const { isDark } = useTheme()
   const vaults = usePools(account)
@@ -127,6 +129,28 @@ const WalletAssetCard: React.FC<WalletAssetCardProps> = ({ token, onRocketClick 
   const logoClick = () => {
     window.open(getWalletLink(token), '_blank')
   }
+  const addToMeta = async ()=>{
+    const wasAdded = await ethereum.request({
+      method: 'wallet_watchAsset',
+      params: {
+        type: 'ERC20', // Initially only supports ERC20, but eventually more!
+        options: {
+          address: token.address, // The address that the token is at.
+          symbol: token.symbol
+          .replace(/[^\w]/gi, '')
+          .replace("SOLARLP","SLP")
+          .replace("MOONLP","MLP")
+          .replace("FREELP","FLP")
+          .slice(0,11)
+          ,
+          decimals: token.decimals || 18, // The number of decimals in the token
+          image: token.isLP?null:`https://moon.kafe.finance/images/tokens/${token.symbol}.png`, // A string url of the token logo
+        },
+      },
+    });
+    console.log("wasAdded", wasAdded)
+  
+  }
 
   const getWalletLink = (t) => {
     // if (!token.isLP) {
@@ -166,11 +190,26 @@ const WalletAssetCard: React.FC<WalletAssetCardProps> = ({ token, onRocketClick 
   }
   const viewOn = getExchange()
 
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+  // onClick={logoClick}
   return (
     <WalletAssetRow key={token.symbol}>
       <ReactTooltip />
 
-      <TokenLogo style={{ cursor: 'pointer' }} data-delay-show={300} data-tip={`View on ${viewOn}`} onClick={logoClick}>
+
+      <TokenLogo style={{ cursor: 'pointer' }} data-delay-show={300} data-tip={`View on ${viewOn}`} 
+      aria-controls="basic-menu"
+      aria-haspopup="true"
+      aria-expanded={open ? 'true' : undefined}
+      onClick={handleClick}
+      >
         <Image
           src={`images/tokens/${token.image || token.symbol}.png`}
           width={logoWidth}
@@ -178,6 +217,20 @@ const WalletAssetCard: React.FC<WalletAssetCardProps> = ({ token, onRocketClick 
           alt={token.symbol}
         />
       </TokenLogo>
+      <Menu
+        id="basic-menu"
+        anchorEl={anchorEl}
+        open={open}
+        onClose={handleClose}
+        MenuListProps={{
+          'aria-labelledby': 'basic-button',
+        }}
+      >
+        {(token.isLP) ? (<MenuItem onClick={logoClick}>Liquidity</MenuItem>):(<MenuItem onClick={logoClick}>Swap</MenuItem>)}
+        {token.symbol !== "MOVR" && <MenuItem onClick={addToMeta}>Add To Metamask</MenuItem>}
+        {/* <MenuItem onClick={handleClose}>Logout</MenuItem> */}
+      </Menu>
+
 
       <TokenLeft>
         <FlexRowDiv style={{ justifyContent: 'flex-start' }}>

@@ -53,6 +53,23 @@ const MOONKAFE_INFO = {
   tokenPerBlockFunc: contracts.PERBLOCK_KAFE,
   // hidden: true,
 }
+const FREE_INFO = {
+  poolCategory: PoolCategory.SYNTHETIX_VAULT,
+  isFinished: false,
+  projectLink: 'https://freeriver.exchange/',
+  projectName: 'freeriver',
+
+  isLP: true,
+  rewardToken: contracts.FREE,
+  routerForQuote: '0x0d0ac50741f2Aed4D19325bE385EBeFe49C0d186',
+  masterChefAbi: SYNCHEF_ABI,
+  // sortOrder: 1,
+  // tokenPerBlockMultiplier: 0.857,
+  tokenPerBlockFunc: contracts.PERBLOCK_KAFE,
+  rewardRateFunction: 'rewardRate()',
+  // hidden: true,
+}
+
 // const KUDEX_INFO = {
 //   poolCategory: PoolCategory.PRIVATEVAULT,
 //   isFinished: false,
@@ -124,6 +141,7 @@ const pools: PoolConfig[] = [
     ...SOLAR_INFO,
     lpBaseTokenAddress: contracts.WMOVR,
     isLP: false,
+    hidden: true,
     // pendingRewardsFunc: 'pendingKUS',
     // tokenDecimals: 18,
   },
@@ -193,6 +211,8 @@ const pools: PoolConfig[] = [
     // strategy: 0x6dd7B14bd78366174e71C83feAB4275b642171E0
     ...SOLAR_INFO,
     lpBaseTokenAddress: contracts.WMOVR,
+    depositFee: 3.5,
+
   },
   {
     sousId: 7,
@@ -299,6 +319,7 @@ const pools: PoolConfig[] = [
     ...MOONFARM_INFO,
     lpBaseTokenAddress: contracts.USDC,
     isLP: false,
+    depositFee: 4,
   },
   {
     sousId: 15,
@@ -465,7 +486,8 @@ const pools: PoolConfig[] = [
     ...MOONFARM_INFO,
     lpBaseTokenAddress: contracts.WMOVR,
     isLP: false,
-    },
+    depositFee: 4,
+  },
     {
       sousId: 28,
       poolId: 0,
@@ -548,14 +570,14 @@ const pools: PoolConfig[] = [
       sousId: 34,
       poolId: 5,
       image: 'USDC-MOVR',
-      tokenName: 'USDC-MOVR (SOLARLP)',
+      tokenName: 'USDC-MOVR (MOONLP)',
       stakingTokenName: QuoteToken.USDCMOVRSOLARLP,
       stakingTokenAddress: "0xe537f70a8b62204832B8Ba91940B77d3f79AEb81", // lp address
       contractAddress: makeQuote('0x8AD8E1aD610204F1Fa40857De82732710471d36d'),
       // strategy: 0x94B7A6c0FaAA047B59f073F016b0E651448049a1
       ...MOONKAFE_INFO,
       lpBaseTokenAddress: contracts.WMOVR,
-      depositFee: 3.5,
+      // depositFee: 3.5,
     },
     {
       sousId: 35,
@@ -568,8 +590,129 @@ const pools: PoolConfig[] = [
       // strategy: 0x119Ff34e7e66B0Be370762cB8a615BbBFd396549
       ...MOONFARM_INFO,
       lpBaseTokenAddress: contracts.WMOVR,
-      // hidden: false,
+      hidden: false,
+
+      disclaimerPositive: "Boosted",
+
+      vaultShareFarmPid: 0,
+      vaultShareFarmContract: "0x71018266d5Ebc292f7CDB56B0fE55f13a101fDC2",
+      vaultShareRewardToken: contracts.BEANS,
+      vaultShareToken: {
+        tokenAddresses: makeQuote(contracts.BEANS),
+        quoteTokenSymbol: QuoteToken.WMOVR,
+        quoteTokenAdresses: contracts.wbnb
+      },
+      boostEndBlock: 601403,
+
     },
+    {
+      sousId: 36,
+      poolId: 31,
+    image: 'LAIKA-MOVR',
+      tokenName: 'LAIKA-MOVR (MOONLP)',
+      stakingTokenName: QuoteToken.LAIKAMOVRMOONLP,
+      stakingTokenAddress: '0x9eE6b4Ea23BeD962A8a7c069eFc928D2D847f644', // lp address
+      contractAddress: makeQuote('0xE4F33eD8978Ee9c3e0F00842754463eD13e0D14A'),
+      // strategy: 0xBc9153c163A832aB20d8e5E8bF2ABD16881972E8
+      ...MOONFARM_INFO,
+      lpBaseTokenAddress: contracts.WMOVR,
+      // hidden: true,
+
+      disclaimerPositive: "Boosted",
+
+      vaultShareFarmPid: 0,
+      vaultShareFarmContract: "0xe1f427890397402964A1c72974040546936676Ca",
+      vaultShareRewardToken: contracts.LAIKA,
+      vaultShareToken: {
+        tokenAddresses: makeQuote(contracts.LAIKA),
+        quoteTokenSymbol: QuoteToken.WMOVR,
+        quoteTokenAdresses: contracts.wbnb
+      },
+      boostEndBlock: 608336,
+
+
+    },
+    // {
+    //   sousId: 37,
+    //   poolId: 0,
+    //   image: 'SOLAR',
+    //   tokenName: 'SOLAR',
+    //   stakingTokenName: QuoteToken.SOLAR,
+    //   stakingTokenAddress: '0x6bd193ee6d2104f14f94e2ca6efefae561a4334b', // lp address
+    //   contractAddress: makeQuote('0xaF96165115347c8d41c3F8F85d76501602F3677d'),
+    //   // strategy: 0xBEe0dd6adFE0642e5172420b02CFFc69f6f166ef
+    //   ...SOLAR_INFO,
+    //   lpBaseTokenAddress: contracts.WMOVR,
+    //   isLP: false,
+    //   underlyingMasterChef: '0x7e6E03822D0077F3C417D33caeAc900Fc2645679',
+    //   projectName: 'solarbeam',
+    //   // pendingRewardsFunc: 'pendingKUS',
+    //   // tokenDecimals: 18,
+    // },
+
+    // {
+    //   sousId: 38,
+    //   poolId: 12,
+    //   image: 'WBTC-USDC',
+    //   tokenName: 'WBTC-USDC (SOLARLP)',
+    //   stakingTokenName: QuoteToken.WBTCUSDCSOLARLP,
+    //   stakingTokenAddress: '0x83d7a3fc841038e8c8f46e6192bbcca8b19ee4e7', // lp address
+    //   contractAddress: makeQuote('0xC78F7f19d4bf7518D789F206983de0dE906E2274'),
+    //   // strategy: 0x2059F024b49AA9Cd4D8984d7a4Ca984066497E57
+    //   ...SOLAR_INFO,
+    //   lpBaseTokenAddress: contracts.USDC,
+    // },
+    // {
+    //   sousId: 39,
+    //   poolId: 13,
+    //   image: 'USDT-USDC',
+    //   tokenName: 'USDT-USDC (SOLARLP)',
+    //   stakingTokenName: QuoteToken.USDTUSDCSOLARLP,
+    //   stakingTokenAddress: '0x2a44696DDc050f14429bd8a4A05c750C6582bF3b', // lp address
+    //   contractAddress: makeQuote('0x99f27Ec60C6c0094d7f9136603A60f87C315A692'),
+    //   // strategy: 0x6037DB31D1439552b86Fa1539F2FEeaec32e6E79
+    //   ...SOLAR_INFO,
+    //   lpBaseTokenAddress: contracts.USDC,
+    // },
+    // {
+    //   sousId: 40,
+    //   poolId: 1001,
+    //   image: 'FREE-MOVR',
+    //   tokenName: 'FREE-MOVR (FREELP)',
+    //   stakingTokenName: QuoteToken.FREEMOVRFREELP,
+    //   stakingTokenAddress: '0x043BA93eE173adf942c1dfa4115803555a65759e', // lp address
+    //   contractAddress: makeQuote('0xeEd355da46e9E4b6054AF4E3E5A3EDF5e0B9Fa8B'),
+    //   // incoming: 0x342c687f0d0fC5E119a06a4670bb4ab1053cA934
+    //   ...FREE_INFO,
+    //   underlyingMasterChef: '0x31341761A726585257067D15967AD301187504B2',
+    //   lpBaseTokenAddress: contracts.WMOVR, // wkcs
+    // },
+    // {
+    //   sousId: 41,
+    //   poolId: 1002,
+    //   image: 'FREE-USDC',
+    //   tokenName: 'FREE-USDC (FREELP)',
+    //   stakingTokenName: QuoteToken.FREEUSDCFREELP,
+    //   stakingTokenAddress: '0x2397E65E2fCc07e33b49E657D8eEbFf634CfB288', // lp address
+    //   contractAddress: makeQuote('0x841b0f62E5Ea00EDa3cb3DbF084DEc2ba0B6Ea9a'),
+    //   // incoming: 0xE94857638a906284f4e93e453362fe5B0E7738bB
+    //   ...FREE_INFO,
+    //   underlyingMasterChef: '0xfA382b7fb23C558136602a2D4C09D527ea76bb5A',
+    //   lpBaseTokenAddress: contracts.USDC, // wkcs
+    // },
+    // {
+    //   sousId: 42,
+    //   poolId: 1003,
+    //   image: 'MOVR-USDC',
+    //   tokenName: 'MOVR-USDC (FREELP)',
+    //   stakingTokenName: QuoteToken.MOVRUSDCFREELP,
+    //   stakingTokenAddress: '0x8C105c1800FB5baf368ca8A91a2121891966dB3E', // lp address
+    //   contractAddress: makeQuote('0x046ed11a053258d49Af44e4A556Ff9Eaca1F7E31'),
+    //   // incoming: 0xEB1F8fe18c26f73807150220CEf07bA70ce884a6
+    //   ...FREE_INFO,
+    //   underlyingMasterChef: '0x7355894158181566BCB6CF09c0A6fEbA13b9c2D3',
+    //   lpBaseTokenAddress: contracts.USDC, // wkcs
+    // },
 ]
 
 export default pools

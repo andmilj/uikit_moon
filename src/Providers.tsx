@@ -20,6 +20,7 @@ import { PriceContextMswapProvider } from 'contexts/PriceContextMswap'
 import { PriceContextSolarProvider } from 'contexts/PriceContextSolar'
 import { QuotePriceContextProvider } from 'contexts/QuotePriceContext'
 import { PriceContextFreeProvider } from 'contexts/PriceContextFree'
+import { PriceContextBeansProvider } from 'contexts/PriceContextBeans'
 
 const Providers: React.FC = ({ children }) => {
   const rpcUrl = getRpcUrl()
@@ -49,11 +50,13 @@ const Providers: React.FC = ({ children }) => {
                           <PriceContextMswapProvider>
                             <PriceContextSolarProvider>
                               <PriceContextFreeProvider>
+                              <PriceContextBeansProvider>
                                 <QuotePriceContextProvider>
                                   <RefreshContextProvider>
                                     <ModalProvider>{children}</ModalProvider>
                                   </RefreshContextProvider>
                                 </QuotePriceContextProvider>
+                              </PriceContextBeansProvider>
                               </PriceContextFreeProvider>
                             </PriceContextSolarProvider>
                           </PriceContextMswapProvider>

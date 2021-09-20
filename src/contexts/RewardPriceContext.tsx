@@ -10,6 +10,7 @@ import contracts from 'config/constants/contracts'
 import BigNumber from 'bignumber.js'
 import chefConfigs from 'config/constants/chefs'
 import farmConfigs from 'config/constants/farms'
+import { getAddressName } from 'utils/formatBalance'
 
 const RewardPriceContext = React.createContext({})
 const RewardPriceContextProvider = ({ children }) => {
@@ -99,7 +100,7 @@ const RewardPriceContextProvider = ({ children }) => {
             previousPrice.current[cc.rewardToken.toLowerCase()] !== val
           ) {
             changed = true
-            // console.log("price of ", cc.rewardToken, val)
+            console.log("price of", getAddressName(cc.rewardToken), val)
             previousPrice.current[cc.rewardToken.toLowerCase()] = val
             finalPrices[cc.rewardToken.toLowerCase()] = new BigNumber(val)
           }

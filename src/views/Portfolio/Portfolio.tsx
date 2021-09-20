@@ -1,4 +1,5 @@
-import React, { useState } from 'react'
+import ReactGA from 'react-ga';
+import React, { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { Helmet } from 'react-helmet'
 // import { PieChart, Pie, Sector, Cell, ResponsiveContainer, Label } from 'recharts';
@@ -10,8 +11,8 @@ import Tooltip from '@material-ui/core/Tooltip'
 import { BLOCKS_PER_YEAR } from 'config'
 import BigNumber from 'bignumber.js'
 import { PoolCategory } from 'config/constants/types'
-
 import { useWallet } from 'use-wallet'
+import usePriceRewards from 'hooks/usePriceRewards'
 import {
   useChefs,
   useFarms,
@@ -22,6 +23,7 @@ import {
   useTotalPersonalValue,
 } from 'state/hooks'
 import contracts from 'config/constants/contracts'
+import { ChefType } from 'config/constants/chefs';
 import guestConfig from 'config/constants/guest'
 import PoolCard2 from 'views/Pools/components/PoolCard2'
 
@@ -35,12 +37,11 @@ import styled from 'styled-components'
 import moment from 'moment'
 import { Text, Checkbox, Image, Tag, Button, useModal } from '@pancakeswap-libs/uikit'
 import Page from 'components/layout/Page'
-import usePriceRewards from 'hooks/usePriceRewards'
 import InfoBox from './components/InfoBox'
 import ChefFarmCard from './components/ChefFarmCard'
+import MigrateFromFarmModal from './components/MigrateFromFarmModal'
 import WalletAssetCard from './components/WalletAssetCard'
 import SelectVaultModal from './components/SelectVaultModal'
-import MigrateFromFarmModal from './components/MigrateFromFarmModal'
 
 const FlexRowDiv = styled.div`
   display: flex;
@@ -281,6 +282,17 @@ const Portfolio: React.FC = () => {
     dispatch(setHideBalancesAction(!hideBalances))
   }
 
+  useEffect(() => {
+    if (account){
+      console.log("accessed portfolio")
+      ReactGA.event({
+        category: "Portfolio",
+        action: "portfolio",
+      });
+    }
+
+
+  },[account])
   const { isDark } = useTheme()
   const RADIAN = Math.PI / 180
 
@@ -536,46 +548,85 @@ const Portfolio: React.FC = () => {
     chefs.forEach((chef) => {
       if (chef.pools) {
         // console.log(chef.pools)
+        if (chef.type === ChefType.MASTERCHEF){
+          const poolsIds = chef.poolIds
+          results[chef.chefId] = new BigNumber(0)
+          // resultsPerPool[chef.chefId] = {};
 
-        const poolsIds = chef.poolIds
-        results[chef.chefId] = new BigNumber(0)
-        // resultsPerPool[chef.chefId] = {};
-
-        const userData = chef.userData
-        // console.log("userData", userData)
-        poolsIds.forEach((pid) => {
-          const pool = chef.pools[pid]
-          if (userData[pid]) {
-            const userPoolInfo = userData[pid]
-            if (userPoolInfo && new BigNumber(userPoolInfo.stakedBalance).isGreaterThan(0)) {
-              // console.log(pool)
-              // console.log("pid", pid)
-              let val
-              if (pool.isLP) {
-                val = getDollar(
-                  new BigNumber(userPoolInfo.stakedBalance)
-                    .multipliedBy(pool.lpTotalInQuoteToken)
-                    .div(pool.depositedLp),
-                  pool.baseToken,
-                )
-              } else {
-                val = getDollar(
-                  new BigNumber(userPoolInfo.stakedBalance).multipliedBy(pool.tokenPriceVsQuote).dividedBy(getExpDecimals(pool.lpToken)),
-                  pool.baseToken,
-                )
+          const userData = chef.userData
+          // console.log("userData", userData)
+          poolsIds.forEach((pid) => {
+            const pool = chef.pools[pid]
+            if (userData[pid]) {
+              const userPoolInfo = userData[pid]
+              if (userPoolInfo && new BigNumber(userPoolInfo.stakedBalance).isGreaterThan(0)) {
+                // console.log(pool)
+                // console.log("pid", pid)
+                let val
+                if (pool.isLP) {
+                  val = getDollar(
+                    new BigNumber(userPoolInfo.stakedBalance)
+                      .multipliedBy(pool.lpTotalInQuoteToken)
+                      .div(pool.depositedLp),
+                    pool.baseToken,
+                  )
+                } else {
+                  val = getDollar(
+                    new BigNumber(userPoolInfo.stakedBalance).multipliedBy(pool.tokenPriceVsQuote).dividedBy(getExpDecimals(pool.lpToken)),
+                    pool.baseToken,
+                  )
+                }
+                if (!resultsPerPool[chef.chefId]) {
+                  resultsPerPool[chef.chefId] = {}
+                }
+                // console.log(pool.pid,pool.tokString, val.toString())
+                resultsPerPool[chef.chefId][pid] = val
+                results[chef.chefId] = results[chef.chefId].plus(val)
               }
-              if (!resultsPerPool[chef.chefId]) {
-                resultsPerPool[chef.chefId] = {}
-              }
-              // console.log(pool.pid,pool.tokString, val.toString())
-              resultsPerPool[chef.chefId][pid] = val
-              results[chef.chefId] = results[chef.chefId].plus(val)
             }
-          }
-        })
+          })
+        }
+        else if (chef.type === ChefType.MASTERCHEF_SYNTHETIX){
+          const poolContracts = chef.poolContracts
+          results[chef.chefId] = new BigNumber(0)
+          // resultsPerPool[chef.chefId] = {};
+
+          const userData = chef.userData
+          // console.log("userData", userData)
+          poolContracts.forEach((pc) => {
+            const pool = chef.pools[pc]
+            if (userData[pc]) {
+              const userPoolInfo = userData[pc]
+              if (userPoolInfo && new BigNumber(userPoolInfo.stakedBalance).isGreaterThan(0)) {
+                // console.log(pool)
+                // console.log("pid", pid)
+                let val
+                if (pool.isLP) {
+                  val = getDollar(
+                    new BigNumber(userPoolInfo.stakedBalance)
+                      .multipliedBy(pool.lpTotalInQuoteToken)
+                      .div(pool.depositedLp),
+                    pool.baseToken,
+                  )
+                } else {
+                  val = getDollar(
+                    new BigNumber(userPoolInfo.stakedBalance).multipliedBy(pool.tokenPriceVsQuote).dividedBy(getExpDecimals(pool.lpToken)),
+                    pool.baseToken,
+                  )
+                }
+                if (!resultsPerPool[chef.chefId]) {
+                  resultsPerPool[chef.chefId] = {}
+                }
+                // console.log(pool.pid,pool.tokString, val.toString())
+                resultsPerPool[chef.chefId][pc] = val
+                results[chef.chefId] = results[chef.chefId].plus(val)
+              }
+            }
+          })
+        }
       }
     })
-    // console.log(results, resultsPerPool)
+    // console.log("results", results, "resultsPerPool", resultsPerPool)
     return { results, resultsPerPool }
   }
 
@@ -592,29 +643,57 @@ const Portfolio: React.FC = () => {
         const rewardPrice = rewardPrices[chef.rewardToken.toLowerCase()] || new BigNumber(1)
         // console.log(chef.name, "rewardPrice",rewardPrice.toFixed(5))
         if (chef.pools) {
-          chef.poolIds.forEach((pid) => {
-            if (
-              _stakedValuesPerPool[chef.chefId] &&
-              _stakedValuesPerPool[chef.chefId][pid] &&
-              _stakedValuesPerPool[chef.chefId][pid].isGreaterThan(0)
-            ) {
-              const pool = chef.pools[pid]
-              // console.log(chef.name, pool, _stakedValuesPerPool[chef.chefId][pid].toString())
-              const tvl = getDollar(new BigNumber(pool.lpTotalInQuoteToken), pool.baseToken.toLowerCase())
-              // console.log("tvl",tvl.toFixed(2))
-              const cakeRewardPerBlock = new BigNumber(chef.perBlock || 1)
-                .times(new BigNumber(pool.poolWeight))
-                .times(chef.rewardsMultiplier || 1)
-                .times(chef.customRewardMultiplier || 1)
-                .div(new BigNumber(10).pow(18))
-              // console.log("cakeRewardPerBlock",cakeRewardPerBlock.toString())
-              const cakeRewardPerYear = cakeRewardPerBlock.times(BLOCKS_PER_YEAR)
-              // console.log("cakeRewardPerYear",cakeRewardPerYear.toFixed(2))
-              const apy = new BigNumber(rewardPrice).times(cakeRewardPerYear).times(100).dividedBy(tvl)
-              // console.log("apy",apy.toFixed(2))
-              f[chef.chefId][pid] = { pid, tvl, apy: apy.toNumber() }
-            }
-          })
+          if (chef.type === ChefType.MASTERCHEF){
+            chef.poolIds.forEach((pid) => {
+              if (
+                _stakedValuesPerPool[chef.chefId] &&
+                _stakedValuesPerPool[chef.chefId][pid] &&
+                _stakedValuesPerPool[chef.chefId][pid].isGreaterThan(0)
+              ) {
+                const pool = chef.pools[pid]
+                // console.log(chef.name, pool, _stakedValuesPerPool[chef.chefId][pid].toString())
+                const tvl = getDollar(new BigNumber(pool.lpTotalInQuoteToken), pool.baseToken.toLowerCase())
+                // console.log("tvl",tvl.toFixed(2))
+                const cakeRewardPerBlock = new BigNumber(chef.perBlock || 1)
+                  .times(new BigNumber(pool.poolWeight))
+                  .times(chef.rewardsMultiplier || 1)
+                  .times(chef.customRewardMultiplier || 1)
+                  .div(new BigNumber(10).pow(18))
+                // console.log("cakeRewardPerBlock",cakeRewardPerBlock.toString())
+                const cakeRewardPerYear = cakeRewardPerBlock.times(BLOCKS_PER_YEAR)
+                // console.log("cakeRewardPerYear",cakeRewardPerYear.toFixed(2))
+                const apy = new BigNumber(rewardPrice).times(cakeRewardPerYear).times(100).dividedBy(tvl)
+                // console.log("apy",apy.toFixed(2))
+                f[chef.chefId][pid] = { pid, tvl, apy: apy.toNumber() }
+              }
+            })
+          }
+          else if (chef.type === ChefType.MASTERCHEF_SYNTHETIX){
+            chef.poolContracts.forEach((pc) => {
+              if (
+                _stakedValuesPerPool[chef.chefId] &&
+                _stakedValuesPerPool[chef.chefId][pc] &&
+                _stakedValuesPerPool[chef.chefId][pc].isGreaterThan(0)
+              ) {
+                const pool = chef.pools[pc]
+                // console.log(chef.name, pool, _stakedValuesPerPool[chef.chefId][pid].toString())
+                const tvl = getDollar(new BigNumber(pool.lpTotalInQuoteToken), pool.baseToken.toLowerCase())
+                // console.log("tvl",tvl.toFixed(2))
+                const cakeRewardPerBlock = new BigNumber(pool.perBlock || 1)
+                  // .times(new BigNumber(pool.poolWeight))
+                  // .times(chef.rewardsMultiplier || 1)
+                  // .times(chef.customRewardMultiplier || 1)
+                  .div(new BigNumber(10).pow(18))
+
+                // console.log("cakeRewardPerBlock",cakeRewardPerBlock.toString())
+                const cakeRewardPerYear = cakeRewardPerBlock.times(365*86400)
+                // console.log("cakeRewardPerYear",cakeRewardPerYear.toFixed(2))
+                const apy = new BigNumber(rewardPrice).times(cakeRewardPerYear).times(100).dividedBy(tvl)
+                // console.log("apy",apy.toFixed(2))
+                f[chef.chefId][pc] = { pid: pc, tvl, apy: apy.toNumber() }
+              }
+            })
+          }
         }
       })
     // console.log("chefTvlsApy", f)
@@ -628,7 +707,8 @@ const Portfolio: React.FC = () => {
     let farmEarnings = new BigNumber(0)
 
     Object.keys(stakedValuesPerPool).forEach((chefId) => {
-      const poolStakeInfos = stakedValuesPerPool[chefId]
+      const poolStakeInfos =  stakedValuesPerPool[chefId]
+      // console.log(poolStakeInfos)
       if (poolStakeInfos) {
         const poolIds = Object.keys(poolStakeInfos)
         poolIds.forEach((pid) => {
@@ -636,13 +716,14 @@ const Portfolio: React.FC = () => {
           if (chefTvlApys && chefTvlApys[chefId] && chefTvlApys[chefId][pid]) {
             const { apy } = chefTvlApys[chefId][pid]
             if (apy) {
-              // console.log(n, pid, apy, poolStakeInfos[pid].toString())
+              // console.log(pid, apy, poolStakeInfos[pid].toString(), )
               farmEarnings = farmEarnings.plus(poolStakeInfos[pid].multipliedBy(apy).dividedBy(36500))
             }
           }
         })
       }
     })
+    // console.log("farmEarnings",farmEarnings.toString())
     return farmEarnings
   }
   const farmEarnings = getFarmEarnings()

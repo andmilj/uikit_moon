@@ -78,11 +78,12 @@ const Farm: React.FC = () => {
   )
   Object.keys(dollarProfitsPerYearVs).forEach((_sousId) => {
     const _pool = combinedPools.find((p) => p.sousId === parseInt(_sousId))
-    // console.log(_sousId, _pool.image, dollarProfitsPerYearVs[_sousId].toString())
-    dollarProfitsPerYearVs[_sousId] = getDollarValue(
+      // console.log(_sousId, _pool.image, dollarProfitsPerYearVs[_sousId].toString(), dollarProfitsPerYearVs[_sousId].toString())
+      dollarProfitsPerYearVs[_sousId] = getDollarValue(
       dollarProfitsPerYearVs[_sousId],
       _pool.vaultShareRewardToken || contracts.KAFE,
-    )
+      )
+      // console.log(_sousId, _pool.image, "$", dollarProfitsPerYearVs[_sousId].toString())
   })
 
   const poolsWithApy = (
@@ -221,25 +222,29 @@ const Farm: React.FC = () => {
         <title>Moonkafe Finance</title>
       </Helmet>
       <WidePage>
-        <Hero>
+        {/* <Hero style={{width: "100%"}}> */}
           <HeroRow>
             <HeroLeft>
               <Heading as="h1" size="xxl" mb="16px">
                 MOONKAFE Vaults
               </Heading>
-              <ul>
-                <li>Stake LP into autocompounding vaults</li>
-                <li>{TranslateString(404, 'You can unstake at any time.')}</li>
-              </ul>
-              <ul style={{ opacity: 0.6, fontSize: '13px' }}>
-                <li>3.5% performance fees on profits</li>
-                <li>0.1% withdrawal fees on capital</li>
-              </ul>
+              
             </HeroLeft>
-          </HeroRow>
-        </Hero>
 
-        <FlexRowDiv style={{ marginTop: hasMinWidth ? '-50px' : '0' }}>
+            <HeroRight>
+              <Text>Stake LP into autocompounding vaults</Text>
+              <Text>You can unstake at any time</Text>
+
+                            
+              <Text>3.5% performance fees on profits</Text>
+              <Text>0.1% withdrawal fees on capital</Text>
+              
+            </HeroRight>
+            
+          </HeroRow>
+        {/* </Hero> */}
+
+        <FlexRowDiv>
           <Warning color="warning">
             Using Smart Contracts, Tokens and Crypto is always a risk. DYOR before investing.
           </Warning>
@@ -330,6 +335,7 @@ const Farm: React.FC = () => {
           <Route path={`${path}/moonkafe`}>{getProjectPools('moonkafe')}</Route>
           <Route path={`${path}/solarbeam`}>{getProjectPools('solarbeam')}</Route>
           <Route path={`${path}/moonfarm`}>{getProjectPools('moonfarm')}</Route>
+          <Route path={`${path}/freeriver`}>{getProjectPools('freeriver')}</Route>
         </FlexLayout>
 {/* 
         <div style={{display: 'flex', justifyContent:'center', flexDirection:'row', flex:1, width: '100%'}}>
@@ -368,15 +374,23 @@ const FlexColDiv = styled.div`
 `
 const HeroRow = styled(FlexRowDiv)`
   width: 100%;
-  justify-content: space-between;
+  min-width: 100%;
+  // justify-content: space-between;
 `
 const HeroLeft = styled(FlexColDiv)`
+  flex: 1;
   justify-content: flex-start;
   align-items: flex-start;
 `
 const HeroRight = styled(FlexColDiv)`
+  flex: 2;
   justify-content: flex-start;
   align-items: flex-end;
+  font-size: 10px;
+  > div {
+    color: grey;
+
+  }
 `
 const Warning = styled(Text)`
   background-color: ${(props) => props.theme.card.background};

@@ -51,6 +51,8 @@ import {
 } from 'utils/formatBalance'
 import Balance from 'components/Balance'
 import { Farm, Pool } from 'state/types'
+import getTimePeriods from 'utils/getTimePeriods'
+import useBlock from 'hooks/useBlock'
 import DepositModalSlider from './DepositModalSlider'
 import CardTitle from './CardTitle'
 import Card from './Card'
@@ -114,6 +116,7 @@ const PoolCard2: React.FC<PoolCardProps> = ({ pool }) => {
     positiveTooltip,
     negativeTooltip,
     boostFinished,
+    boostEndBlock,
 
     stakeBalanceDollar,
     stakeVsBalanceDollar,
@@ -131,7 +134,7 @@ const PoolCard2: React.FC<PoolCardProps> = ({ pool }) => {
   const stakingTokenContract = useERC20(stakingTokenAddress)
   const vsTokenContract = useVaultContract(contractAddress[process.env.REACT_APP_CHAIN_ID])
   const { account, ethereum }: { account: string; ethereum: provider } = useWallet()
-  // const block = useBlock()
+  const block = useBlock()
   const { onApprove } = useSousApprove(stakingTokenContract, sousId)
   const { onStake } = useSousStake(sousId)
   const { onUnstake } = useSousUnstake(sousId)
@@ -478,6 +481,41 @@ const PoolCard2: React.FC<PoolCardProps> = ({ pool }) => {
     }
     return <Text>-</Text>
   }
+  
+  // const [blocksLeft, setBlocksLeft] = useState(0);
+  // useEffect(() => {
+  //   if (block && boostEndBlock){
+  //     const numBlocksLeft = boostEndBlock - block;
+  //     setBlocksLeft(numBlocksLeft);
+  //   }
+
+  // }, [block])
+
+  // const getSecsLeft = () => {
+  //   const numBlocksLeft = 
+  // }
+  const getTime = (n) => {
+    const secs = n*13;
+    const timeUntil = getTimePeriods(secs);
+   
+    const str = []
+    if (timeUntil.days > 0) {
+      str.push(`${timeUntil.days}d,`)
+    }
+    if (timeUntil.hours > 0 || timeUntil.days > 0) {
+      str.push(`${timeUntil.hours}h,`)
+    }
+    if (timeUntil.minutes > 0 || timeUntil.hours > 0 || timeUntil.days > 0) {
+      str.push(`${timeUntil.minutes}m`)
+    }
+    return str.join(' ');
+
+  }
+  const getCountDown = () => {
+      const numBlocksLeft = boostEndBlock - block;
+      return `${numBlocksLeft} blocks (~${getTime(numBlocksLeft)})`
+
+  }
 
   const stepOne = () => {
 
@@ -745,11 +783,25 @@ const PoolCard2: React.FC<PoolCardProps> = ({ pool }) => {
           ''
         )}
 
+        {!boostFinished && boostEndBlock &&  <div
+            style={{
+              display: 'flex',
+              flexDirection: hasMinWidth ? 'row' : 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            <Text color="grey" fontSize="14px">
+              Boost ending in {getCountDown()}
+            </Text>
+          </div>}
+
+
         <HorizontalDivider />
 
         {stakedVsBalance.isGreaterThan(0) ? (
           <Button style={{ width: 'auto' }} disabled={requestedApproval} onClick={onRewardSequence}>
-            {`Claim ${getBalanceNumberPrecisionFloat(pendingVsReward, 18, 4)} ${
+            {`Claim ${getBalanceNumberPrecisionFloat(pendingVsReward, getDecimals(vaultShareRewardToken||contracts.KAFE), 4)} ${
               vaultShareRewardToken ? getAddressName(vaultShareRewardToken) : 'KAFE'
             }`}
           </Button>
@@ -831,7 +883,7 @@ const PoolCard2: React.FC<PoolCardProps> = ({ pool }) => {
           <span>
             <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-start' }}>
               <Text color="primary">{stakingTokenName}</Text>
-              <LinkExternal href={getLiquidLink(stakingTokenName, liquidityUrlPathParts)} />
+              <LinkExternal href={getLiquidLink(stakingTokenName, liquidityUrlPathParts, projectName)} />
               {disclaimer ? (
                 <span style={{ cursor: 'pointer' }} data-multiline="true" data-type="error" data-tip={disclaimer}>
                   ⚠️
@@ -892,11 +944,11 @@ const PoolCard2: React.FC<PoolCardProps> = ({ pool }) => {
                 onReward()
               }}
             >
-              <Balance decimals={2} fontSize="20px" value={getBalanceNumber(pendingVsReward)} />
+              <Balance decimals={getDecimals(vaultShareRewardToken||contracts.KAFE) < 18 ? 0 : 2} fontSize="20px" value={getBalanceNumber(pendingVsReward, getDecimals(vaultShareRewardToken||contracts.KAFE))} />
             </MyButton>
 
             <Text style={{ textAlign: 'center' }} color="grey" fontSize="12px">
-              Pending ${vaultShareRewardToken ? getAddressName(vaultShareRewardToken) : 'KAFE'}
+              Pending {vaultShareRewardToken ? getAddressName(vaultShareRewardToken) : 'KAFE'}
             </Text>
           </TextEle>
         ) : (

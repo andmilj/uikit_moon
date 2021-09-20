@@ -8,15 +8,17 @@ import {
   toDollar,
   toDollarQuote,
 } from 'utils/formatBalance'
-import { ChefInfo, ChefPoolInfo, ChefPoolUserData, getAbiFromChef } from 'config/constants/chefs'
+import { ChefInfo, ChefPoolInfo, ChefPoolUserData, ChefType, getAbiFromChef } from 'config/constants/chefs'
 import { PoolCategory } from 'config/constants/types'
 import { toast } from 'react-toastify'
 import BigNumber from 'bignumber.js'
 import { Pool } from 'state/types'
 import { useHideBalances, usePools } from 'state/hooks'
-import { useChefHarvest } from 'hooks/useHarvest'
+import { useChefHarvest, useSynChefHarvest } from 'hooks/useHarvest'
 import useQuotePrice from 'hooks/useQuotePrice'
 import styled from 'styled-components'
+import MASTERCHEF_SYN_ABI from 'config/abi/chefSyn.json';
+
 import {
   Card,
   CardBody,
@@ -36,6 +38,7 @@ import { BLOCKS_PER_YEAR } from 'config'
 import usePriceRewards from 'hooks/usePriceRewards'
 import ReactTooltip from 'react-tooltip'
 import { useMediaQuery } from '@material-ui/core'
+import { getMasterChefAddress } from 'utils/addressHelpers'
 // import { poolsConfig } from 'config/constants';
 // import MigrateFromFarmModal from '../MigrateFromFarmModal';
 // import SelectVaultModal from '../SelectVaultModal';
@@ -256,9 +259,9 @@ const ChefFarmCard: React.FC<CardProps> = ({ chef, pool, userData, onRocketClick
   const rewardPrice = rewardPrices[chef.rewardToken.toLowerCase()] || new BigNumber(0)
   const vaults = usePools(account)
   const hideBalances = useHideBalances()
-
+  
   const vaultEquivalent = vaults.filter(
-    (p) => p.stakingTokenAddress.toLowerCase() === pool.lpToken.toLowerCase() && p.projectName === chef.name,
+    (p) => p.stakingTokenAddress.toLowerCase() === pool.lpToken.toLowerCase(),
   )
 
   const hasVaultEquivalent = vaultEquivalent.length > 0
@@ -276,13 +279,32 @@ const ChefFarmCard: React.FC<CardProps> = ({ chef, pool, userData, onRocketClick
   const onPresentSelectVault = () => {
     onRocketClick(chef.chefId, parseInt(pool.pid), pool.lpToken)
   }
-  const { onReward } = useChefHarvest(
+
+  const { onReward: onRewardChef } = useChefHarvest(
     chef.masterchefAddress,
     getAbiFromChef(chef),
     pool.pid,
     chef.referralMode,
     chef.stakingMode,
   )
+  const { onReward: onRewardSyn } = useSynChefHarvest(
+    (chef.type === ChefType.MASTERCHEF) ? getMasterChefAddress():pool.pid,
+    MASTERCHEF_SYN_ABI,
+  )
+
+  const onReward = () => {
+    if (chef.type === ChefType.MASTERCHEF){
+      onRewardChef()
+    } 
+    else if (chef.type === ChefType.MASTERCHEF_SYNTHETIX){
+      onRewardSyn()
+    }else {
+      console.log(chef)
+
+    }
+  }
+
+
 
   // const allowance = new BigNumber(userData?.allowance || 0)
   // const stakingTokenBalance = new BigNumber(userData?.tokenBalance || 0)
@@ -333,12 +355,20 @@ const ChefFarmCard: React.FC<CardProps> = ({ chef, pool, userData, onRocketClick
 
   // calculate tvl
   const getApy = () => {
-    const cakeRewardPerBlock = new BigNumber(chef.perBlock || 1)
-      .times(new BigNumber(pool.poolWeight))
-      .times(chef.rewardsMultiplier || 1)
-      .times(chef.customRewardMultiplier || 1)
-      .div(new BigNumber(10).pow(18))
-    const cakeRewardPerYear = cakeRewardPerBlock.times(BLOCKS_PER_YEAR)
+    let cakeRewardPerBlock;
+    let cakeRewardPerYear;
+    if (chef.type === ChefType.MASTERCHEF){
+      cakeRewardPerBlock = new BigNumber(chef.perBlock || 1)
+        .times(new BigNumber(pool.poolWeight))
+        .times(chef.rewardsMultiplier || 1)
+        .times(chef.customRewardMultiplier || 1)
+        .div(new BigNumber(10).pow(18))
+      cakeRewardPerYear = cakeRewardPerBlock.times(BLOCKS_PER_YEAR)
+    }else if (chef.type === ChefType.MASTERCHEF_SYNTHETIX){
+      cakeRewardPerBlock = new BigNumber(pool.perBlock || 1)
+        .div(new BigNumber(10).pow(18))
+      cakeRewardPerYear = cakeRewardPerBlock.multipliedBy(86400 * 365)
+    }
     // console.log("poolweight",farm.poolWeight)
     const apy = new BigNumber(rewardPrice).times(cakeRewardPerYear).times(100).dividedBy(tvl)
     return apy
@@ -369,7 +399,7 @@ const ChefFarmCard: React.FC<CardProps> = ({ chef, pool, userData, onRocketClick
     const content = (
       <>
         <div style={{ width: 80, height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-          <Image src={`./images/tokens/${image}.png`} width={pool.isLP ? 80 : 52} height={52} alt={stakingTokenName} />
+          <Image src={`./images/tokens/${image.toUpperCase()}.png`} width={pool.isLP ? 80 : 52} height={52} alt={stakingTokenName} />
         </div>
 
         <VerticalDivider />

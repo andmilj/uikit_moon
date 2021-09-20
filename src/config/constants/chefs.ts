@@ -9,12 +9,12 @@ export interface ChefConfig {
   chefId: number
   image: string
   name: string
-  masterchefAddress: string
+  masterchefAddress?: string
   factories: string[]
   rewardToken: string
-  poolIds: number[]
+  poolIds?: number[]
   perBlockSignature: string
-  hasDepositFee: boolean // has deposit fee on some pools
+  hasDepositFee?: boolean // has deposit fee on some pools
   depositedCakeSignature?: string
   pendingRewardsSignature: string
   type: ChefType
@@ -24,10 +24,15 @@ export interface ChefConfig {
   rewardTokenSymbol?: string
   projectLink?: string
   customRewardMultiplier?: number
+
+  // for synthetix
+  poolContracts?: string[]
+  
 }
-enum ChefType {
+export enum ChefType {
   MASTERCHEF,
   VAULT,
+  MASTERCHEF_SYNTHETIX
 }
 
 export interface ChefInfo extends ChefConfig {
@@ -84,6 +89,7 @@ export interface ChefPoolInfo {
   multiplier: string
   depositedLp: string
 
+  perBlock: string
   // userData?: ChefPoolUserData
 }
 
@@ -132,6 +138,29 @@ export const chefs: ChefConfig[] = [
     chefId: 1,
     type: ChefType.MASTERCHEF,
     image: '',
+    name: 'solarbeam vault',
+    projectLink: 'https://solarbeam.io',
+    masterchefAddress: '0x7e6E03822D0077F3C417D33caeAc900Fc2645679',
+    rewardToken: contracts.SOLAR,
+    rewardTokenSymbol: 'SOLAR',
+    // poolIds: [2],
+    poolIds: [0],
+    perBlockSignature: contracts.PERBLOCK_SOLAR,
+    pendingRewardsSignature: contracts.PENDING_SOLAR,
+    factories: ['0x049581aEB6Fe262727f290165C29BDAB065a1B68'],
+    // depositedCakeSignature: 'totalSolarInPools()',
+    quoteRouters: ['0xdF71f363940A2298e831F18f44266C80015c8Dfd'],
+    // quoteRouters: ['0xAA30eF758139ae4a7f798112902Bf6d65612045f'],
+    referralMode: false,
+    stakingMode: false,
+    hasDepositFee: true,
+  // },
+
+  },
+  {
+    chefId: 2,
+    type: ChefType.MASTERCHEF,
+    image: '',
     name: 'moonfarm',
     projectLink: 'https://app.moonfarm.in/',
     masterchefAddress: '0x78aa55ce0b0dc7488d2c38bd92769f4d0c8196ff',
@@ -143,15 +172,9 @@ export const chefs: ChefConfig[] = [
       0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 
       10, 12, 13, 14, 16, 17, 18, 19,
       20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 
-      30
+      30, 31
     
     ],
-    // poolIds: [
-    //   0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 
-    //   10, 11, 12, 13, 14, 15, 16, 17, 18, 19,
-    //   20, 21, 22, 23, 24, 25, 26, 27, 28, 29
-    
-    // ],
     perBlockSignature: contracts.PERBLOCK_MOON,
     pendingRewardsSignature: contracts.PENDING_MOON,
     factories: ['0x056973f631a5533470143bb7010c9229c19c04d2'],
@@ -163,7 +186,7 @@ export const chefs: ChefConfig[] = [
   },
 
   {
-    chefId: 2,
+    chefId: 3,
     type: ChefType.MASTERCHEF,
     image: '',
     name: 'moonkafe',
@@ -184,6 +207,28 @@ export const chefs: ChefConfig[] = [
     stakingMode: false,
     hasDepositFee: true,
   },
+
+  {
+    chefId: 4,
+    type: ChefType.MASTERCHEF_SYNTHETIX,
+    image: '',
+    name: 'freeriver',
+    projectLink: 'https://freeriver.exchange',
+    // masterchefAddress: '0x91aD62286cb69d2C6abdB952564e0EFEA082869c',
+    rewardToken: contracts.FREE,
+    rewardTokenSymbol: 'FREE',
+    poolContracts: [
+      "0x31341761A726585257067D15967AD301187504B2",
+      "0xfA382b7fb23C558136602a2D4C09D527ea76bb5A",
+      "0x7355894158181566BCB6CF09c0A6fEbA13b9c2D3"
+    ],
+    perBlockSignature: "rewardRate()",
+    pendingRewardsSignature: "earned(address)",
+    factories: ['0x52abD262B13bef4E65Ff624880E8A0595a17af48'],
+    // depositedCakeSignature: 'totalSolarInPools()',
+    quoteRouters: ['0x0d0ac50741f2Aed4D19325bE385EBeFe49C0d186'],
+  },
+
 
 
 ]

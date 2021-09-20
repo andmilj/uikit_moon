@@ -257,6 +257,7 @@ export const getCakeProfitsPerYearVs = (pools) => {
           .dividedBy(1e18)
           .times(new BigNumber(p.vPoolWeight))
           .times(p.vsRewardMultiplier || 1)
+        // console.log("cakeRewardPerBlock",cakeRewardPerBlock.toString())
         const cakeRewardPerYear = cakeRewardPerBlock.times(BLOCKS_PER_YEAR)
         return { ...acc, [p.sousId]: cakeRewardPerYear }
       }
@@ -294,17 +295,18 @@ export const getVsApy = (pool, dollarProfitsPerYearVs, getDollarValueFunc) => {
   // console.log("dollarProfitsPerYearVs",dollarProfitsPerYearVs.toString())
   let vsStakeBalanceDollar = new BigNumber(0)
   if (pool.vaultShareFarmPid >= 0 && pool.vPoolWeight) {
-    // console.log(vStakedBalance, pool.pricePerShare,pool.stakePriceAsQuoteToken)
     vsStakeBalanceDollar = getDollarValueFunc(
       vStakedBalance.multipliedBy(pool.pricePerShare).multipliedBy(pool.stakePriceAsQuoteToken).dividedBy(1e18),
       pool.lpBaseTokenAddress,
-    )
+      )
+      // console.log(vStakedBalance.toString(), vsStakeBalanceDollar.toString(), pool.pricePerShare,pool.stakePriceAsQuoteToken)
     if (vsStakeBalanceDollar.isZero()) {
-      vsStakeBalanceDollar = new BigNumber(3000)
+      vsStakeBalanceDollar = new BigNumber(10)
     }
     // console.log("dollarProfitsPerYearVs",dollarProfitsPerYearVs.toString())
     // console.log("vsStakeBalanceDollar",vsStakeBalanceDollar.toString())
     vsApy = dollarProfitsPerYearVs.dividedBy(vsStakeBalanceDollar).multipliedBy(100)
+    // console.log("vsApy", vsApy.toString())
   }
   return vsApy
 }

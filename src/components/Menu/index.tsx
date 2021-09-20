@@ -1,3 +1,4 @@
+import useWebVersion from 'hooks/useWebVersion'
 import React, { useContext } from 'react'
 import { useWallet } from 'use-wallet'
 import contracts from 'config/constants/contracts'
@@ -13,6 +14,8 @@ const Menu = (props) => {
   const { selectedLanguage, setSelectedLanguage } = useContext(LanguageContext)
   const { isDark, toggleTheme } = useTheme()
   const cakePriceUsd = useCakePrice()
+  const latestVer = useWebVersion();
+  console.log("latestVer", latestVer)
 
   return (
     <UikitMenu
@@ -26,6 +29,7 @@ const Menu = (props) => {
       setLang={setSelectedLanguage}
       cakePriceUsd={cakePriceUsd.toNumber()}
       // cakePriceUsd={0}
+      needRefresh={latestVer !== contracts.VERSION}
       links={config}
       // priceLink=""
       priceLink={`https://charts.freeriver.exchange/?token=${contracts.cake[process.env.REACT_APP_CHAIN_ID]}`}

@@ -1,3 +1,4 @@
+import ReactGA from 'react-ga';
 import { useCallback } from 'react'
 import { useWallet } from 'use-wallet'
 import { useDispatch } from 'react-redux'
@@ -31,6 +32,10 @@ const useStake = (pid: number, refreshPools = false) => {
   const handleStake = useCallback(
     async (amount: string) => {
       try {
+        ReactGA.event({
+          category: "Stake Espresso",
+          action: `pid ${pid}`,
+        });
         const txHash = await stake(masterChefContract, pid, amount, account)
         console.info(txHash)
         dispatch(fetchFarmUserDataAsync(account))
@@ -56,6 +61,10 @@ export const useCustomStake = (masterChefAddress, pid: number, refreshPools = fa
   const handleStake = useCallback(
     async (amount: string, decimals = 18) => {
       try {
+        ReactGA.event({
+          category: "Stake Espresso",
+          action: `id ${pid}`,
+        });
         const txHash = await stake(masterChefContract, pid, amount, account, decimals)
         console.info(txHash)
         dispatch(fetchFarmUserDataAsync(account))
@@ -81,6 +90,11 @@ export const useSousStake = (sousId) => {
   const handleStake = useCallback(
     async (amount: string) => {
       try {
+        ReactGA.event({
+          category: "Stake Espresso",
+          action: `${sousId}`,
+        });
+
         const tx = await sousStake(sousChefContract, amount, account)
         dispatch(fetchPoolsUserDataAsyncSingle(sousId, account))
 
