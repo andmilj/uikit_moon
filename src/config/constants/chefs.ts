@@ -221,7 +221,7 @@ export const chefs: ChefConfig[] = [
       "0x31341761A726585257067D15967AD301187504B2",
       "0xfA382b7fb23C558136602a2D4C09D527ea76bb5A",
       "0x7355894158181566BCB6CF09c0A6fEbA13b9c2D3"
-    ],
+    ], 
     perBlockSignature: "rewardRate()",
     pendingRewardsSignature: "earned(address)",
     factories: ['0x52abD262B13bef4E65Ff624880E8A0595a17af48'],
