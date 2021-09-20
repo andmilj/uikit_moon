@@ -1,9 +1,14 @@
 import KUSWAP_CHEF_ABI from 'config/abi/kuswap_chef.json'
-import MASTERCHEF_ABI from 'config/abi/masterchef.json'
+import _MASTERCHEF_ABI from 'config/abi/masterchef.json'
+import _MASTERCHEFSYN_ABI from 'config/abi/synchef.json'
 import KUDEXMASTERCHEF_ABI from 'config/abi/kudex_chef.json'
 import BigNumber from 'bignumber.js'
 import { PrivatePoolInfo } from 'state/types'
 import contracts from './contracts'
+
+
+export const MASTERCHEFSYN_ABI = JSON.parse(JSON.stringify(_MASTERCHEFSYN_ABI))
+export const MASTERCHEF_ABI = JSON.parse(JSON.stringify(_MASTERCHEF_ABI))
 
 export interface ChefConfig {
   chefId: number
@@ -96,12 +101,15 @@ export interface ChefPoolInfo {
 // kukafe chefs
 // kukafe vaults
 
+
 // kudex, kuswap, boneswap, kandy, kubeans
 export const getAbiFromChef = (chef) => {
   if (!chef) {
     return MASTERCHEF_ABI // JSON.parse(JSON.stringify(MASTERCHEF_ABI))
   }
   switch (chef.name) {
+    case 'freeriver':
+      return MASTERCHEFSYN_ABI
     case 'solarbeam': // deposit fee
     case 'moonfarm': // deposit fee
     case 'moonkafe': // deposit fee

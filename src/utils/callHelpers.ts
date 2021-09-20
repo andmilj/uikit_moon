@@ -116,6 +116,18 @@ export const customUnstake = async (masterChefContract, pid, amount, account, st
     })
 }
 
+
+export const synUnstake = async (masterChefContract, amount, account, decimals=18) => {
+    return masterChefContract.methods
+      .withdraw(new BigNumber(amount).times(new BigNumber(10).pow(decimals)).toFixed(0))
+      .send({ from: account, gas: contracts.GAS_LIMIT })
+      .on('transactionHash', (tx) => {
+        return tx.transactionHash
+      })
+  
+}
+
+
 export const sousExit = async (sousChefContract, account) => {
   return sousChefContract.methods
     .exit()

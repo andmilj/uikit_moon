@@ -19,16 +19,17 @@ import { useDispatch } from 'react-redux'
 import { Button, Modal, Text } from '@pancakeswap-libs/uikit'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import styled from 'styled-components'
-import { getAbiFromChef } from 'config/constants/chefs'
+import { ChefType, getAbiFromChef } from 'config/constants/chefs'
 import useTokenBalance from 'hooks/useTokenBalance'
 import { useCustomMasterchef, useERC20 } from 'hooks/useContract'
 import { usePrivateSousApprove, useSousApprove } from 'hooks/useApprove'
 import { usePrivateSousStake, useSousStake } from 'hooks/useStake'
-import { useChefUnstake, usePrivateSousEntry } from 'hooks/useUnstake'
+import { useChefUnstake, usePrivateSousEntry, useSynChefUnstake } from 'hooks/useUnstake'
 import { useCreateVault } from 'hooks/useCreateVault'
 import { removeTrailingZero } from 'utils/formatBalance'
 import { useAllowance } from 'hooks/useAllowance'
 import { useStakeBalance } from '../hooks/useStakeBalance'
+import { useSynStakeBalance } from '../hooks/useSynStakeBalance'
 
 const FlexRowDiv = styled.div`
   display: flex;
@@ -155,9 +156,10 @@ const MigrateFromFarmModal: React.FC<ModalProps> = ({ onConfirm, onDismiss }) =>
   const chefs = useChefs()
   const temp = useMigration()
   const { oldChefId, oldChefPoolId, selectedSous, migrateMode } = temp
-
+  // console.log(oldChefId, oldChefPoolId, selectedSous, migrateMode, chefs[oldChefId], chefs[oldChefId][oldChefPoolId])
   // console.log("migration", temp)
   const oldChef = chefs.find((c) => c.chefId === oldChefId)
+  const synMode = oldChef ? oldChef.type === ChefType.MASTERCHEF_SYNTHETIX : false
   const oldPool = oldChef ? oldChef.pools[oldChefPoolId] : null
   const dispatch = useDispatch()
   const { account } = useWallet()
@@ -201,20 +203,27 @@ const MigrateFromFarmModal: React.FC<ModalProps> = ({ onConfirm, onDismiss }) =>
   }
 
   const defaultChefAddress = getMasterChefAddress()
-
+  const defaultSynFuncAddress =   oldPool ? ((oldChef.type === ChefType.MASTERCHEF_SYNTHETIX) ? oldPool.pid : defaultChefAddress)||defaultChefAddress : defaultChefAddress
+   
   // step 1
-  const amtInOldChef = useStakeBalance(
-    oldChef ? oldChef.masterchefAddress : defaultChefAddress,
+  const amtInNormalOldChef = useStakeBalance(
+    oldChef ? (oldChef.masterchefAddress||defaultChefAddress) : defaultChefAddress,
     oldPool ? oldPool.pid : 0,
   )
+  const amtInSynOldChef = useSynStakeBalance(defaultSynFuncAddress)
 
-  
+  const amtInOldChef = synMode ? amtInSynOldChef : amtInNormalOldChef
+
   const { onUnstake } = useChefUnstake(
-    oldChef ? oldChef.masterchefAddress : defaultChefAddress,
+    oldChef ? (oldChef.masterchefAddress||defaultChefAddress) : defaultChefAddress,
     getAbiFromChef(oldChef),
     oldPool ? oldPool.pid : 0,
     oldChef ? oldChef.stakingMode : false,
   )
+
+
+  const { onUnstake : onSynUnstake } = useSynChefUnstake(defaultSynFuncAddress)
+
 
   // step 1b - private vault
   const userData = v?.userData
@@ -288,7 +297,11 @@ const MigrateFromFarmModal: React.FC<ModalProps> = ({ onConfirm, onDismiss }) =>
   }
   const doUnstake = async () => {
     setUnstakePending(true)
-    await onUnstake(amtInOldChef.dividedBy(1e18).toString())
+    if (synMode){
+      await onSynUnstake(amtInOldChef.dividedBy(1e18).toString())
+    }else{
+      await onUnstake(amtInOldChef.dividedBy(1e18).toString())
+    }
     setUnstakePending(false)
 
     setVal(balanceStakingToken.plus(amtInOldChef))

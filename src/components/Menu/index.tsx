@@ -15,7 +15,7 @@ const Menu = (props) => {
   const { isDark, toggleTheme } = useTheme()
   const cakePriceUsd = useCakePrice()
   const latestVer = useWebVersion();
-  console.log("latestVer", latestVer)
+  // console.log("latestVer", latestVer)
 
   return (
     <UikitMenu

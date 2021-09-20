@@ -140,7 +140,7 @@ export interface AppConfig {
 export interface MigrationConfig {
   lpToken?: string
   oldChefId?: number
-  oldChefPoolId?: number
+  oldChefPoolId?: string
   selectedSous?: number
   migrateMode?: string // farm||wallet
 }

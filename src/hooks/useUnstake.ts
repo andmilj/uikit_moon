@@ -28,8 +28,9 @@ import {
   sousEntry,
   sousClose,
   customUnstake,
+  synUnstake,
 } from 'utils/callHelpers'
-import { useCustomMasterchef, useMasterchef, usePrivateSousChef, useSousChef, useVaultRegistry } from './useContract'
+import { useCustomMasterchef, useMasterchef, usePrivateSousChef, useSousChef, useSynChef, useVaultRegistry } from './useContract'
 
 const useUnstake = (pid: number, refreshPools = false) => {
   const dispatch = useDispatch()
@@ -99,6 +100,25 @@ export const useChefUnstake = (chefAddress, chefAbi, pid, stakingMode) => {
   return { onUnstake: handleUnstake }
 }
 
+
+export const useSynChefUnstake = (chefAddress) => {
+  const { account } = useWallet()
+  const masterChefContract = useSynChef(chefAddress)
+
+  const handleUnstake = useCallback(
+    async (amount: string) => {
+      try {
+        const txHash = await synUnstake(masterChefContract, amount, account)
+        console.info(txHash)
+      } catch (e) {
+        console.error(e)
+      }
+    },
+    [account, masterChefContract],
+  )
+
+  return { onUnstake: handleUnstake }
+}
 const SYRUPIDS = [5, 6, 3, 1, 22, 23]
 
 export const useSousUnstake = (sousId) => {

@@ -20,9 +20,8 @@ const useAllEarnings = () => {
 
   useEffect(() => {
     const fetchAllBalances = async () => {
-      const vs = poolConfig.filter((p) => !p.vaultShareFarmContract && p.vaultShareFarmPid >= 0).map((p) => p.vaultShareFarmPid)
+      const vs = poolConfig.filter((p) => (!p.vaultShareFarmContract) && p.vaultShareFarmPid >= 0).map((p) => p.vaultShareFarmPid)
       const farms = farmsConfig.filter((f) => f.farmType === 'native').map((f) => f.pid)
-
       const calls = [...farms, ...vs].map((pid) => [
         getMasterChefAddress(),
         getFuncData('pendingKafe(uint256,address)', [pid, account]),
@@ -30,7 +29,7 @@ const useAllEarnings = () => {
 
       let callResults = await multi.methods.aggregate(calls).call()
       callResults = callResults[1].map(decodeInt)
-
+      console.log(callResults)
       setBalance(callResults)
     }
 

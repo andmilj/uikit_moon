@@ -17,7 +17,6 @@ import { useHideBalances, usePools } from 'state/hooks'
 import { useChefHarvest, useSynChefHarvest } from 'hooks/useHarvest'
 import useQuotePrice from 'hooks/useQuotePrice'
 import styled from 'styled-components'
-import MASTERCHEF_SYN_ABI from 'config/abi/chefSyn.json';
 
 import {
   Card,
@@ -47,7 +46,7 @@ interface CardProps {
   chef?: ChefInfo
   pool?: ChefPoolInfo
   userData?: ChefPoolUserData
-  onRocketClick?: (chefId: number, poolId: number, lpToken: string) => void
+  onRocketClick?: (chefId: number, poolId: string, lpToken: string) => void
 }
 const SECS_THRESOLD = 30 * 60
 
@@ -277,11 +276,11 @@ const ChefFarmCard: React.FC<CardProps> = ({ chef, pool, userData, onRocketClick
   // )
 
   const onPresentSelectVault = () => {
-    onRocketClick(chef.chefId, parseInt(pool.pid), pool.lpToken)
+    onRocketClick(chef.chefId, pool.pid, pool.lpToken)
   }
 
   const { onReward: onRewardChef } = useChefHarvest(
-    chef.masterchefAddress,
+    chef.masterchefAddress || getMasterChefAddress(),
     getAbiFromChef(chef),
     pool.pid,
     chef.referralMode,
@@ -289,7 +288,7 @@ const ChefFarmCard: React.FC<CardProps> = ({ chef, pool, userData, onRocketClick
   )
   const { onReward: onRewardSyn } = useSynChefHarvest(
     (chef.type === ChefType.MASTERCHEF) ? getMasterChefAddress():pool.pid,
-    MASTERCHEF_SYN_ABI,
+    getAbiFromChef(chef),
   )
 
   const onReward = () => {

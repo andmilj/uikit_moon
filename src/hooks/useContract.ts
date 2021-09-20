@@ -5,7 +5,6 @@ import useWeb3 from 'hooks/useWeb3'
 import { getMasterChefAddress, getCakeAddress, getLotteryAddress, getLotteryTicketAddress } from 'utils/addressHelpers'
 import { poolsConfig } from 'config/constants'
 import guestConfig from 'config/constants/guest'
-
 import { PoolCategory } from 'config/constants/types'
 import ifo from 'config/abi/ifo.json'
 import erc20 from 'config/abi/erc20.json'
@@ -23,6 +22,7 @@ import vaultRegistryAbi from 'config/abi/vaultRegistry.json'
 import routerAbi from 'config/abi/router.json'
 import contracts from 'config/constants/contracts'
 import { getWeb3 } from 'utils/web3'
+import { MASTERCHEFSYN_ABI } from 'config/constants/chefs'
 
 
 const useContract = (abi: AbiItem, address: string, contractOptions?: ContractOptions) => {
@@ -81,6 +81,11 @@ export const useLotteryTicket = () => {
 export const useMasterchef = () => {
   const abi = masterChef as unknown as AbiItem
   return useContract(abi, getMasterChefAddress())
+}
+
+export const useSynChef = (address) => {
+  const abi = MASTERCHEFSYN_ABI as unknown as AbiItem
+  return useContract(abi, address)
 }
 
 export const useCustomMasterchef = (address, abi) => {

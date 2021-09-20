@@ -8,21 +8,21 @@ import cakeABI from 'config/abi/cake.json'
 import { getContract } from 'utils/web3'
 import { getTokenBalance } from 'utils/erc20'
 import { getCakeAddress } from 'utils/addressHelpers'
-import { useCustomMasterchef } from 'hooks/useContract'
+import { useCustomMasterchef, useSynChef } from 'hooks/useContract'
 import masterchefAbi from 'config/abi/masterchef.json'
 
-export const useStakeBalance = (chefAddress, pid) => {
+export const useSynStakeBalance = (chefAddress) => {
   const [balance, setBalance] = useState(new BigNumber(0))
   const { account, ethereum }: { account: string; ethereum: provider } = useWallet()
   const { fastRefresh } = useRefresh()
-  const mc = useCustomMasterchef(chefAddress, masterchefAbi)
+  const mc = useSynChef(chefAddress)
   useEffect(() => {
     const fetchBalance = async () => {
-      if (account && pid >= 0) {
+      if (account) {
         try{
-          const res = await mc.methods.userInfo(pid, account).call()
-          setBalance(new BigNumber(res.amount.toString()))
-        } catch(e){
+          const res = await mc.methods.balanceOf(account).call()
+          setBalance(new BigNumber(res.toString()))
+        }catch (e) {
           console.error(e)
         }
       }
@@ -31,9 +31,9 @@ export const useStakeBalance = (chefAddress, pid) => {
     if (account && ethereum) {
       fetchBalance()
     }
-  }, [account, ethereum, pid, mc.methods, fastRefresh])
+  }, [account, ethereum, mc.methods, fastRefresh])
 
   return balance
 }
 
-export default useStakeBalance
+export default useSynStakeBalance
