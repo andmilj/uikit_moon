@@ -295,7 +295,7 @@ const PoolCard2: React.FC<PoolCardProps> = ({ pool }) => {
         }
       })
       const { sum: total, res: cumSums } = findCumulativeSum(arr)
-      // console.log(total.toString(), cumSums.map(c => c.toString()))
+      console.log(total.toString(), cumSums.map(c => c.toString()))
 
       setCapital(total)
       setCapitalCum(cumSums)
@@ -1101,7 +1101,7 @@ const PoolCard2: React.FC<PoolCardProps> = ({ pool }) => {
                       ) : (
                         <>
                           {' '}
-                          <Text fontSize="14px">{removeTrailingZero(getBalanceNumber(capital,getDecimals(lpBaseTokenAddress)))}</Text>
+                          <Text fontSize="14px">{removeTrailingZero(getBalanceNumber(capital,getDecimals(stakingTokenAddress)))}</Text>
                           <Text style={{ marginTop: '-5px' }} fontSize="12px">
                             (${getBalanceNumber(capitalDollar,getDecimals(lpBaseTokenAddress)).toFixed(2)})
                           </Text>
@@ -1127,7 +1127,7 @@ const PoolCard2: React.FC<PoolCardProps> = ({ pool }) => {
                         <>
                           {' '}
                           <Text fontSize="14px">
-                            {removeTrailingZero(getBalanceNumber(bothTotalStaked.multipliedBy(pricePerShare),getDecimals(lpBaseTokenAddress)))}
+                            {removeTrailingZero(getBalanceNumber(bothTotalStaked.multipliedBy(pricePerShare),getDecimals(stakingTokenAddress)))}
                           </Text>
                           <Text style={{ marginTop: '-5px' }} fontSize="12px">
                             (${getBalanceNumber(bothTotalStakedDollar,getDecimals(lpBaseTokenAddress)).toFixed(2)})
