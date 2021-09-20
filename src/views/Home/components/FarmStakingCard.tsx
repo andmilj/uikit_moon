@@ -60,13 +60,17 @@ const FarmedStakingCard = () => {
     .filter((balanceType) => balanceType.balance.toNumber() > 0)
     .map((f) => f.vaultShareFarmPid)
 
-  const { onReward } = useAllHarvest([...balancesWithValue, ...vsBalancesWithValue])
+  const totalBalancesWithVal = [...balancesWithValue, ...vsBalancesWithValue];
+  // console.log("balancesWithValue",balancesWithValue)
+  // console.log("vsBalancesWithValue",vsBalancesWithValue)
+  const { onReward } = useAllHarvest(totalBalancesWithVal)
 
   const harvestAllFarms = useCallback(async () => {
     setPendingTx(true)
     try {
       await onReward()
     } catch (error) {
+      console.error(error)
       // TODO: find a way to handle when the user rejects transaction or it fails
     } finally {
       setPendingTx(false)
@@ -94,13 +98,13 @@ const FarmedStakingCard = () => {
           {account ? (
             <Button
               id="harvest-all"
-              disabled={balancesWithValue.length <= 0 || pendingTx}
+              disabled={totalBalancesWithVal.length <= 0 || pendingTx}
               onClick={harvestAllFarms}
               fullWidth
             >
               {pendingTx
                 ? TranslateString(548, 'Collecting EGG')
-                : TranslateString(999, `Harvest all (${balancesWithValue.length})`)}
+                : TranslateString(999, `Harvest all (${totalBalancesWithVal.length})`)}
             </Button>
           ) : (
             <UnlockButton fullWidth />

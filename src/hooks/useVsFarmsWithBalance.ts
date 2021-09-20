@@ -28,10 +28,10 @@ const useVsFarmsWithBalance = () => {
 
   useEffect(() => {
     const vs = poolConfig
-      .filter((p) => p.vaultShareFarmPid >= 0)
+      .filter((p) => (!p.vaultShareFarmContract) && (p.vaultShareFarmPid === 0 || p.vaultShareFarmPid > 0))
       .map((p) => ({
         vaultShareFarmPid: p.vaultShareFarmPid,
-        vaultShareFarmContract: p.vaultShareFarmContract || getMasterChefAddress(),
+        vaultShareFarmContract: getMasterChefAddress(),
       }))
 
     const fetchBalances = async () => {
@@ -42,8 +42,9 @@ const useVsFarmsWithBalance = () => {
 
       let callResults = await multi.methods.aggregate(calls).call()
       callResults = callResults[1].map(decodeInt)
-      const results2 = poolConfig.map((pool, index) => ({ ...pool, balance: new BigNumber(callResults[index]) }))
-
+      const results2 = poolConfig.filter((p) => (!p.vaultShareFarmContract) && (p.vaultShareFarmPid === 0 || p.vaultShareFarmPid > 0))
+        .map((pool, index) => ({ ...pool, pid: pool.vaultShareFarmPid, balance: new BigNumber(callResults[index]) }))
+      
       setFarmsWithBalances(results2)
     }
 
