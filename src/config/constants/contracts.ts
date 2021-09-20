@@ -89,7 +89,7 @@ MSWAP: '0xB3FB48bF090bEDFF4f6F93FFb40221742E107db7',
 
   DEPOSITED_KUD: 'depositedKud()',
 
-  VERSION: '1.5',
+  VERSION: '1.6',
   compoundPeriodInSecs: 600,
   performanceFee: 0.035,
 
