@@ -170,7 +170,7 @@ export const chefs: ChefConfig[] = [
     type: ChefType.MASTERCHEF,
     image: '',
     name: 'moonfarm',
-    projectLink: 'https://app.moonfarm.in/',
+    projectLink: 'https://v2.moonfarm.in/',
     masterchefAddress: '0x78aa55ce0b0dc7488d2c38bd92769f4d0c8196ff',
     rewardToken: contracts.MOON,
     rewardTokenSymbol: 'MOON',

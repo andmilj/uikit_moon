@@ -24,7 +24,7 @@ const SOLAR_INFO = {
 const MOONFARM_INFO = {
   poolCategory: PoolCategory.VAULT,
   isFinished: false,
-  projectLink: 'https://app.moonfarm.in/',
+  projectLink: 'https://v2.moonfarm.in/',
   projectName: 'moonfarm',
 
   isLP: true,
