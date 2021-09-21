@@ -829,6 +829,20 @@ const pools: PoolConfig[] = [
       lpBaseTokenAddress: contracts.USDC,
       isLP: false,
     },
+    {
+      sousId: 51,
+      poolId: 35,
+    image: 'TOOLS-MOVR',
+      tokenName: 'TOOLS-MOVR (MOONLP)',
+      stakingTokenName: QuoteToken.TOOLSMOVRMOONLP,
+      stakingTokenAddress: '0x711Ab763e638AD40554ad7c685AfBb3A43aEbf48', // lp address
+      contractAddress: makeQuote('0x3Eb213a4d162D89Cb87eEF97008F54f15FC6B0Ba'),
+      // strategy: 0xEd4B760B325eA12468dFF0D3f47623F870bF3745
+      ...MOONFARM_INFO,
+      lpBaseTokenAddress: contracts.WMOVR,
+      // hidden: true,
+
+    },
 ]
 
 export default pools
