@@ -224,9 +224,10 @@ const Farm: React.FC = () => {
       <WidePage>
         {hasMinWidth ? (<HeroRow>
             <HeroLeft>
-              <Heading as="h1" size="xxl" mb="16px">
+              {/* <Heading as="h1" size="xxl" mb="16px">
                 MOONKAFE Vaults
-              </Heading>
+              </Heading> */}
+              <Text fontSize="24px"  color="primary">Moonkafe Espresso Vaults</Text>
               
             </HeroLeft>
 

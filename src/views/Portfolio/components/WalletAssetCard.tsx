@@ -129,6 +129,10 @@ const WalletAssetCard: React.FC<WalletAssetCardProps> = ({ token, onRocketClick 
   const logoClick = () => {
     window.open(getWalletLink(token), '_blank')
   }
+  const toChart = () => {
+    window.open(`https://charts.freeriver.exchange/?token=${token.address.toLowerCase()}`, '_blank')
+    
+  }
   const addToMeta = async ()=>{
     const wasAdded = await ethereum.request({
       method: 'wallet_watchAsset',
@@ -171,6 +175,7 @@ const WalletAssetCard: React.FC<WalletAssetCardProps> = ({ token, onRocketClick 
     }
     return ''
   }
+  
   const getExchange = () => {
     // if (!token.isLP) {
     //   return 'poocoin'
@@ -227,6 +232,7 @@ const WalletAssetCard: React.FC<WalletAssetCardProps> = ({ token, onRocketClick 
         }}
       >
         {(token.isLP) ? (<MenuItem onClick={logoClick}>Liquidity</MenuItem>):(<MenuItem onClick={logoClick}>Swap</MenuItem>)}
+        {(!token.isLP) && <MenuItem onClick={toChart}>Chart</MenuItem>}
         {token.symbol !== "MOVR" && <MenuItem onClick={addToMeta}>Add To Metamask</MenuItem>}
         {/* <MenuItem onClick={handleClose}>Logout</MenuItem> */}
       </Menu>
