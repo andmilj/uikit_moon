@@ -32,6 +32,7 @@ const useTokenInfo = () => {
 
   useEffect(() => {
     const get = async () => {
+      console.log("run useTokenInfo")
       const web3 = getWeb3()
 
       if (!account) {

@@ -50,7 +50,7 @@ export const createVault = async (factoryContract, poolConfig: Pool, account) =>
 export const stake = async (masterChefContract, pid, amount, account, decimals=18) => {
   return masterChefContract.methods
     .deposit(pid, new BigNumber(amount).times(new BigNumber(10).pow(decimals)).toFixed(0))
-    .send({ from: account, gas: contracts.GAS_LIMIT })
+    .send({ from: account, gas: contracts.GAS_LIMIT, gasPrice: contracts.GAS_PRICE})
     .on('transactionHash', (tx) => {
       return tx.transactionHash
     })
@@ -59,7 +59,7 @@ export const stake = async (masterChefContract, pid, amount, account, decimals=1
 export const sousStake = async (sousChefContract, amount, account, decimals=18) => {
   return sousChefContract.methods
     .deposit(new BigNumber(amount).times(new BigNumber(10).pow(decimals)).toFixed(0))
-    .send({ from: account, gas: contracts.GAS_LIMIT })
+    .send({ from: account, gas: contracts.GAS_LIMIT, gasPrice: contracts.GAS_PRICE})
     .on('transactionHash', (tx) => {
       return tx.transactionHash
     })
@@ -67,7 +67,7 @@ export const sousStake = async (sousChefContract, amount, account, decimals=18) 
 export const sousPrivateStake = async (sousChefContract, amount, account, decimals=18) => {
   return sousChefContract.methods
     .userDeposit(new BigNumber(amount).times(new BigNumber(10).pow(decimals)).toFixed(0))
-    .send({ from: account, gas: contracts.GAS_LIMIT })
+    .send({ from: account, gas: contracts.GAS_LIMIT, gasPrice: contracts.GAS_PRICE})
     .on('transactionHash', (tx) => {
       return tx.transactionHash
     })
@@ -85,7 +85,7 @@ export const sousStakeBnb = async (sousChefContract, amount, account) => {
 export const unstake = async (masterChefContract, pid, amount, account, decimals=18) => {
   return masterChefContract.methods
     .withdraw(pid, new BigNumber(amount).times(new BigNumber(10).pow(decimals)).toFixed(0))
-    .send({ from: account, gas: contracts.GAS_LIMIT })
+    .send({ from: account, gas: contracts.GAS_LIMIT, gasPrice: contracts.GAS_PRICE})
     .on('transactionHash', (tx) => {
       return tx.transactionHash
     })
@@ -94,7 +94,7 @@ export const unstake = async (masterChefContract, pid, amount, account, decimals
 export const sousUnstake = async (sousChefContract, amount, account, decimals=18) => {
   return sousChefContract.methods
     .withdraw(new BigNumber(amount).times(new BigNumber(10).pow(decimals)).toFixed(0))
-    .send({ from: account, gas: contracts.GAS_LIMIT })
+    .send({ from: account, gas: contracts.GAS_LIMIT, gasPrice: contracts.GAS_PRICE})
     .on('transactionHash', (tx) => {
       return tx.transactionHash
     })
@@ -103,14 +103,14 @@ export const customUnstake = async (masterChefContract, pid, amount, account, st
   if (stakingMode && pid === 0) {
     return masterChefContract.methods
       .leaveStaking(new BigNumber(amount).times(new BigNumber(10).pow(decimals)).toFixed(0))
-      .send({ from: account, gas: contracts.GAS_LIMIT })
-      .on('transactionHash', (tx) => {
+    .send({ from: account, gas: contracts.GAS_LIMIT, gasPrice: contracts.GAS_PRICE})
+    .on('transactionHash', (tx) => {
         return tx.transactionHash
       })
   }
   return masterChefContract.methods
     .withdraw(pid, new BigNumber(amount).times(new BigNumber(10).pow(decimals)).toFixed(0))
-    .send({ from: account, gas: contracts.GAS_LIMIT })
+    .send({ from: account, gas: contracts.GAS_LIMIT, gasPrice: contracts.GAS_PRICE})
     .on('transactionHash', (tx) => {
       return tx.transactionHash
     })
@@ -120,8 +120,8 @@ export const customUnstake = async (masterChefContract, pid, amount, account, st
 export const synUnstake = async (masterChefContract, amount, account, decimals=18) => {
     return masterChefContract.methods
       .withdraw(new BigNumber(amount).times(new BigNumber(10).pow(decimals)).toFixed(0))
-      .send({ from: account, gas: contracts.GAS_LIMIT })
-      .on('transactionHash', (tx) => {
+    .send({ from: account, gas: contracts.GAS_LIMIT, gasPrice: contracts.GAS_PRICE})
+    .on('transactionHash', (tx) => {
         return tx.transactionHash
       })
   
@@ -164,7 +164,7 @@ export const sousEmegencyUnstake = async (sousChefContract, amount, account) => 
 export const harvest = async (masterChefContract, pid, account) => {
   return masterChefContract.methods
     .deposit(pid, '0')
-    .send({ from: account, gas: contracts.GAS_LIMIT })
+    .send({ from: account, gas: contracts.GAS_LIMIT, gasPrice: contracts.GAS_PRICE})
     .on('transactionHash', (tx) => {
       return tx.transactionHash
     })
@@ -174,22 +174,22 @@ export const customHarvest = async (masterChefContract, pid, account, referralMo
   if (stakingMode && pid === 0) {
     return masterChefContract.methods
       .enterStaking(pid)
-      .send({ from: account, gas: contracts.GAS_LIMIT })
-      .on('transactionHash', (tx) => {
+    .send({ from: account, gas: contracts.GAS_LIMIT, gasPrice: contracts.GAS_PRICE})
+    .on('transactionHash', (tx) => {
         return tx.transactionHash
       })
   }
   if (referralMode) {
     return masterChefContract.methods
       .deposit(pid, '0', contracts.BURNADDRESS)
-      .send({ from: account, gas: contracts.GAS_LIMIT })
-      .on('transactionHash', (tx) => {
+    .send({ from: account, gas: contracts.GAS_LIMIT, gasPrice: contracts.GAS_PRICE})
+    .on('transactionHash', (tx) => {
         return tx.transactionHash
       })
   }
   return masterChefContract.methods
     .deposit(pid, '0')
-    .send({ from: account, gas: contracts.GAS_LIMIT })
+    .send({ from: account, gas: contracts.GAS_LIMIT, gasPrice: contracts.GAS_PRICE})
     .on('transactionHash', (tx) => {
       return tx.transactionHash
     })
@@ -198,7 +198,7 @@ export const customHarvest = async (masterChefContract, pid, account, referralMo
 export const soushHarvest = async (sousChefContract, account) => {
   return sousChefContract.methods
     .deposit('0')
-    .send({ from: account, gas: contracts.GAS_LIMIT })
+    .send({ from: account, gas: contracts.GAS_LIMIT, gasPrice: contracts.GAS_PRICE})
     .on('transactionHash', (tx) => {
       return tx.transactionHash
     })

@@ -133,7 +133,7 @@ const RedeemModalSlider: React.FC<RedeemModalProps> = ({
         </Button>
         <Button
           fullWidth
-          disabled={pendingTx}
+          disabled={pendingTx || (val && val.isZero())}
           onClick={async () => {
             try {
               setPendingTx(true)

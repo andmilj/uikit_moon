@@ -115,7 +115,7 @@ const WithdrawModalSlider: React.FC<WithdrawModalProps> = ({
         </Button>
         <Button
           fullWidth
-          disabled={pendingTx}
+          disabled={pendingTx || (val && val.isZero())}
           onClick={async () => {
             try {
               setPendingTx(true)

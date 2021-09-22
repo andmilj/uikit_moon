@@ -49,6 +49,7 @@ import {
   removeTrailingZero,
   toDollar,
 } from 'utils/formatBalance'
+import { TokenInfo } from 'config/constants/tokens'
 import Balance from 'components/Balance'
 import { Farm, Pool } from 'state/types'
 import getTimePeriods from 'utils/getTimePeriods'
@@ -68,10 +69,11 @@ import WithdrawModalSlider from './WithdrawModalSlider'
 const web3 = getWeb3()
 interface PoolCardProps {
   pool: Pool
+  tokenInfo?: TokenInfo[]
 }
 const CHAIN_ID = process.env.REACT_APP_CHAIN_ID
 
-const PoolCard2: React.FC<PoolCardProps> = ({ pool }) => {
+const PoolCard2: React.FC<PoolCardProps> = ({ pool , tokenInfo = []}) => {
   const {
     sousId,
     image,
@@ -122,7 +124,7 @@ const PoolCard2: React.FC<PoolCardProps> = ({ pool }) => {
     stakeVsBalanceDollar,
     bothTotalStaked,
     bothTotalStakedDollar,
-
+    
     // stakingLimit,
   } = pool
   // console.log("stakeBalanceDollar",stakeBalanceDollar.toString())
@@ -517,6 +519,22 @@ const PoolCard2: React.FC<PoolCardProps> = ({ pool }) => {
 
   }
 
+  const getLpBreakDownText = () => {
+    if (pool.isLP && bothTotalStaked && (!bothTotalStaked.isZero()) && tokenInfo){
+      const temp = tokenInfo.find(t => t.address.toLowerCase() === stakingTokenAddress.toLowerCase())
+      // console.log(image, bothTotalStaked.toString(), temp)
+      if (temp){
+
+        const token0Amt = getBalanceNumber(bothTotalStaked.multipliedBy(pricePerShare).multipliedBy(temp.token0PerLp), getDecimals(temp.token0));
+        const token1Amt = getBalanceNumber(bothTotalStaked.multipliedBy(pricePerShare).multipliedBy(temp.token1PerLp), getDecimals(temp.token1));
+        // return "test"
+        return `${removeTrailingZero(token0Amt,2)} ${temp.token0Symbol}<br>+<br>${removeTrailingZero(token1Amt,2)} ${temp.token1Symbol}`
+      }
+    }
+    return null;
+  }
+
+
   const stepOne = () => {
 
 
@@ -646,7 +664,6 @@ const PoolCard2: React.FC<PoolCardProps> = ({ pool }) => {
           </Text>
         </TextRow>
 
-        <ReactTooltip />
       </ActionBox>
     )
   }
@@ -801,7 +818,7 @@ const PoolCard2: React.FC<PoolCardProps> = ({ pool }) => {
 
         {stakedVsBalance.isGreaterThan(0) ? (
           <Button style={{ width: 'auto' }} disabled={requestedApproval} onClick={onRewardSequence}>
-            {`Claim ${getBalanceNumberPrecisionFloat(pendingVsReward, getDecimals(vaultShareRewardToken||contracts.KAFE), 4)} ${
+            {`Claim ${hideBalances ? ("***"):(getBalanceNumberPrecisionFloat(pendingVsReward, getDecimals(vaultShareRewardToken||contracts.KAFE), 4))} ${
               vaultShareRewardToken ? getAddressName(vaultShareRewardToken) : 'KAFE'
             }`}
           </Button>
@@ -892,7 +909,6 @@ const PoolCard2: React.FC<PoolCardProps> = ({ pool }) => {
                 ''
               )}
             </div>
-            <ReactTooltip />
 
             {/* {disclaimerPositive ? (<span data-multiline="true" data-type="success" data-tip={disclaimerPositive}>✔️</span>):("")} */}
           </span>
@@ -911,7 +927,6 @@ const PoolCard2: React.FC<PoolCardProps> = ({ pool }) => {
             {disclaimerPositive ? (
               <MultiplierTag data-multiline="true" data-type="success" data-tip={positiveTooltip} variant="success">
                 {disclaimerPositive}
-            <ReactTooltip />
               </MultiplierTag>
             ) : (
               ''
@@ -919,7 +934,6 @@ const PoolCard2: React.FC<PoolCardProps> = ({ pool }) => {
             {disclaimerNegative ? (
               <MultiplierTag data-multiline="true" data-type="error" data-tip={negativeTooltip} variant="failure">
                 {disclaimerNegative}
-            <ReactTooltip />
               </MultiplierTag>
             ) : (
               ''
@@ -944,7 +958,9 @@ const PoolCard2: React.FC<PoolCardProps> = ({ pool }) => {
                 onReward()
               }}
             >
-              <Balance decimals={getDecimals(vaultShareRewardToken||contracts.KAFE) < 18 ? 0 : 2} fontSize="20px" value={getBalanceNumber(pendingVsReward, getDecimals(vaultShareRewardToken||contracts.KAFE))} />
+
+              {hideBalances ? (<Text>****</Text>):(<Balance decimals={getDecimals(vaultShareRewardToken||contracts.KAFE) < 18 ? 0 : 2} fontSize="20px" value={getBalanceNumber(pendingVsReward, getDecimals(vaultShareRewardToken||contracts.KAFE))} />)} 
+              
             </MyButton>
 
             <Text style={{ textAlign: 'center' }} color="grey" fontSize="12px">
@@ -969,9 +985,10 @@ const PoolCard2: React.FC<PoolCardProps> = ({ pool }) => {
                 <Text fontSize="18px">*****</Text>
               ) : (
                 <>
-                  <Text fontSize="18px">
+                  <Text data-multiline data-tip={getLpBreakDownText()} fontSize="18px">
                     {removeTrailingZero(getBalanceNumber(bothTotalStaked.multipliedBy(pricePerShare),getDecimals(stakingTokenAddress)))}
                   </Text>
+                  <ReactTooltip />
                   <Text style={{ marginTop: '-5px' }} fontSize="12px">
                     (${parseFloat(getBalanceNumber(bothTotalStakedDollar,getDecimals(lpBaseTokenAddress)).toFixed(2)).toLocaleString()})
                   </Text>
@@ -1043,6 +1060,8 @@ const PoolCard2: React.FC<PoolCardProps> = ({ pool }) => {
   }
   return (
     <Card2>
+      <ReactTooltip />
+
       {hasVaultShare && boostFinished && accountHasVsStakedBalance ? <Overlay /> : ''}
       {hasMinWidth ? (
         <CardTopRow onClick={toggleExpand}>
@@ -1093,7 +1112,6 @@ const PoolCard2: React.FC<PoolCardProps> = ({ pool }) => {
                       <div>
                         Capital
                         <span data-tip="Capital calculation resets upon full withdrawal">&nbsp;*</span>
-                        <ReactTooltip />
                       </div>
 
                       {hideBalances ? (
@@ -1148,7 +1166,6 @@ const PoolCard2: React.FC<PoolCardProps> = ({ pool }) => {
                     >
                       <div>
                         Change<span data-tip="% change is in terms of tokens, not price">&nbsp;*</span>
-                        <ReactTooltip />
                       </div>
                       {getChange(capital, bothTotalStaked.multipliedBy(pricePerShare))}
                     </div>
@@ -1206,7 +1223,6 @@ const PoolCard2: React.FC<PoolCardProps> = ({ pool }) => {
             {TranslateString(412, 'View project site')}
           </TokenLink>):("")} */}
 
-      <ReactTooltip />
 
       {/* <StyledDetails>
           <div style={{ flex: 1, display: 'flex', flexDirection: 'row', justifyContent: 'flex-end'}}>

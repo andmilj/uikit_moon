@@ -990,7 +990,7 @@ const Portfolio: React.FC = () => {
           {expandSection2 ? (
             <>
               {regularVaults.map((_p) => (
-                <PoolCard2 key={_p.sousId} pool={_p} />
+                <PoolCard2 key={_p.sousId} pool={_p} tokenInfo={tokens}/>
               ))}
 
             </>

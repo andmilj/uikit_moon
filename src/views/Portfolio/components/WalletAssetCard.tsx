@@ -210,7 +210,7 @@ const WalletAssetCard: React.FC<WalletAssetCardProps> = ({ token, onRocketClick 
       <ReactTooltip />
 
 
-      <TokenLogo style={{ cursor: 'pointer' }} data-delay-show={300} data-tip={`View on ${viewOn}`} 
+      <TokenLogo style={{ cursor: 'pointer' }} 
       aria-controls="basic-menu"
       aria-haspopup="true"
       aria-expanded={open ? 'true' : undefined}

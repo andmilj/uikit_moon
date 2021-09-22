@@ -1090,32 +1090,7 @@ const fetchPoolsTotalStakingWithBaseSyn = async (lpPoolsWithBase) => {
       .dividedBy(totalSupplys2[i].toString())
   })
   // console.log("valueOfLpsInVaultInBase", valueOfLpsInVaultInUSDT[0].toString())
-  // 2762 // so many kus in the lp
-  // 443
-  // 2675
-  // 891 KUS in vault
-  // console.log(lpInMasterchef[0].toString(), valueOfLpsInMasterChefInKcs[0].toString())
-  // find price of reward token
-  // const priceOfRewardCalls2 = lpPoolsWithBase.map((p) => (
-  //   {
-  //   address: p.routerForQuote,
-  //   name: 'getAmountsOut',
-  //   params: ["1000000000000000000",[p.rewardToken, p.lpBaseTokenAddress]],
-  // }))
-  // let prices2 = await multicall(routerABI, priceOfRewardCalls2)
-  // prices2 = prices2.map(p => p[0][1]);
-
-  // const priceOfRewardCalls2 = lpPoolsWithBase.map((p) => {
-  //   if (p.rewardToken.toLowerCase() === p.lpBaseTokenAddress.toLowerCase()){
-  //     return null;
-  //   }
-  //   return {
-  //     address: p.routerForQuote,
-  //     name: 'getAmountsOut',
-  //     params: ["1000000000000000000",[p.rewardToken, p.lpBaseTokenAddress]],
-  //   }
-
-  // })
+  
   let prices2_ = results.slice(lpPoolsWithBase.length * 5) // await multicall(routerABI, priceOfRewardCalls2.filter(p=>p))
   prices2_ = prices2_.map((p) => web3.eth.abi.decodeParameter('uint256[]', p))
   prices2_ = prices2_.map((p) => new BigNumber(p[p.length-1]))
@@ -1131,10 +1106,10 @@ const fetchPoolsTotalStakingWithBaseSyn = async (lpPoolsWithBase) => {
     }
   })
 
-  // console.log("prices2",new BigNumber(prices2[0].toString()).multipliedBy(10).dividedBy(1e18).toString())
+  // console.log("prices2",new BigNumber(prices2[0].toString()).toString())
   // apy
   const apys2 = lpPoolsWithBase.map((p, i) => {
-    // console.log(prices2[i].toString(), p.allocPoint, p.rewardMultiplier, p.totalAllocPoint)
+    console.log(prices2[i].toString(), p.allocPoint, p.rewardMultiplier, p.totalAllocPoint)
     return new BigNumber(prices2[i].toString())
       .multipliedBy(p.synRewardRate)
       .multipliedBy(86400 * 365)
@@ -1148,7 +1123,7 @@ const fetchPoolsTotalStakingWithBaseSyn = async (lpPoolsWithBase) => {
   return lpPoolsWithBase.map((p, index) => ({
     sousId: p.sousId,
     totalStakedAsQuoteToken: valueOfLpsInVaultInUSDT[index].toJSON(),
-    stakePriceAsQuoteToken: valueOfLpsInVaultInUSDT[index].dividedBy(lpInVault2[index]).toJSON(),
+    stakePriceAsQuoteToken: valueOfLpsInMasterChefInUSDT[index].dividedBy(lpInMasterchef2[index]).toJSON(),
     apy: apys2[index].toJSON(),
     // apyCompound: apyscompound2[index].toJSON(),
     // apyCompoundDay: apyscompound2Day[index].toJSON(),

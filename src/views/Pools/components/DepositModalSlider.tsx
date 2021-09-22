@@ -130,7 +130,7 @@ const DepositModalSlider: React.FC<DepositModalProps> = ({
         </Button>
         <Button
           fullWidth
-          disabled={pendingTx}
+          disabled={pendingTx || (val && val.isZero())}
           onClick={async () => {
             try {
               setPendingTx(true)

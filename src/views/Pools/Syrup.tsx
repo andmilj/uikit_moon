@@ -14,6 +14,7 @@ import orderBy from 'lodash/orderBy'
 import { getCakeProfitsPerYearVs, getVsApy, hasTikuStake, hasVaultStake } from 'utils/callHelpers'
 import useI18n from 'hooks/useI18n'
 import useBlock from 'hooks/useBlock'
+import useTokenInfo from 'hooks/useTokenInfo'
 import { toDollar } from 'utils/formatBalance'
 import useQuotePrice from 'hooks/useQuotePrice'
 import { useMediaQuery } from '@material-ui/core'
@@ -34,6 +35,7 @@ const Farm: React.FC = () => {
   const pools = usePools(account)
   const farms = useFarms(account)
   const block = useBlock()
+  const tokens = useTokenInfo()
 
   const quotePrice = useQuotePrice()
   const [onlyStaked, setOnlyStaked] = useState(false)
@@ -206,7 +208,7 @@ const Farm: React.FC = () => {
           {regularVaults
             .filter((p) => p.projectName === projectName)
             .map((_p) => (
-              <PoolCard2 key={_p.sousId} pool={_p} />
+              <PoolCard2 key={_p.sousId} pool={_p} tokenInfo={tokens}/>
             ))}
         </PoolCardContainer>
 
