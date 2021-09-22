@@ -14,7 +14,7 @@ import Tooltip from '@material-ui/core/Tooltip'
 import { Image, Text, useModal } from '@pancakeswap-libs/uikit'
 import contracts from 'config/constants/contracts'
 import { TokenInfo } from 'config/constants/tokens'
-import { getBalanceNumber, getBalanceNumberPrecisionFloatFixed, mightHide, removeTrailingZero } from 'utils/formatBalance'
+import { getBalanceNumber, getBalanceNumberPrecisionFloatFixed, getDecimals, mightHide, removeTrailingZero } from 'utils/formatBalance'
 import { PoolCategory } from 'config/constants/types'
 import SelectVaultModal from './SelectVaultModal'
 import MigrateFromWalletModal from './MigrateFromWalletModal'
@@ -133,6 +133,7 @@ const WalletAssetCard: React.FC<WalletAssetCardProps> = ({ token, onRocketClick 
     window.open(`https://charts.freeriver.exchange/?token=${token.address.toLowerCase()}`, '_blank')
     
   }
+  
   const addToMeta = async ()=>{
     const wasAdded = await ethereum.request({
       method: 'wallet_watchAsset',
@@ -162,15 +163,15 @@ const WalletAssetCard: React.FC<WalletAssetCardProps> = ({ token, onRocketClick 
     // }
 
     if (token.routerForQuote === contracts.moonRouter) {
-      return (token.isLP) ? `https://swap.moonfarm.in/#/remove/${token.token0}/${token.token1}`:
+      return (token.isLP) ? `https://swap.moonfarm.in/#/remove/${token.token0.toLowerCase().replace(contracts.WMOVR.toLowerCase(), 'ETH')}/${token.token1}`:
         `https://swap.moonfarm.in/#/swap?inputCurrency=${token.address}`
     }
     if (token.routerForQuote === contracts.solarRouter) {
-      return (token.isLP) ? `https://solarbeam.io/exchange/remove/${token.token0}/${token.token1}`:
+      return (token.isLP) ? `https://solarbeam.io/exchange/remove/${token.token0.toLowerCase().replace(contracts.WMOVR.toLowerCase(), 'ETH')}/${token.token1}`:
       `https://solarbeam.io/exchange/swap?inputCurrency=${token.address}`
     }
     if (token.routerForQuote === contracts.freeRouter) {
-      return (token.isLP) ?  `https://freeriver.exchange/#/remove/${token.token0}/${token.token1}`:
+      return (token.isLP) ?  `https://freeriver.exchange/#/remove/${token.token0.toLowerCase().replace(contracts.WMOVR.toLowerCase(), 'ETH')}/${token.token1}`:
       `https://freeriver.exchange/#/swap?inputCurrency=${token.address}`
     }
     return ''
@@ -264,7 +265,9 @@ const WalletAssetCard: React.FC<WalletAssetCardProps> = ({ token, onRocketClick 
       <ExpandingSpacer />
 
       <TokenRight>
-        <Text fontSize="16px">{mightHide(`$${token.value.toLocaleString()}`, hideBalances)}</Text>
+        {(token.isLP ? (<Text data-effect="solid" data-multiline data-tip={`${removeTrailingZero(getBalanceNumber(token.balanceToken0, getDecimals(token.token0)),2)} ${token.token0Symbol}<br>+<br>${removeTrailingZero(getBalanceNumber(token.balanceToken1,getDecimals(token.token1)),2)} ${token.token1Symbol}`} fontSize="16px">{mightHide(`$${token.value.toLocaleString()}`, hideBalances)}</Text>):
+          (<Text fontSize="16px">{mightHide(`$${token.value.toLocaleString()}`, hideBalances)}</Text>))}
+        
       </TokenRight>
     </WalletAssetRow>
   )

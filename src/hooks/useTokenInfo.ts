@@ -4,7 +4,7 @@ import contracts from 'config/constants/contracts'
 import { PoolCategory } from 'config/constants/types'
 import BigNumber from 'bignumber.js'
 import { getMulticallAddress } from 'utils/addressHelpers'
-import { bucketArray, decodeAddress, decodeInt, getFuncData } from 'utils/callHelpers'
+import { bucketArray, decodeAddress, decodeInt, decodeString, getFuncData } from 'utils/callHelpers'
 import vaultABI from 'config/abi/vault.json'
 import MultiCallAbi from 'config/abi/Multicall.json'
 import poolsConfig from 'config/constants/pools'
@@ -124,20 +124,40 @@ const useTokenInfo = () => {
         callResults2 = callResults2[1]
         let [amtBase, supply, bal] = bucketArray(callResults2.slice(0, lpTokens.length * 3), lpTokens.length)
         let [token0s, token1s] = bucketArray(callResults2.slice(lpTokens.length * 3), lpTokens.length)
+        token0s = token0s.map(decodeAddress)
+        token1s = token1s.map(decodeAddress)
+
+        const token0InLpsCall = lpTokens.map((l,i) => [token0s[i], getFuncData('balanceOf(address)', [l.address])])
+        const token1InLpsCall = lpTokens.map((l,i) => [token1s[i], getFuncData('balanceOf(address)', [l.address])])
+        const token0SymbolCall = lpTokens.map((l,i) => [token0s[i], getFuncData('symbol()', [])])
+        const token1SymbolCall = lpTokens.map((l,i) => [token1s[i], getFuncData('symbol()', [])])
+
+        let callResults2a = await multi.methods
+        .aggregate([...token0InLpsCall, ...token1InLpsCall, ...token0SymbolCall, ...token1SymbolCall])
+        .call()
+        callResults2a = callResults2a[1]
+        let [token0InLps, token1InLps, token0Symbol, token1Symbol] = bucketArray(callResults2a, lpTokens.length)
+
 
         amtBase = amtBase.map(decodeInt)
         supply = supply.map(decodeInt)
         bal = bal.map(decodeInt)
-        token0s = token0s.map(decodeAddress)
-        token1s = token1s.map(decodeAddress)
+        token0InLps = token0InLps.map(decodeInt)
+        token1InLps = token1InLps.map(decodeInt)
+        token0Symbol = token0Symbol.map(decodeString)
+        token1Symbol = token1Symbol.map(decodeString)
 
         lpTokens.forEach((l, i) => {
           final.push({
             ...l,
             priceVsQuoteToken: new BigNumber(amtBase[i]).times(2).dividedBy(supply[i]),
             balance: new BigNumber(bal[i]),
-            token0: token0s[i].toLowerCase().replace(contracts.WMOVR, 'ETH'),
-            token1: token1s[i].toLowerCase().replace(contracts.WMOVR, 'ETH'),
+            balanceToken0: new BigNumber(bal[i]).multipliedBy(token0InLps[i]).dividedBy(supply[i]),
+            balanceToken1: new BigNumber(bal[i]).multipliedBy(token1InLps[i]).dividedBy(supply[i]),
+            token0: token0s[i].toLowerCase(),
+            token1: token1s[i].toLowerCase(),
+            token0Symbol: token0Symbol[i],
+            token1Symbol: token1Symbol[i],
             decimals: 18,
           })
         })

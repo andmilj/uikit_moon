@@ -21,6 +21,10 @@ export interface TokenInfo extends TokenConfig {
   balance?: BigNumber
   token0?: string
   token1?: string
+  balanceToken0?: BigNumber
+  balanceToken1?: BigNumber
+  token0Symbol?: string
+  token1Symbol?: string
   decimals?: number
   value?: number
   valuePer?: number
