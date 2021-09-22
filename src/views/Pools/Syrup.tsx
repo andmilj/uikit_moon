@@ -35,7 +35,7 @@ const Farm: React.FC = () => {
   const pools = usePools(account)
   const farms = useFarms(account)
   const block = useBlock()
-  const tokens = useTokenInfo()
+  const tokens = useTokenInfo().filter(f => f.isLP)
 
   const quotePrice = useQuotePrice()
   const [onlyStaked, setOnlyStaked] = useState(false)
@@ -339,7 +339,7 @@ const Farm: React.FC = () => {
                   {regularVaults
                     .filter((p) => hasVaultStake(p))
                     .map((_p) => (
-                      <PoolCard2 key={_p.sousId} pool={_p} />
+                      <PoolCard2 key={_p.sousId} pool={_p} tokenInfo={tokens} />
                     ))}
                 </PoolCardContainer>
 

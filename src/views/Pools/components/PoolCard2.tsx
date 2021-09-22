@@ -636,11 +636,14 @@ const PoolCard2: React.FC<PoolCardProps> = ({ pool , tokenInfo = []}) => {
           <span
             data-multiline="true"
             data-type="success"
+            data-for="rate"
             data-tip="Keeps increasing as <br/>autocompound happens"
             style={{ fontSize: '16px', textDecoration: 'underline' }}
           >
             {new BigNumber(pricePerShare).toFixed(3)}
           </span>
+          <ReactTooltip id="rate"/>
+
           &nbsp;
           <Token>{stakingTokenName}</Token>
         </Text>
@@ -901,10 +904,12 @@ const PoolCard2: React.FC<PoolCardProps> = ({ pool , tokenInfo = []}) => {
             <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-start' }}>
               <Text color="primary">{stakingTokenName}</Text>
               <LinkExternal href={getLiquidLink(stakingTokenName, liquidityUrlPathParts, projectName)} />
-              {disclaimer ? (
-                <span style={{ cursor: 'pointer' }} data-multiline="true" data-type="error" data-tip={disclaimer}>
+              {disclaimer ? (<>
+                <span style={{ cursor: 'pointer' }} data-for="error1" data-multiline="true" data-type="error" data-tip={disclaimer}>
                   ⚠️
                 </span>
+                <ReactTooltip id="error1"/>
+                  </>
               ) : (
                 ''
               )}
@@ -925,15 +930,17 @@ const PoolCard2: React.FC<PoolCardProps> = ({ pool , tokenInfo = []}) => {
           <TextRow>
             {depositFee ? <MultiplierTag variant="failure">{depositFee}% Deposit Fee</MultiplierTag> : ''}
             {disclaimerPositive ? (
-              <MultiplierTag data-multiline="true" data-type="success" data-tip={positiveTooltip} variant="success">
+              <MultiplierTag data-for="disclaimerPositive" data-multiline="true" data-type="success" data-tip={positiveTooltip} variant="success">
                 {disclaimerPositive}
+                <ReactTooltip id="disclaimerPositive"/>
               </MultiplierTag>
             ) : (
               ''
             )}
             {disclaimerNegative ? (
-              <MultiplierTag data-multiline="true" data-type="error" data-tip={negativeTooltip} variant="failure">
+              <MultiplierTag data-for="disclaimerNegative" data-multiline="true" data-type="error" data-tip={negativeTooltip} variant="failure">
                 {disclaimerNegative}
+                <ReactTooltip id="disclaimerNegative"/>
               </MultiplierTag>
             ) : (
               ''
@@ -985,10 +992,10 @@ const PoolCard2: React.FC<PoolCardProps> = ({ pool , tokenInfo = []}) => {
                 <Text fontSize="18px">*****</Text>
               ) : (
                 <>
-                  <Text data-multiline data-tip={getLpBreakDownText()} fontSize="18px">
+                  <Text data-multiline data-for="lp" data-tip={getLpBreakDownText()} fontSize="18px">
                     {removeTrailingZero(getBalanceNumber(bothTotalStaked.multipliedBy(pricePerShare),getDecimals(stakingTokenAddress)))}
                   </Text>
-                  <ReactTooltip />
+                  <ReactTooltip id="lp" />
                   <Text style={{ marginTop: '-5px' }} fontSize="12px">
                     (${parseFloat(getBalanceNumber(bothTotalStakedDollar,getDecimals(lpBaseTokenAddress)).toFixed(2)).toLocaleString()})
                   </Text>
@@ -1060,7 +1067,6 @@ const PoolCard2: React.FC<PoolCardProps> = ({ pool , tokenInfo = []}) => {
   }
   return (
     <Card2>
-      <ReactTooltip />
 
       {hasVaultShare && boostFinished && accountHasVsStakedBalance ? <Overlay /> : ''}
       {hasMinWidth ? (
@@ -1111,7 +1117,8 @@ const PoolCard2: React.FC<PoolCardProps> = ({ pool , tokenInfo = []}) => {
                     >
                       <div>
                         Capital
-                        <span data-tip="Capital calculation resets upon full withdrawal">&nbsp;*</span>
+                        <span data-for="capital" data-tip="Capital calculation resets upon full withdrawal">&nbsp;*</span>
+                        <ReactTooltip id="capital"/>
                       </div>
 
                       {hideBalances ? (
@@ -1165,8 +1172,9 @@ const PoolCard2: React.FC<PoolCardProps> = ({ pool , tokenInfo = []}) => {
                       }}
                     >
                       <div>
-                        Change<span data-tip="% change is in terms of tokens, not price">&nbsp;*</span>
+                        Change<span data-for="change" data-tip="% change is in terms of tokens, not price">&nbsp;*</span>
                       </div>
+                        <ReactTooltip id="change"/>
                       {getChange(capital, bothTotalStaked.multipliedBy(pricePerShare))}
                     </div>
 

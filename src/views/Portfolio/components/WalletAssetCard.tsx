@@ -163,15 +163,15 @@ const WalletAssetCard: React.FC<WalletAssetCardProps> = ({ token, onRocketClick 
     // }
 
     if (token.routerForQuote === contracts.moonRouter) {
-      return (token.isLP) ? `https://swap.moonfarm.in/#/remove/${token.token0.toLowerCase().replace(contracts.WMOVR.toLowerCase(), 'ETH')}/${token.token1}`:
+      return (token.isLP) ? `https://swap.moonfarm.in/#/remove/${token.token0.toLowerCase().replace(contracts.WMOVR.toLowerCase(), 'ETH')}/${token.token1.toLowerCase().replace(contracts.WMOVR.toLowerCase(), 'ETH')}`:
         `https://swap.moonfarm.in/#/swap?inputCurrency=${token.address}`
     }
     if (token.routerForQuote === contracts.solarRouter) {
-      return (token.isLP) ? `https://solarbeam.io/exchange/remove/${token.token0.toLowerCase().replace(contracts.WMOVR.toLowerCase(), 'ETH')}/${token.token1}`:
+      return (token.isLP) ? `https://solarbeam.io/exchange/remove/${token.token0.toLowerCase().replace(contracts.WMOVR.toLowerCase(), 'ETH')}/${token.token1.toLowerCase().replace(contracts.WMOVR.toLowerCase(), 'ETH')}`:
       `https://solarbeam.io/exchange/swap?inputCurrency=${token.address}`
     }
     if (token.routerForQuote === contracts.freeRouter) {
-      return (token.isLP) ?  `https://freeriver.exchange/#/remove/${token.token0.toLowerCase().replace(contracts.WMOVR.toLowerCase(), 'ETH')}/${token.token1}`:
+      return (token.isLP) ?  `https://freeriver.exchange/#/remove/${token.token0.toLowerCase().replace(contracts.WMOVR.toLowerCase(), 'ETH')}/${token.token1.toLowerCase().replace(contracts.WMOVR.toLowerCase(), 'ETH')}`:
       `https://freeriver.exchange/#/swap?inputCurrency=${token.address}`
     }
     return ''

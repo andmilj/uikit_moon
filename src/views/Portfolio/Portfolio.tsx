@@ -274,7 +274,7 @@ const Portfolio: React.FC = () => {
   const [onlyStaked, setOnlyStaked] = useState(true)
   const [sortApy, setSortApy] = useState(true)
   const totalPersonalVaultValue = useTotalPersonalValue({ includeFarms: false })
-  const tokens = useTokenInfo()
+  const tokens = useTokenInfo().filter(f => f.isLP)
   const dispatch = useDispatch()
   const hideBalances = useHideBalances()
 
@@ -767,7 +767,7 @@ const Portfolio: React.FC = () => {
   // console.log("overallAvgApy",overallAvgApy.toFixed(2))
 
   const tokensWithDollar = orderBy(
-    tokens.filter((b) => b.balance.isGreaterThan(0)).map((t) => {
+    tokens.filter((b) => b.symbol === 'KAFE' || b.balance.isGreaterThan(0)).map((t) => {
       const dec = new BigNumber(10).pow(t.decimals)
       const quoteDec = new BigNumber(10).pow(contracts.tokenDecimals[t.base?.toLowerCase()]|| 18)
       const valuePer = getDollar(dec.multipliedBy(t.priceVsQuoteToken).dividedBy(quoteDec), t.base || contracts.WMOVR)
