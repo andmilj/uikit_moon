@@ -920,7 +920,7 @@ const PoolCard2: React.FC<PoolCardProps> = ({ pool , tokenInfo = []}) => {
           <FlexRowDiv style={{justifyContent: 'flex-start', alignItems:'flex-end', color: 'grey', fontSize: '15px'}}>
             <div>Uses</div>
             &nbsp;
-            <MyLink href={projectLink}>{projectName}</MyLink>
+            <MyLink href={projectLink}  target="_blank" rel="noreferrer noopener">{projectName}</MyLink>
 
           </FlexRowDiv>
           {/* <Text style={{ marginTop: '-5px' }} color="grey" fontSize="15px">

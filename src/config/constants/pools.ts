@@ -500,7 +500,7 @@ const pools: PoolConfig[] = [
     ...MOONFARM_INFO,
     lpBaseTokenAddress: contracts.WMOVR,
     isLP: false,
-    depositFee: 4,
+    // depositFee: 4,
   },
     {
       sousId: 28,
