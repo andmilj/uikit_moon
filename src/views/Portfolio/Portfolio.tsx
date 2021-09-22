@@ -274,7 +274,7 @@ const Portfolio: React.FC = () => {
   const [onlyStaked, setOnlyStaked] = useState(true)
   const [sortApy, setSortApy] = useState(true)
   const totalPersonalVaultValue = useTotalPersonalValue({ includeFarms: false })
-  const tokens = useTokenInfo().filter(f => f.isLP)
+  const tokens = useTokenInfo()
   const dispatch = useDispatch()
   const hideBalances = useHideBalances()
 
