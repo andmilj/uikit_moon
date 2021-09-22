@@ -152,6 +152,8 @@ const useTokenInfo = () => {
             ...l,
             priceVsQuoteToken: new BigNumber(amtBase[i]).times(2).dividedBy(supply[i]),
             balance: new BigNumber(bal[i]),
+            token0PerLp:new BigNumber(token0InLps[i]).dividedBy(supply[i]),
+            token1PerLp:new BigNumber(token1InLps[i]).dividedBy(supply[i]),
             balanceToken0: new BigNumber(bal[i]).multipliedBy(token0InLps[i]).dividedBy(supply[i]),
             balanceToken1: new BigNumber(bal[i]).multipliedBy(token1InLps[i]).dividedBy(supply[i]),
             token0: token0s[i].toLowerCase(),
@@ -162,8 +164,8 @@ const useTokenInfo = () => {
           })
         })
       }
-      // setTokenInfo(final)
-      setTokenInfo(final.filter((b) => b.balance.isGreaterThan(0)))
+      setTokenInfo(final)
+      // setTokenInfo(final.filter((b) => b.balance.isGreaterThan(0)))
       // setTokenInfo(final.filter((b) => b.symbol === 'KAFE' || b.balance.isGreaterThan(0)))
     }
 

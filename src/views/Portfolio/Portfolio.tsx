@@ -767,7 +767,7 @@ const Portfolio: React.FC = () => {
   // console.log("overallAvgApy",overallAvgApy.toFixed(2))
 
   const tokensWithDollar = orderBy(
-    tokens.map((t) => {
+    tokens.filter((b) => b.balance.isGreaterThan(0)).map((t) => {
       const dec = new BigNumber(10).pow(t.decimals)
       const quoteDec = new BigNumber(10).pow(contracts.tokenDecimals[t.base?.toLowerCase()]|| 18)
       const valuePer = getDollar(dec.multipliedBy(t.priceVsQuoteToken).dividedBy(quoteDec), t.base || contracts.WMOVR)

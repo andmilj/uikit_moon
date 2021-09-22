@@ -25,6 +25,8 @@ export interface TokenInfo extends TokenConfig {
   balanceToken1?: BigNumber
   token0Symbol?: string
   token1Symbol?: string
+  token0PerLp?: BigNumber
+  token1PerLp?: BigNumber
   decimals?: number
   value?: number
   valuePer?: number
@@ -63,6 +65,8 @@ const tokens: TokenConfig[] = [
   { symbol: 'BBMS', address: "0xC0FC9E41C84803fcE8A54Ca8bEcb73cEC3E9A533", routerForQuote: contracts.moonRouter },
   { symbol: 'DRAGON', address: "0x062bD733268269d7Ecb85Cd3EA84281E6bEd7f5F", routerForQuote: contracts.freeRouter },
   { symbol: 'TOOLS', address: "0x5853ccBDc428d5fC9F8C1d3599B252C88477b460", routerForQuote: contracts.moonRouter },
+  { symbol: '1SWAP', address: "0x3516a7588C2E6FFA66C9507eF51853eb85d76e5B", routerForQuote: contracts.solarRouter },
+
 
   
   // {

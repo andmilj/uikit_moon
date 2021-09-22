@@ -195,8 +195,8 @@ const PoolCard2: React.FC<PoolCardProps> = ({ pool }) => {
   // const isOldSyrup = stakingTokenName === QuoteToken.SYRUP
   const accountHasStakedBalance = stakedBalance?.toNumber() > 0
   const needsApproval =
-    !accountHasStakedBalance &&
-    (!allowance.toNumber() || allowance.isLessThan('0xffffffffffffffffffffffffffffffffffffffff'))
+  (!allowance.toNumber() || allowance.isLessThan('0xffffffffffffffffffffffffffffffffffffffff'))
+    // !accountHasStakedBalance &&
   const isCardActive = isFinished && accountHasStakedBalance
 
   const quotePrice = useQuotePrice()
