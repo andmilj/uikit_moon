@@ -24,7 +24,7 @@ import { getDecimals, getExpDecimals, isValidBase } from 'utils/formatBalance'
 
 const CHAIN_ID = process.env.REACT_APP_CHAIN_ID
 const web3 = getWeb3()
-const multi = new web3.eth.Contract(MultiCallAbi as unknown as AbiItem, getMulticallAddress())
+const multi = new web3.eth.Contract((MultiCallAbi as unknown) as AbiItem, getMulticallAddress())
 
 export const fetchPoolsBlockLimits = async () => {
   const poolsWithEnd = poolsConfig.filter((p) => p.sousId !== 0)
@@ -57,7 +57,7 @@ export const fetchPoolsBlockLimits = async () => {
 
 export const fetchPoolsInfoSynthetix = async () => {
   const pools = poolsConfig.filter((c) => !c.hidden && c.poolCategory === PoolCategory.SYNTHETIX_VAULT)
-  if (pools.length === 0){
+  if (pools.length === 0) {
     return []
   }
   // get reward rate
@@ -255,11 +255,8 @@ const fetchPrivatePoolsTotalStakingWithBase = async (lpPrivatePoolsWithBase, sou
       if (p.rewardToken.toLowerCase() === p.lpBaseTokenAddress.toLowerCase()) {
         return null
       }
-    const path = contracts.getQuotePath(p.rewardToken, p.lpBaseTokenAddress)
-    return [
-        p.routerForQuote,
-        getFuncData('getAmountsOut(uint256,address[])', ['1000000000000000000', path]),
-      ]
+      const path = contracts.getQuotePath(p.rewardToken, p.lpBaseTokenAddress)
+      return [p.routerForQuote, getFuncData('getAmountsOut(uint256,address[])', ['1000000000000000000', path])]
     })
     .filter((n) => n)
 
@@ -272,7 +269,7 @@ const fetchPrivatePoolsTotalStakingWithBase = async (lpPrivatePoolsWithBase, sou
   const lpInMasterchef = results.slice(l * 2, l * 3).map((r) => web3.eth.abi.decodeParameter('uint256', r))
 
   let prices_ = results.slice(l * 3).map((r) => web3.eth.abi.decodeParameter('uint256[]', r))
-  prices_ = prices_.map(p => new BigNumber(p[p.length - 1]))
+  prices_ = prices_.map((p) => new BigNumber(p[p.length - 1]))
 
   const prices = []
   let pIndex = 0
@@ -402,14 +399,8 @@ const fetchPoolsTotalStakingTokenSyn = async (tokenPools) => {
       if (p.stakingTokenAddress.toLowerCase() === p.lpBaseTokenAddress.toLowerCase()) {
         return null
       }
-    const path = contracts.getQuotePath(p.lpBaseTokenAddress,p.stakingTokenAddress)
-      return [
-        p.routerForQuote,
-        getFuncData('getAmountsOut(uint256,address[])', [
-          '1000000000000000000',
-          path,
-        ]),
-      ]
+      const path = contracts.getQuotePath(p.lpBaseTokenAddress, p.stakingTokenAddress)
+      return [p.routerForQuote, getFuncData('getAmountsOut(uint256,address[])', ['1000000000000000000', path])]
     })
     .filter((n) => n)
 
@@ -418,11 +409,8 @@ const fetchPoolsTotalStakingTokenSyn = async (tokenPools) => {
       if (p.rewardToken.toLowerCase() === p.lpBaseTokenAddress.toLowerCase()) {
         return null
       }
-    const path = contracts.getQuotePath(p.rewardToken, p.lpBaseTokenAddress)
-    return [
-        p.routerForQuote,
-        getFuncData('getAmountsOut(uint256,address[])', ['1000000000000000000', path]),
-      ]
+      const path = contracts.getQuotePath(p.rewardToken, p.lpBaseTokenAddress)
+      return [p.routerForQuote, getFuncData('getAmountsOut(uint256,address[])', ['1000000000000000000', path])]
     })
     .filter((n) => n)
 
@@ -449,7 +437,7 @@ const fetchPoolsTotalStakingTokenSyn = async (tokenPools) => {
   let pricesResults = results
     .slice(tokenPools.length * 3, tokenPools.length * 3 + priceStakingTokenCall.length + priceRewardCall.length)
     .map((p) => web3.eth.abi.decodeParameter('uint256[]', p))
-  pricesResults = pricesResults.map(p => new BigNumber(p[p.length - 1]))
+  pricesResults = pricesResults.map((p) => new BigNumber(p[p.length - 1]))
   // const amtTokInMaster = await multicall(erc20ABI, tokenPools.map((p) => ({
   //   address: p.underlyingMasterChef,
   //   name: 'totalSupply',
@@ -585,20 +573,14 @@ const fetchPoolsTotalStakingToken = async (tokenPools) => {
   ])
 
   const priceStakingTokenCall = tokenPools
-    .map((p,i) => {
+    .map((p, i) => {
       if (p.stakingTokenAddress.toLowerCase() === p.lpBaseTokenAddress.toLowerCase()) {
         return null
       }
       const b = new BigNumber(10).pow(contracts.tokenDecimals[p.lpBaseTokenAddress.toLowerCase()] || 18)
       // console.log("b",b.toString())
-    const path = contracts.getQuotePath(p.lpBaseTokenAddress,p.stakingTokenAddress)
-    return [
-        p.routerForQuote,
-        getFuncData('getAmountsOut(uint256,address[])', [
-          b.toString(),
-          path,
-        ]),
-      ]
+      const path = contracts.getQuotePath(p.lpBaseTokenAddress, p.stakingTokenAddress)
+      return [p.routerForQuote, getFuncData('getAmountsOut(uint256,address[])', [b.toString(), path])]
     })
     .filter((n) => n)
   const priceRewardCall = tokenPools
@@ -607,22 +589,18 @@ const fetchPoolsTotalStakingToken = async (tokenPools) => {
         return null
       }
       const b = new BigNumber(10).pow(contracts.tokenDecimals[p.lpBaseTokenAddress.toLowerCase()] || 18)
-    const path = contracts.getQuotePath(p.lpBaseTokenAddress, p.rewardToken)
-    return [
-        p.routerForQuote,
-        getFuncData('getAmountsOut(uint256,address[])', [b.toString(), path]),
-      ]
+      const path = contracts.getQuotePath(p.lpBaseTokenAddress, p.rewardToken)
+      return [p.routerForQuote, getFuncData('getAmountsOut(uint256,address[])', [b.toString(), path])]
     })
     .filter((n) => n)
 
-  let optionalCalls;
-  if (contracts.hasLaunchedFarm){
+  let optionalCalls
+  if (contracts.hasLaunchedFarm) {
     optionalCalls = [[contracts.masterChef[CHAIN_ID], getFuncData('depositedKafe()', [])]]
     const kusPool = tokenPools.find((p) => p.projectName === 'kuswap' && p.poolId === 0)
     if (kusPool) {
       optionalCalls.push([kusPool.underlyingMasterChef, getFuncData('depositedKus()', [])])
     }
-
   }
 
   // const t1 = await multi.methods.aggregate(amtTokInMasterCalls).call()
@@ -654,7 +632,7 @@ const fetchPoolsTotalStakingToken = async (tokenPools) => {
   let pricesResults = results
     .slice(tokenPools.length * 3, tokenPools.length * 3 + priceStakingTokenCall.length + priceRewardCall.length)
     .map((p) => web3.eth.abi.decodeParameter('uint256[]', p))
-  pricesResults = pricesResults.map(p => new BigNumber(p[p.length - 1]))
+  pricesResults = pricesResults.map((p) => new BigNumber(p[p.length - 1]))
   // const amtTokInMaster = await multicall(erc20ABI, tokenPools.map((p) => ({
   //   address: p.stakingTokenAddress,
   //   name: 'balanceOf',
@@ -662,15 +640,15 @@ const fetchPoolsTotalStakingToken = async (tokenPools) => {
   // })))
   let depositedKus = 0
   let depositedKafe = 0
-  if (contracts.hasLaunchedFarm){
+  if (contracts.hasLaunchedFarm) {
     if (optionalCalls.length === 2) {
-      depositedKus = decodeInt(results[results.length - 1]) as unknown as number
-      depositedKafe = decodeInt(results[results.length - 2]) as unknown as number
+      depositedKus = (decodeInt(results[results.length - 1]) as unknown) as number
+      depositedKafe = (decodeInt(results[results.length - 2]) as unknown) as number
     } else {
-      depositedKafe = decodeInt(results[results.length - 1]) as unknown as number
+      depositedKafe = (decodeInt(results[results.length - 1]) as unknown) as number
     }
   }
-  
+
   // kafe
   // const depositedKafe1 = await web3.eth.call({
   //   to: contracts.masterChef[CHAIN_ID], // contract address
@@ -732,7 +710,6 @@ const fetchPoolsTotalStakingToken = async (tokenPools) => {
   // const routerCalls = await multicall(routerABI, [...priceStakingTokenCall,...priceRewardCall].filter(p=>p))
   // const pricesResults = routerCalls.map(p => p[0][1]);
 
-  
   // console.log("pricesResults", pricesResults[0].toString())
   const pricesOfStakingToken = []
   const pricesOfReward = []
@@ -747,9 +724,8 @@ const fetchPoolsTotalStakingToken = async (tokenPools) => {
     }
   })
 
- 
-// 1e18 -> 6773e9
-// 1e18/6773e9 -> 1
+  // 1e18 -> 6773e9
+  // 1e18/6773e9 -> 1
 
   tokenPools.forEach((p) => {
     if (p.rewardToken.toLowerCase() === p.lpBaseTokenAddress.toLowerCase()) {
@@ -764,7 +740,7 @@ const fetchPoolsTotalStakingToken = async (tokenPools) => {
   // console.log("pricesOfStakingToken",pricesOfStakingToken[0].toString())
   // console.log("pricesOfReward",pricesOfReward[0].toString())
   // console.log("amtTokInMaster",amtTokInMaster[0].toString())
- 
+
   const apysTokenOnly = tokenPools.map((p, i) => {
     let effAmt = new BigNumber(amtTokInMaster[i].toString())
     if (p.projectName === 'moonkafe' && p.poolId === 0) {
@@ -774,7 +750,7 @@ const fetchPoolsTotalStakingToken = async (tokenPools) => {
       effAmt = new BigNumber(depositedKus)
       // console.log("depositedKus", effAmt.toString())
     }
-    
+
     // console.log(effAmt.multipliedBy(pricesOfStakingToken[i]).toString(),
     // new BigNumber(pricesOfReward[i].toString()).multipliedBy(1e18)
     //   .multipliedBy(p.tokenPerBlock)
@@ -784,7 +760,8 @@ const fetchPoolsTotalStakingToken = async (tokenPools) => {
     //   .multipliedBy(1 - contracts.performanceFee).dividedBy(p.totalAllocPoint).toString()
     // )
     return new BigNumber(pricesOfReward[i].toString())
-      .multipliedBy(p.tokenPerBlock).multipliedBy(1e18)
+      .multipliedBy(p.tokenPerBlock)
+      .multipliedBy(1e18)
       .multipliedBy(p.allocPoint)
       .multipliedBy(p.rewardMultiplier)
       .multipliedBy(BLOCKS_PER_YEAR)
@@ -809,9 +786,7 @@ const fetchPoolsTotalStakingToken = async (tokenPools) => {
 
   // })
   const valueOfTokensInVaultInKcs = tokenPools.map((p, i) => {
-
-    return new BigNumber(amtTokInVault[i].toString())
-      .multipliedBy(new BigNumber(pricesOfStakingToken[i].toString()))
+    return new BigNumber(amtTokInVault[i].toString()).multipliedBy(new BigNumber(pricesOfStakingToken[i].toString()))
   })
   // console.log("amtTokInVault",amtTokInVault[0].toString())
   // console.log("pricesOfStakingToken",pricesOfStakingToken[0].toString())
@@ -871,7 +846,7 @@ const fetchPrivatePoolsTotalStakingToken = async (tokenPools, sousIdToPrivateSta
     if (p.stakingTokenAddress.toLowerCase() === p.lpBaseTokenAddress.toLowerCase()) {
       return null
     }
-    const path = contracts.getQuotePath(p.lpBaseTokenAddress,p.stakingTokenAddress)
+    const path = contracts.getQuotePath(p.lpBaseTokenAddress, p.stakingTokenAddress)
     return {
       address: p.routerForQuote,
       name: 'getAmountsOut',
@@ -896,7 +871,7 @@ const fetchPrivatePoolsTotalStakingToken = async (tokenPools, sousIdToPrivateSta
     [...pricesOfStakingTokenCall, ...pricesOfRewardCall].filter((p) => p),
   )
   let pricesResults = routerCalls.map((p) => p[0])
-  pricesResults = pricesResults.map((p) => new BigNumber(p[p.length-1]))
+  pricesResults = pricesResults.map((p) => new BigNumber(p[p.length - 1]))
 
   const pricesOfStakingToken = []
   const pricesOfReward = []
@@ -1004,10 +979,7 @@ const fetchPoolsTotalStakingWithBaseSyn = async (lpPoolsWithBase) => {
       return null
     }
     const path = contracts.getQuotePath(p.rewardToken, p.lpBaseTokenAddress)
-    return [
-      p.routerForQuote,
-      getFuncData('getAmountsOut(uint256,address[])', ['1000000000000000000', path]),
-    ]
+    return [p.routerForQuote, getFuncData('getAmountsOut(uint256,address[])', ['1000000000000000000', path])]
   })
 
   let results = await multi.methods
@@ -1118,7 +1090,7 @@ const fetchPoolsTotalStakingWithBaseSyn = async (lpPoolsWithBase) => {
   // })
   let prices2_ = results.slice(lpPoolsWithBase.length * 5) // await multicall(routerABI, priceOfRewardCalls2.filter(p=>p))
   prices2_ = prices2_.map((p) => web3.eth.abi.decodeParameter('uint256[]', p))
-  prices2_ = prices2_.map((p) => new BigNumber(p[p.length-1]))
+  prices2_ = prices2_.map((p) => new BigNumber(p[p.length - 1]))
 
   const prices2 = []
   let pIndex = 0
@@ -1180,10 +1152,7 @@ const fetchPoolsTotalStakingWithBase = async (lpPoolsWithBase) => {
       return null
     }
     const path = contracts.getQuotePath(p.rewardToken, p.lpBaseTokenAddress)
-    return [
-      p.routerForQuote,
-      getFuncData('getAmountsOut(uint256,address[])', ['1000000000000000000', path]),
-    ]
+    return [p.routerForQuote, getFuncData('getAmountsOut(uint256,address[])', ['1000000000000000000', path])]
   })
 
   let results = await multi.methods
@@ -1295,7 +1264,6 @@ const fetchPoolsTotalStakingWithBase = async (lpPoolsWithBase) => {
   let prices2_ = results.slice(lpPoolsWithBase.length * 5) // await multicall(routerABI, priceOfRewardCalls2.filter(p=>p))
   prices2_ = prices2_.map((p) => web3.eth.abi.decodeParameter('uint256[]', p))
   prices2_ = prices2_.map((p) => new BigNumber(p[p.length - 1]))
-
 
   const prices2 = []
   let pIndex = 0
@@ -1494,17 +1462,17 @@ export const getPrivateVaultTVL = async (privatePoolConfigs) => {
 
 export const fetchPoolsTotalStatking = async () => {
   const t0_ = Date.now()
-  // console.log("fetchPoolsTotalStatking")
+  console.log('fetchPoolsTotalStatking')
 
   const poolInfos = await fetchPoolsInfo()
   const t0 = Date.now()
   const poolInfosSyn = await fetchPoolsInfoSynthetix()
   const t1 = Date.now()
-  // console.log("fetchPoolsTotalStatking1")
+  console.log('fetchPoolsTotalStatking1')
   const vaultShareFarmInfos = await fetchPoolsVaultShareFarmsInfo()
-  // console.log("vaultShareFarmInfos",vaultShareFarmInfos)
+  console.log('vaultShareFarmInfos', vaultShareFarmInfos)
   const t2 = Date.now()
-  // console.log("fetchPoolsTotalStatking2")
+  console.log('fetchPoolsTotalStatking2')
 
   const lpPoolsWithBase = poolInfos.filter(
     (p) => p.poolCategory === PoolCategory.VAULT && p.isLP && isValidBase(p.lpBaseTokenAddress),

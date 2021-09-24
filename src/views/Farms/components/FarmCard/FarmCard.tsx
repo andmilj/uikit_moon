@@ -17,6 +17,7 @@ import DetailsSection from './DetailsSection'
 import CardActionsContainer from './CardActionsContainer'
 import ApyButton from './ApyButton'
 import CardHeading from './CardHeading'
+import contracts from '../../../../config/constants/contracts'
 
 export interface FarmWithStakedValue extends Farm {
   apy?: BigNumber
@@ -127,8 +128,13 @@ const FarmCard: React.FC<FarmCardProps> = ({ farm, removed, ethereum, account })
     let value = new BigNumber(0)
     if (farm.userData && farm.tokenPriceVsQuote && farm.userData.stakedBalance) {
       if (farm.isTokenOnly) {
-        let val = new BigNumber(farm.tokenPriceVsQuote).times(farm.userData.stakedBalance)
-        // console.log(farm.tokenSymbol, farm.quoteTokenSymbol, farm.tokenPriceVsQuote, farm.userData.stakedBalance, val.toString())
+        const quoteTokenAddress = farm.quoteTokenAdresses[process.env.REACT_APP_CHAIN_ID]
+        let val = new BigNumber(farm.tokenPriceVsQuote)
+          .times(farm.userData.stakedBalance)
+          // token not having 18 decimals need to be fixed
+          .dividedBy(new BigNumber(10).pow(contracts.tokenDecimals[quoteTokenAddress.toLocaleLowerCase()] || 18))
+          .times(new BigNumber(10).pow(18))
+
         val = toDollarQuote(val, farm.quoteTokenSymbol, quotePrices)
         value = value.plus(val)
       } else if (farm.userData?.stakedBalance && farm.lpTotalInQuoteToken) {
@@ -146,6 +152,7 @@ const FarmCard: React.FC<FarmCardProps> = ({ farm, removed, ethereum, account })
     return value
   }, [
     quotePrices,
+    farm.quoteTokenAdresses,
     farm.depositedLp,
     farm.isTokenOnly,
     farm.lpTotalInQuoteToken,
@@ -214,16 +221,7 @@ const FarmCard: React.FC<FarmCardProps> = ({ farm, removed, ethereum, account })
       <Flex justifyContent="space-between">
         <Text>{TranslateString(318, 'Earn')}:</Text>
         <Expand />
-        <Image
-          data-tip={earnLabel}
-          data-type="success"
-          src={`images/tokens/${earnLabel}.png`}
-          alt={earnLabel}
-          width={32}
-          height={32}
-        />
-        {/* <Text bold>{earnLabel}</Text> */}
-        <ReactTooltip />
+        <Text bold>{earnLabel}</Text>
       </Flex>
       {farm.depositFeeBP > 0 ? (
         <Flex justifyContent="space-between" alignItems="center">
@@ -247,8 +245,12 @@ const FarmCard: React.FC<FarmCardProps> = ({ farm, removed, ethereum, account })
           isTokenOnly={farm.isTokenOnly}
           bscScanAddress={
             farm.isTokenOnly
-              ? `https://blockscout.moonriver.moonbeam.network/tokens/${farm.tokenAddresses[process.env.REACT_APP_CHAIN_ID]}`
-              : `https://blockscout.moonriver.moonbeam.network/tokens/${farm.lpAddresses[process.env.REACT_APP_CHAIN_ID]}`
+              ? `https://blockscout.moonriver.moonbeam.network/tokens/${
+                  farm.tokenAddresses[process.env.REACT_APP_CHAIN_ID]
+                }`
+              : `https://blockscout.moonriver.moonbeam.network/tokens/${
+                  farm.lpAddresses[process.env.REACT_APP_CHAIN_ID]
+                }`
           }
           totalValueFormated={totalValueFormated}
           lpLabel={lpLabel}

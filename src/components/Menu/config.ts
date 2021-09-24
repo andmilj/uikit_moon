@@ -35,7 +35,6 @@ const config: MenuEntry[] = [
         label: 'Charts',
         href: `https://charts.freeriver.exchange/?token=${contracts.cake[process.env.REACT_APP_CHAIN_ID]}`,
       },
-
     ],
   },
   {
@@ -48,16 +47,16 @@ const config: MenuEntry[] = [
     icon: 'DripIcon',
     href: '/drips',
   },
-  {
-    label: 'Espresso',
-    icon: 'EspressoIcon',
-    href: '/espresso/moonkafe',
-  },
-  {
-    label: 'Portfolio',
-    icon: 'PortfolioIcon',
-    href: '/portfolio',
-  },
+  // {
+  //   label: 'Espresso',
+  //   icon: 'EspressoIcon',
+  //   href: '/espresso/moonkafe',
+  // },
+  // {
+  //   label: 'Portfolio',
+  //   icon: 'PortfolioIcon',
+  //   href: '/portfolio',
+  // },
   // {
   //   label: 'Lottery',
   //   icon: 'TicketIcon',
@@ -94,11 +93,11 @@ const config: MenuEntry[] = [
   //     // },
   //   ],
   // },
-  {
-    label: 'Moonkafe Health',
-    icon: 'StatusIcon',
-    href: '/status',
-  },
+  // {
+  //   label: 'Moonkafe Health',
+  //   icon: 'StatusIcon',
+  //   href: '/status',
+  // },
   {
     label: 'More',
     icon: 'MoreIcon',
@@ -117,12 +116,12 @@ const config: MenuEntry[] = [
       },
     ],
   },
-  {
-    label: 'Obelisk Audit (soon)',
-    icon: 'ObeliskIcon',
-    href: '/audit',
-    // href: '/status',
-  },
+  // {
+  //   label: 'Obelisk Audit (soon)',
+  //   icon: 'ObeliskIcon',
+  //   href: '/audit',
+  //   // href: '/status',
+  // },
 
   // {
   //   label: 'Partnerships/IFO',

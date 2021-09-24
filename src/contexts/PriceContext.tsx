@@ -10,8 +10,9 @@ const PriceContextProvider = ({ children }) => {
   const [price, setPrice] = useState(new BigNumber(0))
 
   useEffect(() => {
-    const id = 'moonriver'
+    // const id = 'moonriver'
     // const id = "binancecoin";
+    const id = 'ethereum'
     const url = `https://api.coingecko.com/api/v3/simple/price?ids=${id}&vs_currencies=usd`
     const getPrice = async () => {
       const resp = await fetch(url)
@@ -20,7 +21,6 @@ const PriceContextProvider = ({ children }) => {
         if (j[id].usd !== previousPrice.current) {
           previousPrice.current = j[id].usd
           setPrice(new BigNumber(j[id].usd))
-          console.log('movr price', j[id].usd)
         }
       }
     }

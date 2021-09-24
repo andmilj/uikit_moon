@@ -11,7 +11,7 @@ import { getFuncData } from 'utils/callHelpers'
 
 const CHAIN_ID = process.env.REACT_APP_CHAIN_ID
 const web3 = getWeb3()
-const multi = new web3.eth.Contract(MultiCallAbi as unknown as AbiItem, getMulticallAddress())
+const multi = new web3.eth.Contract((MultiCallAbi as unknown) as AbiItem, getMulticallAddress())
 
 // export const fetchFarmUserAllowances = async (account: string) => {
 
@@ -111,6 +111,7 @@ export const fetchFarmUserInfo = async (account: string) => {
   let callResults = await multi.methods
     .aggregate([...allowanceCalls, ...tokenBalanceCalls, ...stakedBalanceCalls, ...earningsCalls])
     .call()
+
   callResults = callResults[1]
   const len = farmsConfig.length
   const allowances = callResults.slice(0, len).map((d) => web3.eth.abi.decodeParameter('uint256', d))

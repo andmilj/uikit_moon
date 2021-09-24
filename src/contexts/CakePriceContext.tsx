@@ -17,8 +17,7 @@ const CakePriceContextProvider = ({ children }) => {
 
   useEffect(() => {
     const getPrice = async () => {
-
-      try{
+      try {
         if (router && kcsPrice && contracts.cake[process.env.REACT_APP_CHAIN_ID]) {
           const amts = await router.methods
             .getAmountsOut('1000000000000', [
@@ -26,19 +25,17 @@ const CakePriceContextProvider = ({ children }) => {
               contracts.wbnb[process.env.REACT_APP_CHAIN_ID],
             ])
             .call()
-  
+
           const tokenPrice = kcsPrice.multipliedBy(new BigNumber(amts[1])).dividedBy(1e12)
           const val = tokenPrice.toFixed(3)
           if (val !== previousPrice.current) {
             previousPrice.current = val
-            console.log('cake', val)
             setPrice(new BigNumber(val))
           }
-  
+
           // console.log("cakeprice",tokenPrice, tokenPrice.toNumber())
         }
-
-      }catch(e){
+      } catch (e) {
         console.error(e)
       }
       // const resp = await fetch(url)

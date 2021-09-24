@@ -15,10 +15,10 @@ import BigNumber from 'bignumber.js'
 import usePriceBeans from 'hooks/usePriceBeans'
 
 const allNonZero = (t) => {
-  let valid = true;
-  Object.keys(t).forEach(k => {
-    if (t[k].isZero()){
-      valid = false;
+  let valid = true
+  Object.keys(t).forEach((k) => {
+    if (t[k].isZero()) {
+      valid = false
     }
   })
   return valid
@@ -30,22 +30,22 @@ const QuotePriceContextProvider = ({ children }) => {
     kafe: new BigNumber(0), // cakePrice,
     eth: new BigNumber(0),
     bnb: new BigNumber(0),
-    moon: new BigNumber(0),
-    mswap: new BigNumber(0),
-    solar:  new BigNumber(0),
-    free:  new BigNumber(0),
-    beans: new BigNumber(0),
+    // moon: new BigNumber(0),
+    // mswap: new BigNumber(0),
+    // solar: new BigNumber(0),
+    // free: new BigNumber(0),
+    // beans: new BigNumber(0),
   })
   const movrPrice = usePrice()
   const cakePrice = useCakePrice()
   const bnbPrice = usePriceBnb()
   const ethPrice = usePriceEth()
 
-  const moonPrice = usePriceMoon()
-  const mswapPrice = usePriceMswap()
-  const solarPrice = usePriceSolar()
-  const freePrice = usePriceFree()
-  const beansPrice = usePriceBeans()
+  // const moonPrice = usePriceMoon()
+  // const mswapPrice = usePriceMswap()
+  // const solarPrice = usePriceSolar()
+  // const freePrice = usePriceFree()
+  // const beansPrice = usePriceBeans()
 
   useEffect(() => {
     const getPrice = () => {
@@ -54,19 +54,19 @@ const QuotePriceContextProvider = ({ children }) => {
         kafe: cakePrice || new BigNumber(0), // cakePrice,
         eth: ethPrice || new BigNumber(0),
         bnb: bnbPrice || new BigNumber(0),
-        moon: moonPrice || new BigNumber(0),
-        mswap: mswapPrice || new BigNumber(0),
-        solar: solarPrice || new BigNumber(0),
-        free: freePrice || new BigNumber(0),
-        beans: beansPrice || new BigNumber(0),
-      };
+        // moon: moonPrice || new BigNumber(0),
+        // mswap: mswapPrice || new BigNumber(0),
+        // solar: solarPrice || new BigNumber(0),
+        // free: freePrice || new BigNumber(0),
+        // beans: beansPrice || new BigNumber(0),
+      }
       setPrice(temp)
       // if (allNonZero(temp)){
       //   console.log("Refresh quotePrice", printBNDict(temp))
       // }
     }
     getPrice()
-  }, [movrPrice, ethPrice, bnbPrice, beansPrice, moonPrice, mswapPrice, cakePrice, solarPrice, freePrice])
+  }, [movrPrice, ethPrice, bnbPrice, cakePrice])
 
   return <QuotePriceContext.Provider value={price}>{children}</QuotePriceContext.Provider>
 }

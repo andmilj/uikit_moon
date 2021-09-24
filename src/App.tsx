@@ -1,5 +1,5 @@
-import contracts from 'config/constants/contracts';
-import ReactGA from 'react-ga';
+import contracts from 'config/constants/contracts'
+import ReactGA from 'react-ga'
 import useWeb3 from 'hooks/useWeb3'
 import styled from 'styled-components'
 import React, { useEffect, Suspense, lazy } from 'react'
@@ -7,7 +7,7 @@ import { HashRouter as Router, Redirect, Route, Switch } from 'react-router-dom'
 import { useWallet } from 'use-wallet'
 import { Button, ResetCSS } from '@pancakeswap-libs/uikit'
 import BigNumber from 'bignumber.js'
-import { createHashHistory } from 'history';
+import { createHashHistory } from 'history'
 import { useFetchPublicData } from 'state/hooks'
 import GlobalStyle from './style/Global'
 import Menu from './components/Menu'
@@ -18,9 +18,9 @@ import PageLoader from './components/PageLoader'
 
 // const history = createHashHistory();
 // history.listen(({location}) => {
-  // console.log("location", location)
-  // ReactGA.set({ page: (location as any).pathname }); // Update the user's current page
-  // ReactGA.pageview((location as any).pathname); // Record a pageview for the given page
+// console.log("location", location)
+// ReactGA.set({ page: (location as any).pathname }); // Update the user's current page
+// ReactGA.pageview((location as any).pathname); // Record a pageview for the given page
 // });
 
 // Route-based code splitting
@@ -28,12 +28,12 @@ import PageLoader from './components/PageLoader'
 const Home = lazy(() => import('./views/Home'))
 const Farms = lazy(() => import('./views/Farms'))
 // const Lottery = lazy(() => import('./views/Lottery'))
-const Pools = lazy(() => import('./views/Pools'))
+// const Pools = lazy(() => import('./views/Pools'))
 // const Ifos = lazy(() => import('./views/Ifos'))
 const NotFound = lazy(() => import('./views/NotFound'))
-const Status = lazy(() => import('./views/Status'))
-const Audit = lazy(() => import('./views/Audit'))
-const Portfolio = lazy(() => import('./views/Portfolio'))
+// const Status = lazy(() => import('./views/Status'))
+// const Audit = lazy(() => import('./views/Audit'))
+// const Portfolio = lazy(() => import('./views/Portfolio'))
 // const Nft = lazy(() => import('./views/Nft'))
 
 // This config is required for number formating
@@ -42,14 +42,8 @@ BigNumber.config({
   DECIMAL_PLACES: 80,
 })
 
-
-
 const App: React.FC = () => {
   const { account, connect } = useWallet()
-
-  
-
-
 
   const web3 = useWeb3()
   useEffect(() => {
@@ -75,7 +69,7 @@ const App: React.FC = () => {
   //   f()
   // });
   const refresh = () => {
-    window.location.reload(true);
+    window.location.reload(true)
   }
 
   return (
@@ -84,7 +78,7 @@ const App: React.FC = () => {
           <Spinner src="images/spinner.png" />
         </HardRefresh>} */}
 
-        {/* <HardRefresh>
+      {/* <HardRefresh>
           <img src="images/spin.svg" alt="spin"/>
         </HardRefresh> */}
       <ResetCSS />
@@ -101,18 +95,18 @@ const App: React.FC = () => {
             <Route path="/drips">
               <Farms tokenMode />
             </Route>
-            <Route path="/espresso">
+            {/* <Route path="/espresso">
               <Pools />
-            </Route>
-            <Route path="/status">
+            </Route> */}
+            {/* <Route path="/status">
               <Status />
-            </Route>
-            <Route path="/audit">
+            </Route> */}
+            {/* <Route path="/audit">
               <Audit />
-            </Route>
-            <Route path="/portfolio">
+            </Route> */}
+            {/* <Route path="/portfolio">
               <Portfolio />
-            </Route>
+            </Route> */}
             {/* <Route path="/lottery"> */}
             {/*  <Lottery /> */}
             {/* </Route> */}
@@ -136,12 +130,10 @@ const App: React.FC = () => {
       </Menu>
       {/* <NftGlobalNotification /> */}
     </Router>
-
   )
 }
 
 export default React.memo(App)
-
 
 const HardRefresh = styled.div`
   position: fixed;
@@ -150,22 +142,18 @@ const HardRefresh = styled.div`
   width: 50px;
   height: 50px;
   z-index: 20;
-  >img{
-
+  > img {
     width: 50px;
     height: 50px;
     transform: scale(1.65);
   }
-  >img:hover {
+  > img:hover {
     transform: scale(1.8);
-
   }
-
-
 `
 
 const Spinner = styled.img`
-cursor: pointer;
+  cursor: pointer;
   width: 50px;
   height: 50px;
   -webkit-animation: rotating 2s linear infinite;
@@ -185,7 +173,7 @@ cursor: pointer;
       transform: rotate(360deg);
     }
   }
-  
+
   @keyframes rotating {
     from {
       -ms-transform: rotate(0deg);
@@ -202,5 +190,4 @@ cursor: pointer;
       transform: rotate(360deg);
     }
   }
-
 `

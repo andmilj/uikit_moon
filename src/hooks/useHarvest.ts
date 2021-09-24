@@ -36,13 +36,13 @@ export const useCustomHarvest = (masterChefAddress, farmPid: number) => {
   const handleHarvest = useCallback(async () => {
     try {
       const txHash = await harvest(masterChefContract, farmPid, account)
-      dispatch(fetchPoolsUserDataAsync(account))
+      // dispatch(fetchPoolsUserDataAsync(account))
       return txHash
     } catch (e) {
       console.error(e)
     }
     return null
-  }, [account, dispatch, farmPid, masterChefContract])
+  }, [account, farmPid, masterChefContract])
 
   return { onReward: handleHarvest }
 }
@@ -55,14 +55,14 @@ export const useChefHarvest = (chefAddress, chefAbi, pid, referralMode, stakingM
   const handleHarvest = useCallback(async () => {
     try {
       const txHash = await customHarvest(masterChefContract, pid, account, referralMode, stakingMode)
-      dispatch(fetchChefsPublicDataAsync(account))
+      // dispatch(fetchChefsPublicDataAsync(account))
       return txHash
     } catch (e) {
       console.error(e)
     }
 
     return null
-  }, [account, pid, dispatch, referralMode, stakingMode, masterChefContract])
+  }, [account, pid, referralMode, stakingMode, masterChefContract])
 
   return { onReward: handleHarvest }
 }
@@ -73,20 +73,21 @@ export const useSynChefHarvest = (chefAddress, chefAbi) => {
 
   const handleHarvest = useCallback(async () => {
     try {
-      const txHash = await masterChefContract.methods.getReward()
-      .send({ from: account, gas: contracts.GAS_LIMIT })
-      .on('transactionHash', (tx) => {
-        return tx.transactionHash
-      })
+      const txHash = await masterChefContract.methods
+        .getReward()
+        .send({ from: account, gas: contracts.GAS_LIMIT })
+        .on('transactionHash', (tx) => {
+          return tx.transactionHash
+        })
 
-      dispatch(fetchChefsPublicDataAsync(account))
+      // dispatch(fetchChefsPublicDataAsync(account))
       return txHash
     } catch (e) {
       console.error(e)
     }
 
     return null
-  }, [account, dispatch,masterChefContract])
+  }, [account, masterChefContract])
 
   return { onReward: handleHarvest }
 }

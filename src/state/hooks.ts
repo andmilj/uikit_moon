@@ -26,7 +26,7 @@ export const useFetchPublicData = () => {
   useEffect(() => {
     console.log('refresh useFetchPublicData')
     dispatch(fetchFarmsPublicDataAsync())
-    dispatch(fetchPoolsPublicDataAsync())
+    // dispatch(fetchPoolsPublicDataAsync())
     // dispatch(fetchGuestsPublicDataAsync())
   }, [dispatch, slowRefresh])
 
@@ -34,9 +34,9 @@ export const useFetchPublicData = () => {
     if (account) {
       console.log('refresh useFetchPublicData account')
       dispatch(fetchFarmUserDataAsync(account))
-      dispatch(fetchPoolsUserDataAsync(account))
+      // dispatch(fetchPoolsUserDataAsync(account))
       // dispatch(fetchGuestsUserDataAsync(account))
-      dispatch(fetchChefsPublicDataAsync(account))
+      // dispatch(fetchChefsPublicDataAsync(account))
     }
   }, [dispatch, slowRefresh, account])
 }
@@ -179,8 +179,12 @@ export const useTotalPersonalValue = ({ includeFarms = true }): BigNumber => {
       const farm = farms[i]
       if (farm.userData && farm.tokenPriceVsQuote && farm.userData.stakedBalance) {
         if (farm.isTokenOnly) {
-          let val = new BigNumber(farm.tokenPriceVsQuote).times(farm.userData.stakedBalance)
+          const quoteTokenAddress = farm.quoteTokenAdresses[process.env.REACT_APP_CHAIN_ID]
 
+          let val = new BigNumber(farm.tokenPriceVsQuote)
+            .times(farm.userData.stakedBalance)
+            .dividedBy(new BigNumber(10).pow(contracts.tokenDecimals[quoteTokenAddress.toLocaleLowerCase()] || 18))
+            .times(new BigNumber(10).pow(18))
           val = toDollarQuote(val, farm.quoteTokenSymbol, quotePrice)
 
           value = value.plus(val)
@@ -199,6 +203,8 @@ export const useTotalPersonalValue = ({ includeFarms = true }): BigNumber => {
       }
     }
   }
+
+  console.log('total user value', value.toString())
 
   const pools: Pool[] = usePools(account).filter((pool) => !pool.hidden)
   // console.log(pools)
@@ -314,7 +320,7 @@ export const useTotalValue = (): BigNumber => {
     if (farm.lpTotalInQuoteToken) {
       const val = toDollarQuote(farm.lpTotalInQuoteToken, farm.quoteTokenSymbol, quotePrice)
       // console.log(farm.lpSymbol, val, val.toString())
-      if (!new BigNumber(val).isNaN()){
+      if (!new BigNumber(val).isNaN()) {
         value = value.plus(val)
       }
     }

@@ -58,7 +58,6 @@ const Section = styled(FlexRowDiv)`
 `
 const SectionCol = styled(FlexColDiv)`
   align-items: flex-start;
-
 `
 const Dropdown2 = styled(Dropdown)`
   // border: 1px solid grey;
@@ -203,11 +202,13 @@ const MigrateFromFarmModal: React.FC<ModalProps> = ({ onConfirm, onDismiss }) =>
   }
 
   const defaultChefAddress = getMasterChefAddress()
-  const defaultSynFuncAddress =   oldPool ? ((oldChef.type === ChefType.MASTERCHEF_SYNTHETIX) ? oldPool.pid : defaultChefAddress)||defaultChefAddress : defaultChefAddress
-   
+  const defaultSynFuncAddress = oldPool
+    ? (oldChef.type === ChefType.MASTERCHEF_SYNTHETIX ? oldPool.pid : defaultChefAddress) || defaultChefAddress
+    : defaultChefAddress
+
   // step 1
   const amtInNormalOldChef = useStakeBalance(
-    oldChef ? (oldChef.masterchefAddress||defaultChefAddress) : defaultChefAddress,
+    oldChef ? oldChef.masterchefAddress || defaultChefAddress : defaultChefAddress,
     oldPool ? oldPool.pid : 0,
   )
   const amtInSynOldChef = useSynStakeBalance(defaultSynFuncAddress)
@@ -215,15 +216,13 @@ const MigrateFromFarmModal: React.FC<ModalProps> = ({ onConfirm, onDismiss }) =>
   const amtInOldChef = synMode ? amtInSynOldChef : amtInNormalOldChef
 
   const { onUnstake } = useChefUnstake(
-    oldChef ? (oldChef.masterchefAddress||defaultChefAddress) : defaultChefAddress,
+    oldChef ? oldChef.masterchefAddress || defaultChefAddress : defaultChefAddress,
     getAbiFromChef(oldChef),
     oldPool ? oldPool.pid : 0,
     oldChef ? oldChef.stakingMode : false,
   )
 
-
-  const { onUnstake : onSynUnstake } = useSynChefUnstake(defaultSynFuncAddress)
-
+  const { onUnstake: onSynUnstake } = useSynChefUnstake(defaultSynFuncAddress)
 
   // step 1b - private vault
   const userData = v?.userData
@@ -297,9 +296,9 @@ const MigrateFromFarmModal: React.FC<ModalProps> = ({ onConfirm, onDismiss }) =>
   }
   const doUnstake = async () => {
     setUnstakePending(true)
-    if (synMode){
+    if (synMode) {
       await onSynUnstake(amtInOldChef.dividedBy(1e18).toString())
-    }else{
+    } else {
       await onUnstake(amtInOldChef.dividedBy(1e18).toString())
     }
     setUnstakePending(false)
@@ -431,13 +430,13 @@ const MigrateFromFarmModal: React.FC<ModalProps> = ({ onConfirm, onDismiss }) =>
     if (tx && tx.status) {
       setSuccess(true)
       if (migrateMode === 'farm') {
-        dispatch(fetchChefsPublicDataAsync(account))
+        // dispatch(fetchChefsPublicDataAsync(account))
       } else {
         dispatch(triggerRefreshWallet())
       }
-      dispatch(fetchPoolsPublicDataAsync())
+      // dispatch(fetchPoolsPublicDataAsync())
       // dispatch(fetchGuestsPublicDataAsync())
-      dispatch(fetchPoolsUserDataAsync(account))
+      // dispatch(fetchPoolsUserDataAsync(account))
       // dispatch(fetchGuestsUserDataAsync(account))
     }
   }
@@ -451,13 +450,13 @@ const MigrateFromFarmModal: React.FC<ModalProps> = ({ onConfirm, onDismiss }) =>
     if (tx && tx.status) {
       setSuccess(true)
       if (migrateMode === 'farm') {
-        dispatch(fetchChefsPublicDataAsync(account))
+        // dispatch(fetchChefsPublicDataAsync(account))
       } else {
         dispatch(triggerRefreshWallet())
       }
-      dispatch(fetchPoolsPublicDataAsync())
+      // dispatch(fetchPoolsPublicDataAsync())
       // dispatch(fetchGuestsPublicDataAsync())
-      dispatch(fetchPoolsUserDataAsync(account))
+      // dispatch(fetchPoolsUserDataAsync(account))
       // dispatch(fetchGuestsUserDataAsync(account))
     }
   }
@@ -490,7 +489,7 @@ const MigrateFromFarmModal: React.FC<ModalProps> = ({ onConfirm, onDismiss }) =>
     if (success) {
       return (
         <Text>
-          Staked {removeTrailingZero(finalVal.dividedBy(1e18),2)} {tokenName} in Espresso Vault
+          Staked {removeTrailingZero(finalVal.dividedBy(1e18), 2)} {tokenName} in Espresso Vault
         </Text>
       )
     }
@@ -503,7 +502,7 @@ const MigrateFromFarmModal: React.FC<ModalProps> = ({ onConfirm, onDismiss }) =>
           ''
         ) : (
           <Slider
-            style={{ width: '95%' , marginTop: "-8px"}}
+            style={{ width: '95%', marginTop: '-8px' }}
             defaultValue={100}
             valueLabelDisplay="off"
             step={1}
@@ -522,7 +521,7 @@ const MigrateFromFarmModal: React.FC<ModalProps> = ({ onConfirm, onDismiss }) =>
         <Section>
           <ActionStep>1</ActionStep>
           <Text>
-            Unstake {removeTrailingZero(amtInOldChef.dividedBy(1e18),2)} {tokenName} from {oldChef?.name}
+            Unstake {removeTrailingZero(amtInOldChef.dividedBy(1e18), 2)} {tokenName} from {oldChef?.name}
           </Text>
           <Expand />
           {unstakeAction()}

@@ -294,7 +294,7 @@ const MigrateFromWalletModal: React.FC<ModalProps> = ({ onConfirm, onDismiss }) 
     setVaultOpenPending(false)
 
     if (tx && tx.status) {
-      dispatch(fetchPoolsPublicDataAsync())
+      // dispatch(fetchPoolsPublicDataAsync())
       // dispatch(fetchPoolsUserDataAsync(account))
     }
   }
@@ -306,11 +306,11 @@ const MigrateFromWalletModal: React.FC<ModalProps> = ({ onConfirm, onDismiss }) 
     setStakePending(false)
     if (tx && tx.status) {
       setSuccess(true)
-      dispatch(fetchPoolsPublicDataAsync())
+      // dispatch(fetchPoolsPublicDataAsync())
       // dispatch(fetchGuestsPublicDataAsync())
-      dispatch(fetchPoolsUserDataAsync(account))
+      // dispatch(fetchPoolsUserDataAsync(account))
       // dispatch(fetchGuestsUserDataAsync(account))
-      dispatch(fetchChefsPublicDataAsync(account))
+      // dispatch(fetchChefsPublicDataAsync(account))
     }
   }
   const doStake = async () => {
@@ -320,11 +320,11 @@ const MigrateFromWalletModal: React.FC<ModalProps> = ({ onConfirm, onDismiss }) 
     setStakePending(false)
     if (tx && tx.status) {
       setSuccess(true)
-      dispatch(fetchPoolsPublicDataAsync())
+      // dispatch(fetchPoolsPublicDataAsync())
       // dispatch(fetchGuestsPublicDataAsync())
-      dispatch(fetchPoolsUserDataAsync(account))
+      // dispatch(fetchPoolsUserDataAsync(account))
       // dispatch(fetchGuestsUserDataAsync(account))
-      dispatch(fetchChefsPublicDataAsync(account))
+      // dispatch(fetchChefsPublicDataAsync(account))
     }
   }
   const _onPrivateVaultSelect = (x) => {
@@ -443,10 +443,10 @@ const MigrateFromWalletModal: React.FC<ModalProps> = ({ onConfirm, onDismiss }) 
   return (
     <Modal title={`Put your ${tokenName} to work!`} onDismiss={onDismiss}>
       {fromWalletContent()}
-      {/*       
+      {/*
       <Container>
 
-        
+
         <HorizDiv/>
 
         <Section>

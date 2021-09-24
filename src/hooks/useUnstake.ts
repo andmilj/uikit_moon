@@ -30,7 +30,14 @@ import {
   customUnstake,
   synUnstake,
 } from 'utils/callHelpers'
-import { useCustomMasterchef, useMasterchef, usePrivateSousChef, useSousChef, useSynChef, useVaultRegistry } from './useContract'
+import {
+  useCustomMasterchef,
+  useMasterchef,
+  usePrivateSousChef,
+  useSousChef,
+  useSynChef,
+  useVaultRegistry,
+} from './useContract'
 
 const useUnstake = (pid: number, refreshPools = false) => {
   const dispatch = useDispatch()
@@ -44,14 +51,14 @@ const useUnstake = (pid: number, refreshPools = false) => {
         console.info(txHash)
         dispatch(fetchFarmUserDataAsync(account))
         dispatch(fetchGuestsUserDataAsync(account))
-        if (refreshPools) {
-          dispatch(fetchPoolsUserDataAsync(account))
-        }
+        // if (refreshPools) {
+        //   dispatch(fetchPoolsUserDataAsync(account))
+        // }
       } catch (e) {
         console.error(e)
       }
     },
-    [account, dispatch, masterChefContract, pid, refreshPools],
+    [account, dispatch, masterChefContract, pid],
   )
 
   return { onUnstake: handleUnstake }
@@ -68,14 +75,14 @@ export const useCustomUnstake = (masterChefAddress, pid: number, refreshPools = 
         const txHash = await unstake(masterChefContract, pid, amount, account, decimals)
         console.info(txHash)
         dispatch(fetchFarmUserDataAsync(account))
-        if (refreshPools) {
-          dispatch(fetchPoolsUserDataAsync(account))
-        }
+        // if (refreshPools) {
+        //   dispatch(fetchPoolsUserDataAsync(account))
+        // }
       } catch (e) {
         console.error(e)
       }
     },
-    [account, dispatch, masterChefContract, pid, refreshPools],
+    [account, dispatch, masterChefContract, pid],
   )
 
   return { onUnstake: handleUnstake }
@@ -99,7 +106,6 @@ export const useChefUnstake = (chefAddress, chefAbi, pid, stakingMode) => {
 
   return { onUnstake: handleUnstake }
 }
-
 
 export const useSynChefUnstake = (chefAddress) => {
   const { account } = useWallet()

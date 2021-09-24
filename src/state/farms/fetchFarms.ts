@@ -13,11 +13,12 @@ import { QuoteToken } from '../../config/constants/types'
 
 const CHAIN_ID = process.env.REACT_APP_CHAIN_ID
 const web3 = getWeb3()
-const multi = new web3.eth.Contract(MultiCallAbi as unknown as AbiItem, getMulticallAddress())
+const multi = new web3.eth.Contract((MultiCallAbi as unknown) as AbiItem, getMulticallAddress())
 
 const fetchFarms = async () => {
   const nowBlock = await web3.eth.getBlockNumber()
   const calls = []
+
   farmsConfig.forEach((farmConfig) => {
     const lpAddress = farmConfig.lpAddresses[CHAIN_ID]
     const isGuest = farmConfig.farmType !== 'native'
@@ -39,6 +40,7 @@ const fetchFarms = async () => {
     calls.push([masterChefAddress, getFuncData('getMultiplier(uint256,uint256)', [nowBlock, nowBlock + 1])])
     calls.push([masterChefAddress, getFuncData('depositedKafe()', [])])
   })
+
   let callResults = await multi.methods.aggregate(calls).call()
   callResults = callResults[1]
   // console.log(callResults)
@@ -100,15 +102,17 @@ const fetchFarms = async () => {
       // tokenPriceVsQuote 2513968990.93737652359561804102038932695218783203870240245385643793008526210244926432481703
 
       // 1e6 wei usdc = 2565597762000000 wei movr
-    // 3e6
-    
-    // 0.00992
+      // 3e6
 
-    // quoteTokenBlanceLP 5734544420763389793068 MOVR
-    // tokenBalanceLP 2230768956997 USDC
+      // 0.00992
 
+      // quoteTokenBlanceLP 5734544420763389793068 MOVR
+      // tokenBalanceLP 2230768956997 USDC
 
-      lpTotalInQuoteToken = tokenAmount.times(new BigNumber(10).pow(tokenDecimals)).times(tokenPriceVsQuote).dividedBy(new BigNumber(10).pow(quoteTokenDecimals))
+      lpTotalInQuoteToken = tokenAmount
+        .times(new BigNumber(10).pow(tokenDecimals))
+        .times(tokenPriceVsQuote)
+        .dividedBy(new BigNumber(10).pow(quoteTokenDecimals))
       // .times(new BigNumber(10).pow(parseInt(quoteTokenDecimals) - parseInt(tokenDecimals)))
       // console.log("lpTotalInQuoteToken",lpTotalInQuoteToken.toString())
     } else {
@@ -144,8 +148,6 @@ const fetchFarms = async () => {
     // console.log(rewardsMultiplier)
     const allocPoint = new BigNumber(info[1])
     const poolWeight = allocPoint.div(new BigNumber(totalAllocPoint))
-
-
 
     // console.log("farmconfig", {
     //   ...farmConfig,

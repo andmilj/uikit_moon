@@ -1,4 +1,4 @@
-import ReactGA from 'react-ga';
+import ReactGA from 'react-ga'
 import { useCallback } from 'react'
 import { useWallet } from 'use-wallet'
 import { useDispatch } from 'react-redux'
@@ -33,21 +33,21 @@ const useStake = (pid: number, refreshPools = false) => {
     async (amount: string) => {
       try {
         ReactGA.event({
-          category: "Stake Espresso",
+          category: 'Stake Espresso',
           action: `pid ${pid}`,
-        });
+        })
         const txHash = await stake(masterChefContract, pid, amount, account)
         console.info(txHash)
         dispatch(fetchFarmUserDataAsync(account))
         dispatch(fetchGuestsUserDataAsync(account))
-        if (refreshPools) {
-          dispatch(fetchPoolsUserDataAsync(account))
-        }
+        // if (refreshPools) {
+        //   dispatch(fetchPoolsUserDataAsync(account))
+        // }
       } catch (e) {
         console.error(e)
       }
     },
-    [account, dispatch, masterChefContract, pid, refreshPools],
+    [account, dispatch, masterChefContract, pid],
   )
 
   return { onStake: handleStake }
@@ -62,20 +62,20 @@ export const useCustomStake = (masterChefAddress, pid: number, refreshPools = fa
     async (amount: string, decimals = 18) => {
       try {
         ReactGA.event({
-          category: "Stake Espresso",
+          category: 'Stake Espresso',
           action: `id ${pid}`,
-        });
+        })
         const txHash = await stake(masterChefContract, pid, amount, account, decimals)
         console.info(txHash)
         dispatch(fetchFarmUserDataAsync(account))
-        if (refreshPools) {
-          dispatch(fetchPoolsUserDataAsync(account))
-        }
+        // if (refreshPools) {
+        //   dispatch(fetchPoolsUserDataAsync(account))
+        // }
       } catch (e) {
         console.error(e)
       }
     },
-    [account, dispatch, masterChefContract, pid, refreshPools],
+    [account, dispatch, masterChefContract, pid],
   )
 
   return { onStake: handleStake }
@@ -91,9 +91,9 @@ export const useSousStake = (sousId) => {
     async (amount: string) => {
       try {
         ReactGA.event({
-          category: "Stake Espresso",
+          category: 'Stake Espresso',
           action: `${sousId}`,
-        });
+        })
 
         const tx = await sousStake(sousChefContract, amount, account)
         dispatch(fetchPoolsUserDataAsyncSingle(sousId, account))

@@ -2,27 +2,32 @@ import BigNumber from 'bignumber.js'
 
 const makeQuote = (add) => {
   return {
+    4: add,
     1285: add,
     31337: add,
   }
 }
 
-
 const contracts = {
   cake: {
+    4: '0x32A9ECf04c79742C604D83B591baDa45C8976A60',
     1285: '0x52f04C806EB82930F40D410259b7AF8E18d3BDc9',
     // 31337: '0xcD26D70fE2C928C3a4FD9764d15b3ad906C138CA',
   },
   hasLaunchedFarm: true,
+  // token / main network token (eth...)
   cakeKcsPair: {
+    4: '0xF86cE6D5092522331679a492241711096e9cD64C',
     1285: '0xb60B5ddAe68aE71481d26659A1D0E9A9D941a8d1',
     // 31337: '0x9ABEd90465B15Bd95A50a1E984385510C4AB399d',
   },
   masterChef: {
+    4: '0xe505971e853B6B7840c13073Ed326E6e7b6569e7', // placeholder
     1285: '0x91aD62286cb69d2C6abdB952564e0EFEA082869c', // placeholder
     // 31337: '0xcF8cF91fA0eE6D64aCf0b6A4Ac67073eff96A22F',
   },
   wbnb: {
+    4: '0xc778417E063141139Fce010982780140Aa0cD5Ab',
     1285: '0x98878b06940ae243284ca214f92bb71a2b032b8a',
     // 31337: '0x98878b06940ae243284ca214f92bb71a2b032b8a',
   },
@@ -34,12 +39,11 @@ const contracts = {
     56: '',
     97: '',
   },
-  mulltiCall: makeQuote('0xe584193B093390a1A1270af2579B3b69AF84d445'),
-  router: makeQuote('0xdF71f363940A2298e831F18f44266C80015c8Dfd'),
-
+  mulltiCall: makeQuote('0x5192752a74dA5a99d16D7Cc7f7C83Ba5d29d14Ec'),
+  router: makeQuote('0x1b02dA8Cb0d097eB8D57A175b88c7D8b47997506'),
 
   quoteUsdt: makeQuote('0xB44a9B6905aF7c801311e8F4E76932ee959c663C'),
-  quoteUsdc: makeQuote('0xE3F5a90F9cb311505cd691a46596599aA1A0AD7D'),
+  quoteUsdc: makeQuote('0x4dbcdf9b62e891a7cec5a2568c3f4faf9e8abe2b'),
   quoteBnb: makeQuote('0x2bF9b864cdc97b08B6D79ad4663e71B8aB65c45c'),
   quoteEth: makeQuote('0x639A647fbe20b6c8ac19E48E2de44ea792c62c5C'),
   quoteSolar: makeQuote('0x6bD193Ee6D2104F14F94E2cA6efefae561A4334B'),
@@ -53,17 +57,17 @@ const contracts = {
   LAIKA: '0x65e66a61D0a8F1e686C2D6083ad611a10D84D97A',
   DRAGON: '0x062bd733268269d7ecb85cd3ea84281e6bed7f5f',
 
-  WMOVR: '0x98878b06940ae243284ca214f92bb71a2b032b8a',
-  MOVR: '0x98878b06940ae243284ca214f92bb71a2b032b8a',
+  WMOVR: '0xc778417E063141139Fce010982780140Aa0cD5Ab',
+  MOVR: '0xc778417E063141139Fce010982780140Aa0cD5Ab',
   MOON: '0xB497c3E9D27Ba6b1fea9F1b941d8C79E66cfC9d6',
-MSWAP: '0xB3FB48bF090bEDFF4f6F93FFb40221742E107db7',
+  MSWAP: '0xB3FB48bF090bEDFF4f6F93FFb40221742E107db7',
   SOLAR: '0x6bD193Ee6D2104F14F94E2cA6efefae561A4334B',
   RIB: '0xbD90A6125a84E5C512129D622a75CDDE176aDE5E',
   FREE: '0x63F2ADf5f76F00d48fe2CBef19000AF13Bb8de82',
 
   BTC: '0x6aB6d61428fde76768D7b45D8BFeec19c6eF91A8',
   USDT: '0xB44a9B6905aF7c801311e8F4E76932ee959c663C',
-  USDC: '0xE3F5a90F9cb311505cd691a46596599aA1A0AD7D',
+  USDC: '0x4dbcdf9b62e891a7cec5a2568c3f4faf9e8abe2b',
   BNB: '0x2bF9b864cdc97b08B6D79ad4663e71B8aB65c45c',
   BUSD: '0x5D9ab5522c64E1F6ef5e3627ECCc093f56167818',
   ETH: '0x639A647fbe20b6c8ac19E48E2de44ea792c62c5C',
@@ -81,7 +85,6 @@ MSWAP: '0xB3FB48bF090bEDFF4f6F93FFb40221742E107db7',
   PENDING_MOON: 'pendingmoonfarm(uint256,address)',
   PENDING_DRAGON: 'pendingEgg(uint256,address)',
 
-  
   PERBLOCK_KAFE: 'kafePerBlock()',
   PERBLOCK_SOLAR: 'solarPerBlock()',
   PERBLOCK_MOON: 'moonfarmPerBlock()',
@@ -120,9 +123,9 @@ MSWAP: '0xB3FB48bF090bEDFF4f6F93FFb40221742E107db7',
   HELPER: '0x8424984E0f70f8B4Ef28F77e4aE174c7C7938Ec1',
   GAS_LIMIT: 4000000,
 
-  solarRouter: '0xdF71f363940A2298e831F18f44266C80015c8Dfd', // wrapper
+  solarRouter: '0x1b02dA8Cb0d097eB8D57A175b88c7D8b47997506', // wrapper
   // solarRouter: '0xAA30eF758139ae4a7f798112902Bf6d65612045f', // 0x049581aEB6Fe262727f290165C29BDAB065a1B68
-  moonRouter: '0x120999312896F36047fBcC44AD197b7347F499d6', // 0x056973f631a5533470143bb7010c9229c19c04d2 
+  moonRouter: '0x120999312896F36047fBcC44AD197b7347F499d6', // 0x056973f631a5533470143bb7010c9229c19c04d2
   seaRouter: '0x802B0B134B76765378e10F1Ef5175349751af90a',
   freeRouter: '0x0d0ac50741f2Aed4D19325bE385EBeFe49C0d186', // 0x52abD262B13bef4E65Ff624880E8A0595a17af48
 
@@ -133,42 +136,38 @@ MSWAP: '0xB3FB48bF090bEDFF4f6F93FFb40221742E107db7',
   // kafeEspresso: 39,
 
   isSushiRouter: (router) => {
-    if (router.toLowerCase() === '0x12fdca1a4AB7c536709c4045a0532c22176CEB2b'.toLowerCase()){
-      return true;
+    if (router.toLowerCase() === '0x12fdca1a4AB7c536709c4045a0532c22176CEB2b'.toLowerCase()) {
+      return true
     } // solar
-    return false;
+    return false
   },
   globalStartBlock: 529970,
-  tokenDecimals:{
-    ["0xE3F5a90F9cb311505cd691a46596599aA1A0AD7D".toLowerCase()]: 6, // USDC
-    ["0xB44a9B6905aF7c801311e8F4E76932ee959c663C".toLowerCase()]: 6, // USDT
-    ["0x4f43ffd28d00999d3c813b20dee9f315757c6e1b".toLowerCase()]: 9, // USDT
-    ["0x65e66a61D0a8F1e686C2D6083ad611a10D84D97A".toLowerCase()]: 9, // LAIKA
+  tokenDecimals: {
+    ['0x4dbcdf9b62e891a7cec5a2568c3f4faf9e8abe2b'.toLowerCase()]: 6, // USDC
+    ['0xB44a9B6905aF7c801311e8F4E76932ee959c663C'.toLowerCase()]: 6, // USDT
+    ['0x4f43ffd28d00999d3c813b20dee9f315757c6e1b'.toLowerCase()]: 9, // USDT
+    ['0x65e66a61D0a8F1e686C2D6083ad611a10D84D97A'.toLowerCase()]: 9, // LAIKA
   },
-  tokenImages:{
-
-  },
+  tokenImages: {},
 
   topics: {
-    vaultDeposit: "90890809c654f11d6e72a28fa60149770a0d11ec6c92319d6ceb2bb0a4ea1a15",
-    vaultWithdraw: "f279e6a1f5e320cca91135676d9cb6e44ca8a08c0b88342bcdb1144f6511b568",
-    strategyCompound: "169f1815ebdea059aac3bb00ec9a9594c7a5ffcb64a17e8392b5d84909a14556"
+    vaultDeposit: '90890809c654f11d6e72a28fa60149770a0d11ec6c92319d6ceb2bb0a4ea1a15',
+    vaultWithdraw: 'f279e6a1f5e320cca91135676d9cb6e44ca8a08c0b88342bcdb1144f6511b568',
+    strategyCompound: '169f1815ebdea059aac3bb00ec9a9594c7a5ffcb64a17e8392b5d84909a14556',
   },
 
-
-  getQuotePath: (start,end) => {
-    if (customQuotePaths[start.toLowerCase()] && customQuotePaths[start.toLowerCase()][end.toLowerCase()]){
+  getQuotePath: (start, end) => {
+    if (customQuotePaths[start.toLowerCase()] && customQuotePaths[start.toLowerCase()][end.toLowerCase()]) {
       return customQuotePaths[start.toLowerCase()][end.toLowerCase()]
-    } 
+    }
     return [start, end]
-
-  }
+  },
 }
 
 const customQuotePaths = {
   [contracts.SOLAR.toLowerCase()]: {
-    [contracts.BUSD.toLowerCase()]: [contracts.SOLAR, contracts.USDC, contracts.BUSD]
-  }
+    [contracts.BUSD.toLowerCase()]: [contracts.SOLAR, contracts.USDC, contracts.BUSD],
+  },
 }
 
 export default contracts

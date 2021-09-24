@@ -14,18 +14,17 @@ import { RefreshContextProvider } from 'contexts/RefreshContext'
 import store from 'state'
 import { PriceContextBnbProvider } from 'contexts/PriceContextBnb'
 import { PriceContextEthProvider } from 'contexts/PriceContextEth'
-import { PriceContextMoonProvider } from 'contexts/PriceContextMoon'
-import { RewardPriceContextProvider } from 'contexts/RewardPriceContext'
-import { PriceContextMswapProvider } from 'contexts/PriceContextMswap'
-import { PriceContextSolarProvider } from 'contexts/PriceContextSolar'
 import { QuotePriceContextProvider } from 'contexts/QuotePriceContext'
-import { PriceContextFreeProvider } from 'contexts/PriceContextFree'
-import { PriceContextBeansProvider } from 'contexts/PriceContextBeans'
+// import { RewardPriceContextProvider } from 'contexts/RewardPriceContext'
+// import { PriceContextMoonProvider } from 'contexts/PriceContextMoon'
+// import { PriceContextMswapProvider } from 'contexts/PriceContextMswap'
+// import { PriceContextSolarProvider } from 'contexts/PriceContextSolar'
+// import { PriceContextFreeProvider } from 'contexts/PriceContextFree'
+// import { PriceContextBeansProvider } from 'contexts/PriceContextBeans'
 
 const Providers: React.FC = ({ children }) => {
   const rpcUrl = getRpcUrl()
   const chainId = parseInt(process.env.REACT_APP_CHAIN_ID)
-
 
   return (
     <Provider store={store}>
@@ -33,35 +32,23 @@ const Providers: React.FC = ({ children }) => {
         <LanguageContextProvider>
           <bsc.UseWalletProvider
             chainId={chainId}
-            connectors={
-              {
-                // walletconnect: { rpcUrl },
-                // bsc,
-              }
-            }
+            connectors={{
+              chainId: { chainId },
+              walletconnect: { rpcUrl },
+              // qrcodKe: true,
+              // pollingInterval: 12000,
+            }}
           >
             <BlockContextProvider>
               <PriceContextProvider>
                 <PriceContextBnbProvider>
                   <PriceContextEthProvider>
                     <CakePriceContextProvider>
-                      <RewardPriceContextProvider>
-                        <PriceContextMoonProvider>
-                          <PriceContextMswapProvider>
-                            <PriceContextSolarProvider>
-                              <PriceContextFreeProvider>
-                              <PriceContextBeansProvider>
-                                <QuotePriceContextProvider>
-                                  <RefreshContextProvider>
-                                    <ModalProvider>{children}</ModalProvider>
-                                  </RefreshContextProvider>
-                                </QuotePriceContextProvider>
-                              </PriceContextBeansProvider>
-                              </PriceContextFreeProvider>
-                            </PriceContextSolarProvider>
-                          </PriceContextMswapProvider>
-                        </PriceContextMoonProvider>
-                      </RewardPriceContextProvider>
+                      <QuotePriceContextProvider>
+                        <RefreshContextProvider>
+                          <ModalProvider>{children}</ModalProvider>
+                        </RefreshContextProvider>
+                      </QuotePriceContextProvider>
                     </CakePriceContextProvider>
                   </PriceContextEthProvider>
                 </PriceContextBnbProvider>

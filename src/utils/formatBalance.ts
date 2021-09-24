@@ -39,8 +39,8 @@ export const toDollar = (amt, base, prices: QuotePrices) => {
   switch (base) {
     case contracts.MOVR.toLowerCase():
       return prices.movr.multipliedBy(amt)
-      case contracts.WMOVR.toLowerCase():
-        return prices.movr.multipliedBy(amt)
+    case contracts.WMOVR.toLowerCase():
+      return prices.movr.multipliedBy(amt)
     // case contracts.KCS.toLowerCase():
     //   return prices.kcs.multipliedBy(amt)
     case contracts.KAFE.toLowerCase():
@@ -59,7 +59,7 @@ export const toDollar = (amt, base, prices: QuotePrices) => {
       return prices.free.multipliedBy(amt)
     case contracts.BEANS.toLowerCase():
       return prices.beans.multipliedBy(amt)
-  
+
     default:
       return amt // assume 1 dollar per tok
   }
@@ -74,6 +74,12 @@ export const toDollarQuote = (amt, quote, prices: QuotePrices) => {
       return prices.kcs.multipliedBy(amt)
     case QuoteToken.KAFE:
       return prices.kafe.multipliedBy(amt)
+    // this is special case where USDC has 6 decimals but frontend expects those values to be 18 decimals
+    // case QuoteToken.USDC:
+    //   return new BigNumber(amt)
+    //     .dividedBy(new BigNumber(10).pow(contracts.tokenDecimals[contracts.USDC.toLocaleLowerCase()]))
+    //     .times(new BigNumber(10).pow(18))
+
     // case QuoteToken.CAKE:
     //   return prices.kafe.multipliedBy(amt)
     case QuoteToken.ETH:
@@ -90,7 +96,7 @@ export const toDollarQuote = (amt, quote, prices: QuotePrices) => {
       return prices.free.multipliedBy(amt)
     case QuoteToken.BEANS:
       return prices.beans.multipliedBy(amt)
-  
+
     default:
       return amt // assume 1 dollar per tok
   }
@@ -157,9 +163,9 @@ export const getAddressName = (add) => {
     case contracts.FREE.toLowerCase():
       return 'FREE'
     case contracts.BEANS.toLowerCase():
-        return 'BEANS'
+      return 'BEANS'
     case contracts.LAIKA.toLowerCase():
-        return 'LAIKA'
+      return 'LAIKA'
 
     default:
       return false
@@ -177,7 +183,7 @@ export const mightHide = (n, hide: boolean) => {
   return hide ? '*****' : n
 }
 
-export const getLiquidLink = (stakingTokenName, liquidityUrlPathParts, projectName="") => {
+export const getLiquidLink = (stakingTokenName, liquidityUrlPathParts, projectName = '') => {
   if (stakingTokenName.toString().includes('SOLARLP')) {
     return `https://solarbeam.io/exchange/add/${liquidityUrlPathParts}`
   }
@@ -187,37 +193,35 @@ export const getLiquidLink = (stakingTokenName, liquidityUrlPathParts, projectNa
   if (stakingTokenName.toString().includes('FREELP')) {
     return `https://freeriver.exchange/#/add/${liquidityUrlPathParts}`
   }
- 
 
   const tok = liquidityUrlPathParts.split('/')[0]
   if (tok === 'ETH') {
-    if (projectName === "moonfarm"){
+    if (projectName === 'moonfarm') {
       return `https://swap.moonfarm.in/#/swap?inputCurrency=ETH`
     }
     return `https://solarbeam.io/exchange/swap?inputCurrency=ETH`
   }
-  if (projectName === "moonfarm"){
+  if (projectName === 'moonfarm') {
     return `https://swap.moonfarm.in/#/swap?inputCurrency=ETH&outputCurrency=${tok}`
   }
-  if (projectName === "dragon"){
+  if (projectName === 'dragon') {
     return `https://freeriver.exchange/#/swap?inputCurrency=ETH&outputCurrency=${tok}`
   }
-  if (projectName === "freeriver"){
+  if (projectName === 'freeriver') {
     return `https://freeriver.exchange/#/swap?inputCurrency=ETH&outputCurrency=${tok}`
   }
   return `https://solarbeam.io/exchange/swap?inputCurrency=ETH&outputCurrency=${tok}`
 }
 
-
 export const getDecimals = (tokenAddress) => {
-  return contracts.tokenDecimals[tokenAddress.toLowerCase()] || 18;
+  return contracts.tokenDecimals[tokenAddress.toLowerCase()] || 18
 }
 
 export const getExpDecimals = (tokenAddress) => {
-  return new BigNumber(10).pow(getDecimals(tokenAddress));
+  return new BigNumber(10).pow(getDecimals(tokenAddress))
 }
 
 export const printBNDict = (d) => {
-  const temp = Object.keys(d).map(k => `${k}: ${d[k].toString()}`)
-  return `\n${temp.join("\n")}`
+  const temp = Object.keys(d).map((k) => `${k}: ${d[k].toString()}`)
+  return `\n${temp.join('\n')}`
 }

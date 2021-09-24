@@ -60,11 +60,9 @@ const FarmedStakingCard = () => {
     .filter((balanceType) => balanceType.balance.toNumber() > 0)
     .map((f) => f.vaultShareFarmPid)
 
-
-
-  const totalBalancesWithVal = [...balancesWithValue, ...vsBalancesWithValue];
-  console.log("balancesWithValue",balancesWithValue)
-  console.log("vsBalancesWithValue",vsBalancesWithValue)
+  const totalBalancesWithVal = [...balancesWithValue, ...vsBalancesWithValue]
+  console.log('balancesWithValue', balancesWithValue)
+  console.log('vsBalancesWithValue', vsBalancesWithValue)
   const { onReward } = useAllHarvest(totalBalancesWithVal)
 
   const harvestAllFarms = useCallback(async () => {

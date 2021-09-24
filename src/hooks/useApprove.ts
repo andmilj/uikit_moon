@@ -26,7 +26,7 @@ export const useApprove = (lpContract: Contract, refreshPools = false) => {
       const tx = await approve(lpContract, masterChefContract, account)
       dispatch(fetchFarmUserDataAsync(account))
       if (refreshPools) {
-        dispatch(fetchPoolsUserDataAsync(account))
+        // dispatch(fetchPoolsUserDataAsync(account))
       }
       return tx
     } catch (e) {
@@ -45,7 +45,7 @@ export const useCustomApprove = (lpContract: Contract, masterChefAddress, refres
       const tx = await approveCustomChef(lpContract, masterChefAddress, account)
       dispatch(fetchFarmUserDataAsync(account))
       if (refreshPools) {
-        dispatch(fetchPoolsUserDataAsync(account))
+        // dispatch(fetchPoolsUserDataAsync(account))
       }
       return tx
     } catch (e) {
